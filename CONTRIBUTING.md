@@ -2,15 +2,12 @@
 ### Installing pre-commit hooks
 We use pre-commit hooks for code quality.
 
-If you are a `pipx` user, run
+We include `pre-commit` as a dev dependency, so you can run
 ```
-pipx install pre-commit
+pip install -r requirements-dev.txt
 ```
-Otherwise activate your virtual environment and run
-```
-pip install pre-commit
-```
-Modify git hooks with
+to install the python library.
+Then run
 ```
 pre-commit install
 ```
@@ -18,7 +15,7 @@ Try it out with
 ```
 pre-commit run --all-files
 ```
-**Note**: This command is handy to use before making commits, or when commits fail the git hook.
+**Note**: The `run --all-files` command is handy to use before making commits, or when commits fail the git hook for debugging purposes.
 
 You can commit without running the pre-commit hooks with the `--no-verify` option of `git commit`.
 ```
