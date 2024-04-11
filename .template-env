@@ -1,11 +1,19 @@
+# Do not change after generating! Users will be logged out if not rotated properly
 DJANGO_SECRET_KEY=
+# Turns on debug features
 DJANGO_DEBUG=True
 
+# Deployment stage
 STAGE=local
+# Path to admin panel
 DJANGO_ADMIN_PATH=admin/
+# Hostname
 DJANGO_HOST=localhost
 
-DEBUG_DB=1
+# Uses a local SQLite DB
+DEBUG_DB=True
+
+# Remote database settings
 POSTGRES_NAME=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
