@@ -1,2 +1,4 @@
 django==5.0.4
 python-dotenv==1.0.1
+gunicorn==21.2.0
+uvicorn==0.29.0
