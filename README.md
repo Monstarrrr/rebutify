@@ -1,4 +1,8 @@
-# rebutify
+# Rebutify
+
+The official repository of [rebutify.org](https://rebutify.org)
+
+# Contributing
 
 For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
 
@@ -15,7 +19,7 @@ cp .env-template .env
 If you don't have a [secret key](https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key) for your project, generate a secure password longer than 50 characters.
 
 ## Installation with Docker
-Run the webserver using
+To start, run
 ```sh
 docker compose up
 ```
@@ -28,4 +32,8 @@ Install the dependencies in a new virtual environment.
 python -m venv .venv
 source .venv/bin/activate # Windows: .venv\Scripts\activate.ps1 
 pip install -r requirements.txt
+```
+Begin serving the application with gunicorn.
+```sh
+gunicorn --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker rebutify.asgi:application
 ```
