@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+STAGE = os.getenv("STAGE", "local")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -84,6 +86,17 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+    if int(os.getenv("DEBUG_DB", 1)) == 1
+    else {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_NAME", ""),
+        "USER": os.getenv("POSTGRES_USER", ""),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+        "HOST": os.getenv("POSTGRES_HOST", ""),
+        "PORT": "5432",
+        "CONN_MAX_AGE": 500,
+        "CONN_HEALTH_CHECKS": True,
+    },
 }
 
 
