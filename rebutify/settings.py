@@ -88,7 +88,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-    if int(os.getenv("DEBUG_DB", 1)) == 1
+    if os.getenv("DEBUG_DB", "True") == "True"
     else {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_NAME", ""),
