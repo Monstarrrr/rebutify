@@ -5,8 +5,8 @@ For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
 # Installation
 ### Environment Variables
 
-Rename `.env-template` to `.env`, or make a copy.
-Read more about the various options in [.env-template](.env-template)
+Copy `.template-env` and rename it `.env`.
+Read more about the various options in [.template-env](.template-env)
 ```
 cp .env-template .env
 ```

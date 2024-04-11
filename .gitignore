@@ -1,0 +1,13 @@
+# Python
+.venv
+__pycache__
+.env*
+# ---
+
+# JS
+node_modules/
+# ---
+
+# Local dev and building
+db.sqlite3
+# ---
