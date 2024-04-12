@@ -1,4 +1,10 @@
+# Template for a file containing project environment variables.
+# Make a copy of this file named .env
+# Manage your secrets and configure global project flags in .env
+
+
 # Do not change after generating! Users will be logged out if not rotated properly
+# Should be the same between all project members.
 DJANGO_SECRET_KEY=
 # Turns on debug features
 DJANGO_DEBUG=True
