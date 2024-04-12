@@ -4,7 +4,7 @@ from django.urls import path
 urlpatterns = [
     path(
         "alivecheck/",
-        lambda request: HttpResponse("", content_type="text/plain"),
+        lambda request: HttpResponse(),
         name="alivecheck",
     ),
 ]
