@@ -142,3 +142,16 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_SECURE_HSTS_SECONDS", 0))
+
+# No effect if HSTS_SECONDS is 0
+SECURE_HSTS_PRELOAD = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", False))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = bool(
+    os.getenv("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", False)
+)
+
+SECURE_SSL_REDIRECT = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", False))
+
+SESSION_COOKIE_SECURE = bool(os.getenv("DJANGO_SESSION_COOKIE_SECURE", False))
+CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", False))
