@@ -14,7 +14,7 @@ Copy `.template-env` and rename it `.env`.
 Read more about the various options in [.template-env](.template-env)
 
 ```
-cp .env-template .env
+cp .template-env .env
 ```
 
 **Note**: Put your `DJANGO_SECRET_KEY` in your `.env` file.
