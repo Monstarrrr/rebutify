@@ -2,6 +2,8 @@
 
 The official repository of [rebutify.org](https://rebutify.org)
 
+[Status page](https://vj0kytyy.status.cron-job.org/)
+
 # Contributing
 
 For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
