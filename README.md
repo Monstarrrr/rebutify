@@ -1,47 +1,57 @@
-# Rebutify
+Official repository of [rebutify.org](https://rebutify.org)
 
-The official repository of [rebutify.org](https://rebutify.org)
+# Table of Content
 
-# Contributing
+- [Table of Content](#table-of-content)
+- [1. Installation](#1-installation)
+  - [1.1 Environment Variables](#11-environment-variables)
+  - [1.2. Deploy with Docker](#12-deploy-with-docker)
+  - [1.3. Local installation](#13-local-installation)
+    - [1.3.1. Python dependencies](#131-python-dependencies)
+    - [1.3.2. Gunicorn](#132-gunicorn)
+- [2. Contributing](#2-contributing)
 
-For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
+# 1. Installation
 
-# Installation
+## 1.1 Environment Variables
 
-### Environment Variables
+**Create** a `.env` file at the root of the project based on [`.template-env`](.template-env)'s content.
 
-Copy `.template-env` and rename it `.env`.
-Read more about the various options in [.template-env](.template-env)
-
-```
+```bash
 cp .env-template .env
 ```
 
-**Note**: Put your `DJANGO_SECRET_KEY` in your `.env` file.
-If you don't have a [secret key](https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key) for your project, generate a secure password longer than 50 characters.
+> :warning: Put your `DJANGO_SECRET_KEY` in your `.env` file.  
+> If you don't have a [secret key](https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key) for your project, generate a secure password longer than 50 characters.
 
-## Installation with Docker
+## 1.2. Deploy with Docker
 
-To start, run
+**Start** the docker container:
 
-```sh
+```bash
 docker compose up
 ```
 
-## Local installation
+## 1.3. Local installation
 
-### Python dependencies
+### 1.3.1. Python dependencies
 
-Install the dependencies in a new virtual environment.
+**Install** the dependencies in a new virtual environment.
 
-```sh
+```bash
 python -m venv .venv
 source .venv/bin/activate # Windows: .venv\Scripts\activate.ps1
 pip install -r requirements.txt
 ```
 
-Begin serving the application with gunicorn.
+### 1.3.2. Gunicorn
 
-```sh
+**Begin** serving the application with gunicorn.
+
+```bash
 gunicorn --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker rebutify.asgi:application
 ```
+
+# 2. Contributing
+
+For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
