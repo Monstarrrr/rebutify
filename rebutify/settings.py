@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
+    "django_vite",
 ]
 
 MIDDLEWARE = [
@@ -141,7 +142,11 @@ STATIC_URL = os.getenv("DJANGO_STATIC_URL", "rebutify-fe/dist/")
 
 DJANGO_VITE_ASSETS_PATH = BASE_DIR / "rebutify-fe" / "dist"
 
+DJANGO_VITE = {"default": {"dev_mode": os.getenv("DJANGO_VITE_DEV_MODE", "true")}}
+
 STATIC_ROOT = BASE_DIR / "collectedstatic"
+
+STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

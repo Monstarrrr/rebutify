@@ -8,4 +8,5 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   root: "rebutify-fe",
+  base: "/rebutify-fe/",
 });

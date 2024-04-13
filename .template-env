@@ -20,6 +20,9 @@ DJANGO_HOST=localhost
 # You may set this to the URL of a CDN in production.
 DJANGO_STATIC_URL=rebutify-fe/
 
+# Whether we are building assets in dev mode
+DJANGO_VITE_DEV_MODE=true
+
 # Uses a local SQLite DB
 DEBUG_DB=True
 
