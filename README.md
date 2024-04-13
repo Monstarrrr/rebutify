@@ -1,4 +1,5 @@
-Official repository of [rebutify.org](https://rebutify.org)
+Official repository of [rebutify.org](https://rebutify.org)  
+[Status page](https://vj0kytyy.status.cron-job.org/)
 
 # Table of Content
 

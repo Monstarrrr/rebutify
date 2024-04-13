@@ -18,8 +18,9 @@ Including another URLconf
 import os
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
+    path("", include("core.urls")),
 ]
