@@ -16,6 +16,10 @@ DJANGO_ADMIN_PATH=admin/
 # Hostname
 DJANGO_HOST=localhost
 
+# Path where Django expects to find static assets.
+# You may set this to the URL of a CDN in production.
+DJANGO_STATIC_URL=rebutify-fe/
+
 # Uses a local SQLite DB
 DEBUG_DB=True
 
