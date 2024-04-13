@@ -139,6 +139,10 @@ USE_TZ = True
 
 STATIC_URL = os.getenv("DJANGO_STATIC_URL", "rebutify-fe/dist/")
 
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / "rebutify-fe" / "dist"
+
+STATIC_ROOT = BASE_DIR / "collectedstatic"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
