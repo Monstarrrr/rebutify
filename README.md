@@ -4,10 +4,6 @@ The official repository of [rebutify.org](https://rebutify.org)
 
 [Status page](https://vj0kytyy.status.cron-job.org/)
 
-# Contributing
-
-For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
-
 # Installation
 
 ### Environment Variables
@@ -47,3 +43,7 @@ Begin serving the application with gunicorn.
 ```sh
 gunicorn --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker rebutify.asgi:application
 ```
+
+# Contributing
+
+For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md)
