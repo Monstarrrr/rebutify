@@ -17,10 +17,18 @@ Including another URLconf
 
 import os
 
+from core import views
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r"status/alive", views.StatusViewSet, basename="alive")
+router.register(r"users", views.UserViewSet)
+router.register(r"groups", views.GroupViewSet)
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
-    path("", include("core.urls")),
+    path("api/", include(router.urls)),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

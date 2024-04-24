@@ -17,7 +17,7 @@ Instructions for contributing to the rebutify repository.
 ### 1.1. Download dependencies using [Python](https://www.python.org/downloads/):
 
 ```bash
-pip install -r requirements-dev.txt
+pip install -r backend/requirements-dev.txt
 ```
 
 ### 1.2. Install pre-commit
@@ -49,12 +49,12 @@ Install the project first as lined out in the [README](README.md).
 Start the development server with
 
 ```bash
-python manage.py runserver
+python backend/manage.py runserver
 ```
 
 Create and run database migrations with
 
 ```
-python manage.py makemigrations
-python manage.py migrate
+python backend/manage.py makemigrations
+python backend/manage.py migrate
 ```
