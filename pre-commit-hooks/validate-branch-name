@@ -8,6 +8,9 @@ BRANCH_REGEX='^(feat|fix|hotfix|release)/.+'
 
 ## Check if the branch name matches the defined regex
 if ! [[ $BRANCH_NAME =~ $BRANCH_REGEX ]]; then
-   echo "Branch name should start with feat/, fix/, hotfix/ or release/"
-   exit 2
+   echo 'Branch name should start with feat/, fix/, hotfix/ or release/'
+   echo 'Branch name should then include issue number'
+   echo 'Example: feat/142/branch-name' 
+   echo 'Rename the branch using "git branch -m new-branch-name" and try again.'
+   exit 1
 fi

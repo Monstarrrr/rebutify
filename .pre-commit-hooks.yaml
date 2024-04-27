@@ -1,5 +1,0 @@
-- id: validate-branch-name
-  name: Validating Branch Name
-  entry: pre-commit-hooks/validate-branch-name
-  language: script
-  stages: [pre-commit, post-checkout]
