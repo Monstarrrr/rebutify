@@ -5,7 +5,7 @@ repos:
     hooks:
       - id: ruff
         types: [python]
-        args: ["--fix"]
+        args: ['--fix']
       - id: ruff-format
 
   # ISORT
@@ -21,7 +21,8 @@ repos:
     hooks:
       - id: mypy
         types: [python]
-        additional_dependencies: [django-stubs, djangorestframework-stubs]
+        additional_dependencies:
+          [django-stubs, djangorestframework-stubs]
 
   # BANDIT
   - repo: https://github.com/PyCQA/bandit
@@ -34,3 +35,14 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
+        args:
+          [
+            '--tab-width',
+            '2',
+            '--single-quote',
+            '--no-semi',
+            'use-tabs',
+            '--jsx-single-quote',
+            '--print-width',
+            '68',
+          ]
