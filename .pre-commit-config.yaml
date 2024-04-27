@@ -20,7 +20,7 @@ repos:
     hooks:
       - id: validate-branch-name
         name: Validating Branch Name
-        entry: pre-commit-hooks/validate-branch-name
+        entry: git-hooks/validate-branch-name
         language: script
         stages: [pre-commit, post-checkout]
 
@@ -29,9 +29,9 @@ repos:
     hooks:
       - id: add-issue-to-commit
         name: Add Issue Number to Commit
-        entry: pre-commit-hooks/add-issue-to-commit
-        language: script
-        stages: [commit-msg]
+        entry: git-hooks/add-issue-to-commit
+        language: system
+        stages: [prepare-commit-msg]
 
   # LINTING & FORMATTING PYTHON
   - repo: https://github.com/astral-sh/ruff-pre-commit
