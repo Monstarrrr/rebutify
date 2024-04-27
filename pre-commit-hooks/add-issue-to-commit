@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Get the name of the commit message file
+commit_msg=$1
+
+# Example: Add a prefix to the commit message
+sed -i '1s/^/Test: /' "$commit_msg"

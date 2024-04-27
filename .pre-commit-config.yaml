@@ -25,11 +25,12 @@ repos:
         stages: [pre-commit, post-checkout]
 
   # ADD ISSUE NUMBER TO COMMIT
-  - repo: https://gitlab.com/codementors/pre-commit/add-issue-number-to-conventional-commit
-    rev: 1.0.2
+  - repo: local
     hooks:
-      - id: add-issue-number
-        name: Adding issue number to commit message
+      - id: add-issue-to-commit
+        name: Add Issue Number to Commit
+        entry: pre-commit-hooks/add-issue-to-commit
+        language: script
         stages: [commit-msg]
 
   # LINTING & FORMATTING PYTHON
