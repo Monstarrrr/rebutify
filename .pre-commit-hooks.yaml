@@ -1,0 +1,5 @@
+- id: validate-branch-name
+  name: Validating Branch Name
+  entry: .git/hooks/validate-branch-name
+  language: script
+  stages: [pre-commit, post-checkout]

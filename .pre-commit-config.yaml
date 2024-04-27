@@ -1,5 +1,5 @@
 repos:
-  # PRE-COMMIT
+  # BUILT-IN HOOKS
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -10,6 +10,14 @@ repos:
       - id: no-commit-to-branch
         name: Preventing commits to main branch
         args: ['--branch', 'main']
+  # VALIDATE-BRANCH-NAME
+  - repo: local
+    hooks:
+      - id: validate-branch-name
+        name: Validating Branch Name
+        entry: .git/hooks/validate-branch-name
+        language: script
+        stages: [pre-commit, post-checkout]
   # RUFF
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.3.7
