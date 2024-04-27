@@ -30,7 +30,7 @@ repos:
       - id: add-issue-to-commit
         name: Add Issue Number to Commit
         entry: git-hooks/add-issue-to-commit
-        language: system
+        language: script
         stages: [prepare-commit-msg]
 
   # LINTING & FORMATTING PYTHON
