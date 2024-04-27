@@ -5,10 +5,13 @@ repos:
     hooks:
       - id: check-merge-conflict
         name: Checking merge conflicts
+        stages: [pre-commit]
       - id: detect-private-key
         name: Detecting private keys
+        stages: [pre-commit]
       - id: no-commit-to-branch
         name: Preventing commits to main branch
+        stages: [pre-commit]
         args: ['--branch', 'main']
 
   # VALIDATE BRANCH NAME
@@ -36,10 +39,12 @@ repos:
       - id: ruff
         name: Linting python code
         types: [python]
+        stages: [pre-commit]
         args: ['--fix']
       - id: ruff-format
         name: Formatting python code
         types: [python]
+        stages: [pre-commit]
 
   # SORTING PYTHON IMPORTS
   - repo: https://github.com/pycqa/isort
@@ -47,6 +52,7 @@ repos:
     hooks:
       - id: isort
         name: Sorting python imports
+        stages: [pre-commit]
 
   # TYPE CHECKING PYTHON
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -57,6 +63,7 @@ repos:
         name: Type checking python code
         additional_dependencies:
           [django-stubs, djangorestframework-stubs]
+        stages: [pre-commit]
 
   # CHECKING FOR PYTHON SECURITY ISSUES
   - repo: https://github.com/PyCQA/bandit
@@ -64,6 +71,7 @@ repos:
     hooks:
       - id: bandit
         name: Checking for python security issues
+        stages: [pre-commit]
 
   # FORMATTING FRONT-END CODE
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -71,6 +79,7 @@ repos:
     hooks:
       - id: prettier
         name: Formatting front-end code
+        stages: [pre-commit]
         args:
           [
             '--tab-width',
