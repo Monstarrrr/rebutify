@@ -4,8 +4,11 @@ repos:
     rev: v4.5.0
     hooks:
       - id: check-merge-conflict
+        name: Checking merge conflicts
       - id: detect-private-key
+        name: Detecting private keys
       - id: no-commit-to-branch
+        name: Preventing commits to main branch
         args: ['--branch', 'main']
   # RUFF
   - repo: https://github.com/astral-sh/ruff-pre-commit
