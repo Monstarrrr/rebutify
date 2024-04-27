@@ -15,16 +15,19 @@ repos:
     rev: v0.3.7
     hooks:
       - id: ruff
+        name: Linting python code
         types: [python]
         args: ['--fix']
       - id: ruff-format
+        name: Formatting python code
+        types: [python]
 
   # ISORT
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
-        name: isort (python)
+        name: Sorting python imports
 
   # MYPY
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -32,6 +35,7 @@ repos:
     hooks:
       - id: mypy
         types: [python]
+        name: Type checking python code
         additional_dependencies:
           [django-stubs, djangorestframework-stubs]
 
@@ -40,12 +44,14 @@ repos:
     rev: 1.7.8
     hooks:
       - id: bandit
+        name: Checking for python security issues
 
   # PRETTIER
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
+        name: Formatting frontend code
         args:
           [
             '--tab-width',

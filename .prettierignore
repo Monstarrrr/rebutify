@@ -1,0 +1,2 @@
+# Backend is ignored by prettier as we use ruff for formatting & linting the backend code 
+/backend
