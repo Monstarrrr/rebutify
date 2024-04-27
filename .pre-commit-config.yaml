@@ -21,7 +21,8 @@ repos:
     hooks:
       - id: mypy
         types: [python]
-        additional_dependencies: [django-stubs, djangorestframework-stubs]
+        additional_dependencies:
+          [django-stubs, djangorestframework-stubs]
 
   # BANDIT
   - repo: https://github.com/PyCQA/bandit
@@ -42,4 +43,6 @@ repos:
             '--no-semi',
             'use-tabs',
             '--jsx-single-quote',
+            '--print-width',
+            '68',
           ]
