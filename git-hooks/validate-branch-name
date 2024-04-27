@@ -14,7 +14,4 @@ if ! [[ $BRANCH_NAME =~ $BRANCH_REGEX ]]; then
    echo 'Example: feat/142_branch-name' 
    echo 'Rename the branch using "git branch -m new-branch-name" and try again.'
    exit 1
-else
-   echo 'Branch name format is correct.'
-   exit 0
 fi

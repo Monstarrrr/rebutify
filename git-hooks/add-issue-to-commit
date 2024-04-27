@@ -21,7 +21,9 @@ extract_number() {
         echo "Issue number: $ISSUE_NUMBER"
         # Add the issue number to the commit message
         sed -i '1s/^/$ISSUE_NUMBER: /' "$COMMIT_MSG"
+        exit 1
     else
         echo "No number found in branch name"
+        exit 2
     fi
 }
