@@ -27,7 +27,7 @@ repos:
   - repo: local
     hooks:
       - id: add-issue-to-commit
-        name: Add Issue Number to Commit
+        name: Add issue number to commit
         entry: git-hooks/add-issue-to-commit
         language: script
         stages: [prepare-commit-msg]
@@ -78,7 +78,7 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        name: Formatting front-end code
+        name: Formatting front-end code (re-commit if fails)
         stages: [pre-commit]
         args:
           [
