@@ -1,8 +1,5 @@
 {
-	"extends": [
-		"@babel/plugin-transform-private-property-in-object",
-		"next/core-web-vitals"
-	],
+	"extends": ["next/core-web-vitals"],
 	"rules": {
 		"prefer-const": "error"
 	}
