@@ -75,11 +75,12 @@ repos:
         name: Checking for python security issues
         stages: [pre-commit]
 
-  # GENERATING ENV.EXAMPLE FILE
+  # UPDATING ENV.EXAMPLE FILE
   - repo: https://github.com/hija/clean-dotenv
     rev: v0.0.7
     hooks:
       - id: clean-dotenv
+        name: Updating env.example file
         stages: [pre-commit]
 
   # FORMATTING FRONT-END CODE
