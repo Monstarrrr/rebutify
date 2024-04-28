@@ -1,3 +1,5 @@
+# /!\ Always specify hooks stage(s) /!\
+
 repos:
   # BUILT-IN HOOKS
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -71,6 +73,13 @@ repos:
     hooks:
       - id: bandit
         name: Checking for python security issues
+        stages: [pre-commit]
+
+  # GENERATING ENV.EXAMPLE FILE
+  - repo: https://github.com/hija/clean-dotenv
+    rev: v0.0.7
+    hooks:
+      - id: clean-dotenv
         stages: [pre-commit]
 
   # FORMATTING FRONT-END CODE
