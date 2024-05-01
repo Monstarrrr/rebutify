@@ -46,6 +46,29 @@ repos:
         types: [python]
         stages: [pre-commit]
 
+  # LINTING FRONTEND
+  - repo: local
+    hooks:
+      - id: eslint
+        entry: bash -c 'cd frontend && npm run lint'
+        name: ESLinting front-end code
+        language: system
+        stages: [pre-commit]
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: v9.1.1
+  #   hooks:
+  #     - id: eslint
+  #       name: ESLinting front-end code
+  #       stages: [pre-commit]
+  #       files: '.*'
+  #       # additional_dependencies: ['eslint-plugin-react', 'eslint-plugin-react-hooks']
+  #       additional_dependencies: [
+  #           next@14.2.1,
+  #           eslint-plugin-react@7.34.1,
+  #           eslint-plugin-react-hooks@4.6.2,
+  #           # 'react/jsx-runtime',
+  #         ]
+
   # SORTING PYTHON IMPORTS
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
