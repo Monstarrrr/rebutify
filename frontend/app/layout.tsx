@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { inter } from '@/app/_styles/fonts'
+import { inter, roboto_mono } from '@/app/_styles/fonts'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={inter.className}>{children}</body>
+      <body className={roboto_mono.className}>{children}</body>
     </html>
   )
 }

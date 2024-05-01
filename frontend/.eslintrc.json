@@ -1,6 +1,28 @@
 {
   "extends": [
-    "@babel/plugin-transform-private-property-in-object",
-    "next/core-web-vitals"
-  ]
+    /* 
+      Recommended rule set for Next.js:
+      (https://nextjs.org/docs/pages/building-your-application/configuring/eslint#eslint-config)
+    */
+    "plugin:@next/next/recommended", // Next.js recommended linting rules
+    "plugin:react/recommended", // React recommended linting rules
+    "plugin:react-hooks/recommended", // Rules: https://legacy.reactjs.org/docs/hooks-rules.html
+    "plugin:react/jsx-runtime", // Info: https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+
+    /*
+      Turning off all linting rules that are unnecessary or might conflict with Prettier.
+      (https://github.com/prettier/eslint-config-prettier)
+    */
+    "prettier"
+  ],
+
+  "settings": {
+    "react": {
+      // Specifying React version is necessary for eslint-plugin-react
+      "version": "detect"
+    }
+  },
+
+  // Needed for typescript support
+  "parser": "@babel/eslint-parser"
 }

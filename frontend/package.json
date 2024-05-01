@@ -15,12 +15,22 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/eslint-parser": "^7.24.1",
     "@babel/plugin-transform-private-property-in-object": "^7.24.1",
+    "@babel/preset-env": "^7.24.5",
+    "@eslint/js": "^9.1.1",
+    "@next/eslint-plugin-next": "^14.2.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
+    "eslint": "^8.57.0",
     "eslint-config-next": "14.2.1",
-    "typescript": "^5"
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "globals": "^15.1.0",
+    "typescript": "^5",
+    "typescript-eslint": "^7.7.1"
   }
 }

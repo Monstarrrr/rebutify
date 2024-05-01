@@ -27,7 +27,7 @@ repos:
   - repo: local
     hooks:
       - id: add-issue-to-commit
-        name: Add Issue Number to Commit
+        name: Add issue number to commit
         entry: git-hooks/add-issue-to-commit
         language: script
         stages: [prepare-commit-msg]
@@ -44,6 +44,16 @@ repos:
       - id: ruff-format
         name: Formatting python code
         types: [python]
+        stages: [pre-commit]
+
+  # LINTING FRONTEND
+  - repo: local
+    hooks:
+      - id: eslint
+        # We are using bash -c to run the command in the frontend directory
+        entry: bash -c 'cd frontend && npm run lint'
+        name: ESLinting front-end code
+        language: system
         stages: [pre-commit]
 
   # SORTING PYTHON IMPORTS
@@ -78,7 +88,7 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        name: Formatting front-end code
+        name: Formatting front-end code (re-commit if fails)
         stages: [pre-commit]
         args:
           [
@@ -86,7 +96,6 @@ repos:
             '2',
             '--single-quote',
             '--no-semi',
-            'use-tabs',
             '--jsx-single-quote',
             '--print-width',
             '68',
