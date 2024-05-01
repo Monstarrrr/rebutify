@@ -9,10 +9,10 @@ export default function Form(props: {
   return (
     <form>
       {inputs.map((input) => (
-        <label>
+        <label key={input.id}>
           {input.label}
           <input
-            name={input.name}
+            name={input.id}
             placeholder={input.placeholder || ''}
             // Inputs are required by default
             required={input.required || true}

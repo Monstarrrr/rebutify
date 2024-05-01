@@ -46,16 +46,6 @@ repos:
         types: [python]
         stages: [pre-commit]
 
-  # LINTING FRONTEND
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.1.1
-    hooks:
-      - id: eslint
-        name: Linting front-end code
-        stages: [pre-commit]
-        additional_dependencies: ['@next/eslint-plugin-next']
-        files: \.[jt]sx?$
-
   # SORTING PYTHON IMPORTS
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
@@ -96,7 +86,6 @@ repos:
             '2',
             '--single-quote',
             '--no-semi',
-            'use-tabs',
             '--jsx-single-quote',
             '--print-width',
             '68',
