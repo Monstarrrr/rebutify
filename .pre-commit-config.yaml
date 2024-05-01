@@ -50,6 +50,7 @@ repos:
   - repo: local
     hooks:
       - id: eslint
+        # We are using bash -c to run the command in the frontend directory
         entry: bash -c 'cd frontend && npm run lint'
         name: ESLinting front-end code
         language: system
