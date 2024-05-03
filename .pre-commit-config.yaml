@@ -84,20 +84,27 @@ repos:
         stages: [pre-commit]
 
   # FORMATTING FRONT-END CODE
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+  - repo: local
     hooks:
       - id: prettier
-        name: Formatting front-end code (re-commit if fails)
+        # We are using bash -c to run the command in the frontend directory
+        entry: bash -c 'cd frontend && npm run format'
+        name: Formatting front-end code
+        language: system
         stages: [pre-commit]
-        files: "\\.(tsx?|css|scss|json)$"
-        args:
-          [
-            '--tab-width',
-            '2',
-            '--single-quote',
-            '--no-semi',
-            '--jsx-single-quote',
-            '--print-width',
-            '68',
-          ]
+  # - repo: https://github.com/pre-commit/mirrors-prettier
+  #   rev: v4.0.0-alpha.8
+  #   hooks:
+  #     - id: prettier
+  #       name: Formatting front-end code
+  #       stages: [pre-commit]
+  #       args:
+  #         [
+  #           '--tab-width',
+  #           '2',
+  #           '--single-quote',
+  #           '--no-semi',
+  #           '--jsx-single-quote',
+  #           '--print-width',
+  #           '68',
+  #         ]

@@ -6,7 +6,8 @@
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write ./**/*.{tsx,ts}"
   },
   "dependencies": {
     "next": "14.2.1",
@@ -30,6 +31,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "globals": "^15.1.0",
+    "prettier": "^3.2.5",
     "typescript": "^5",
     "typescript-eslint": "^7.7.1"
   }
