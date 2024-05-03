@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ./**/*.{tsx,ts}"
+    "format": "prettier . --write"
   },
   "dependencies": {
     "next": "14.2.1",
