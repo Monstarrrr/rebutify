@@ -4,7 +4,7 @@
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 
 ## Define the regular expression for branch name validation
-BRANCH_REGEX='^(feat|fix|hotfix|release)\/[0-9]+_.+'
+BRANCH_REGEX='^(feat|fix|hotfix|release)\/[0-9]+_.+|main|develop$'
 
 ## Check if the branch name matches the defined regex
 if ! [[ $BRANCH_NAME =~ $BRANCH_REGEX ]]; then

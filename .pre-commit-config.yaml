@@ -90,6 +90,7 @@ repos:
       - id: prettier
         name: Formatting front-end code (re-commit if fails)
         stages: [pre-commit]
+        files: "\\.(tsx?|css|scss|json)$"
         args:
           [
             '--tab-width',
