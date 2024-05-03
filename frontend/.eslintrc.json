@@ -24,5 +24,9 @@
   },
 
   // Needed for typescript support
-  "parser": "@babel/eslint-parser"
+  "parser": "@babel/eslint-parser",
+  // Needed to prevent ESLint from looking for a configuration file in parent folders
+  "parserOptions": {
+    "requireConfigFile": false
+  }
 }
