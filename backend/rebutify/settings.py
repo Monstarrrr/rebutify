@@ -23,7 +23,6 @@ STAGE = os.getenv("STAGE", "local")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -34,7 +33,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = bool(os.getenv("DJANGO_DEBUG", "True") == "True")
 
 ALLOWED_HOSTS: List[str] = [
-    os.getenv("DJANGO_HOST", "localhost") if STAGE != "local" else "localhost"
+    os.getenv("DJANGO_HOST", "localhost") if STAGE != "local" else "localhost",
+    os.getenv("ALLOWED_HOST", "localhost"),
 ]
 
 
@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "rest_framework",
+    "rebutify",
+    "crispy_bootstrap4",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -73,7 +76,9 @@ ROOT_URLCONF = "rebutify.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -85,6 +90,8 @@ TEMPLATES = [
         },
     },
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 WSGI_APPLICATION = "rebutify.wsgi.application"
 
@@ -164,3 +171,9 @@ SECURE_SSL_REDIRECT = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", False))
 
 SESSION_COOKIE_SECURE = bool(os.getenv("DJANGO_SESSION_COOKIE_SECURE", False))
 CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", False))
+
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", ""))
+EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
