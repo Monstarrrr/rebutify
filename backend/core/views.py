@@ -10,9 +10,16 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from rest_framework import viewsets
+from rest_framework.response import Response
 
 from .forms import UserRegisterForm
 from .token import account_activation_token
+
+
+class StatusViewSet(viewsets.ViewSet):
+    def list(self, request):
+        return Response(status=200)
 
 
 def index(request):
