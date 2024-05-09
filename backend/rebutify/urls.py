@@ -29,7 +29,6 @@ urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
     path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("admin/", admin.site.urls),
     ##### user related path##########################
     path("", include("core.urls")),
     path("login/", views.Login, name="login"),
