@@ -31,7 +31,7 @@ repos:
         name: Linting python code
         types: [python]
         stages: [pre-commit]
-        args: ['--fix']
+        args: ['--select', 'I', '--fix']
       - id: ruff-format
         name: Formatting python code
         types: [python]
@@ -45,14 +45,6 @@ repos:
         entry: bash -c 'cd frontend && npm run lint'
         name: ESLinting front-end code
         language: system
-        stages: [pre-commit]
-
-  # SORTING PYTHON IMPORTS
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: Sorting python imports
         stages: [pre-commit]
 
   # TYPE CHECKING PYTHON
