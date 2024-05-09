@@ -13,11 +13,8 @@ DJANGO_DEBUG=True
 STAGE=local
 # Path to admin panel
 DJANGO_ADMIN_PATH=admin/
-# Hostname
-DJANGO_HOST=localhost
-
-# Extra host value for ALLOWED_HOSTS (TODO: replace)
-ALLOWED_HOST=127.0.0.1
+# Hostnames, comma separated
+DJANGO_HOSTS=localhost,127.0.0.1
 
 # Uses a local SQLite DB
 DEBUG_DB=True
