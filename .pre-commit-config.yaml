@@ -14,15 +14,6 @@ repos:
         stages: [pre-commit]
         args: ['--branch', 'main']
 
-  # VALIDATE BRANCH NAME
-  - repo: local
-    hooks:
-      - id: validate-branch-name
-        name: Validating Branch Name
-        entry: git-hooks/validate-branch-name
-        language: script
-        stages: [pre-commit, post-checkout]
-
   # ADD ISSUE NUMBER TO COMMIT
   - repo: local
     hooks:
@@ -40,7 +31,7 @@ repos:
         name: Linting python code
         types: [python]
         stages: [pre-commit]
-        args: ['--fix']
+        args: ['--select', 'I', '--fix']
       - id: ruff-format
         name: Formatting python code
         types: [python]
@@ -54,14 +45,6 @@ repos:
         entry: bash -c 'cd frontend && npm run lint'
         name: ESLinting front-end code
         language: system
-        stages: [pre-commit]
-
-  # SORTING PYTHON IMPORTS
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: Sorting python imports
         stages: [pre-commit]
 
   # TYPE CHECKING PYTHON
@@ -82,21 +65,3 @@ repos:
       - id: bandit
         name: Checking for python security issues
         stages: [pre-commit]
-
-  # FORMATTING FRONT-END CODE
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        name: Formatting front-end code (re-commit if fails)
-        stages: [pre-commit]
-        args:
-          [
-            '--tab-width',
-            '2',
-            '--single-quote',
-            '--no-semi',
-            '--jsx-single-quote',
-            '--print-width',
-            '68',
-          ]

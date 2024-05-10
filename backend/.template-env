@@ -13,8 +13,8 @@ DJANGO_DEBUG=True
 STAGE=local
 # Path to admin panel
 DJANGO_ADMIN_PATH=admin/
-# Hostname
-DJANGO_HOST=localhost
+# Hostnames, comma separated
+DJANGO_HOSTS=localhost,127.0.0.1
 
 # Uses a local SQLite DB
 DEBUG_DB=True
@@ -24,6 +24,14 @@ POSTGRES_NAME=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_HOST=
+
+# SMTP settings
+EMAIL_HOST=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+EMAIL_PORT=
+EMAIL_USE_TLS=
+EMAIL_FROM=
 
 # Production HTTPS settings (leave empty for local dev!)
 DJANGO_SECURE_HSTS_SECONDS=

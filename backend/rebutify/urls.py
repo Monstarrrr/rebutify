@@ -24,11 +24,14 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
-router.register(r"users", views.UserViewSet)
-router.register(r"groups", views.GroupViewSet)
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
     path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    ##### user related path##########################
+    path("", include("core.urls")),
+    path("login/", views.Login, name="login"),
+    path("logout/", views.Logout, name="logout"),
+    path("register/", views.register, name="register"),
 ]
