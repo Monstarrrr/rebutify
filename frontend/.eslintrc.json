@@ -24,5 +24,14 @@
   },
 
   // Needed for typescript support
-  "parser": "@babel/eslint-parser"
+  "parserOptions": {
+    "requireConfigFile": false,
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  }
 }
+
+// todo:
+// instead of eslinting with pre-commit,
+// we could pre-commit a build,
+// because nextjs checks for eslint errors on build by default
