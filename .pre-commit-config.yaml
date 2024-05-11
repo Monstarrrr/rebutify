@@ -9,19 +9,23 @@ repos:
       - id: detect-private-key
         name: Detecting private keys
         stages: [pre-commit]
+      # No commit to main branch;
       - id: no-commit-to-branch
-        name: Preventing commits to main branch
+        name: "
+          Preventing commits to main branch \n
+          AND \n
+          incorrectly named branches \n
+          (Note: Must be feat|fix|hotfix|release/[issue-number]_[branch-name])\n
+          (Note: Use 'git branch -m <new-branch-name>' to rename branch if needed)
+        "
         stages: [pre-commit]
-        args: ['--branch', 'main']
-
-  # VALIDATE BRANCH NAME
-  - repo: local
-    hooks:
-      - id: validate-branch-name
-        name: Validating Branch Name
-        entry: git-hooks/validate-branch-name
-        language: script
-        stages: [pre-commit, post-checkout]
+        args:
+          [
+            '--branch',
+            'main',
+            '--pattern',
+            '^(?!^(feat|fix|hotfix|release)\/[0-9]+_).*$',
+          ]
 
   # ADD ISSUE NUMBER TO COMMIT
   - repo: local
@@ -31,7 +35,7 @@ repos:
         entry: git-hooks/add-issue-to-commit
         language: script
         stages: [prepare-commit-msg]
-
+  
   # LINTING & FORMATTING PYTHON
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.3.7
@@ -46,15 +50,15 @@ repos:
         types: [python]
         stages: [pre-commit]
 
-  # LINTING FRONTEND
-  - repo: local
-    hooks:
-      - id: eslint
-        # We are using bash -c to run the command in the frontend directory
-        entry: bash -c 'cd frontend && npm run lint'
-        name: ESLinting front-end code
-        language: system
-        stages: [pre-commit]
+  # # LINTING FRONTEND
+  # - repo: local
+  #   hooks:
+  #     - id: eslint
+  #       # We are using bash -c to run the command in the frontend directory
+  #       entry: bash -c 'cd frontend && npm run lint'
+  #       name: ESLinting front-end code
+  #       language: system
+  #       stages: [pre-commit]
 
   # SORTING PYTHON IMPORTS
   - repo: https://github.com/pycqa/isort
@@ -72,6 +76,7 @@ repos:
         types: [python]
         name: Type checking python code
         additional_dependencies:
+          # These depdendencies job is to provide type hints/checking for Django
           [django-stubs, djangorestframework-stubs]
         stages: [pre-commit]
 
@@ -88,8 +93,13 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        name: Formatting front-end code (re-commit if fails)
+        name: "
+          Formatting front-end code \n
+          (Note: re-commit if files were formatted)
+        "
         stages: [pre-commit]
+        # Apply to all files in the frontend directory
+        files: 'frontend/*'
         args:
           [
             '--tab-width',
