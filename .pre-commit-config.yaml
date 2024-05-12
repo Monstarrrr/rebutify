@@ -44,7 +44,7 @@ repos:
         name: Linting python code
         types: [python]
         stages: [pre-commit]
-        args: ['--fix']
+        args: ['--select', 'I', '--fix']
       - id: ruff-format
         name: Formatting python code
         types: [python]
@@ -60,14 +60,6 @@ repos:
         language: system
         stages: [pre-commit]
         
-
-  # SORTING PYTHON IMPORTS
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: Sorting python imports
-        stages: [pre-commit]
 
   # TYPE CHECKING PYTHON
   - repo: https://github.com/pre-commit/mirrors-mypy
