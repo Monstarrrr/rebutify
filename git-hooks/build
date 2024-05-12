@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-cd frontend-clean/frontend
-npm run build
