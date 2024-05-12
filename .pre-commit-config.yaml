@@ -53,10 +53,10 @@ repos:
   # LINTING FRONTEND
   - repo: local
     hooks:
-      - id: build
+      - id: ESLint
         # We are using bash -c to run the command in the frontend directory
         entry: bash -c 'cd frontend && npx eslint . --plugin @next/eslint-plugin-next'
-        name: Building & ESLinting front-end code
+        name: Linting front-end code
         language: system
         stages: [pre-commit]
         
