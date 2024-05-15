@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMessage
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -29,47 +29,41 @@ def index(request):
 class RegisterViewSet(viewsets.ViewSet):
     def create(self, request):
         form = UserRegisterForm(request.data)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            username = form.cleaned_data.get("username")
-            current_site = get_current_site(request)
-            mail_subject = f"Activation link for {username}"
-            message = render_to_string(
-                "user/acc_active_email.html",
-                {
-                    "user": user,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": account_activation_token.make_token(user),
-                },
-            )
-            to_email = form.cleaned_data.get("email")
-            email = EmailMessage(
-                mail_subject,
-                message,
-                settings.EMAIL_FROM,
-                [to_email],
-            )
-            email.send()
-            return Response(
-                {
-                    "detail": "Please confirm your email address to complete the registration."
-                },
-                status=200,
-            )
-        else:
-            ("user/acc_active_email.html",)
-            (
-                {
-                    "user": user,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": account_activation_token.make_token(user),
-                },
-            )
-        return Response({"errors": form.errors}, status=400)
+
+        if not form.is_valid():
+            return Response({"errors": form.errors}, status=400)
+
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+
+        username = form.cleaned_data.get("username")
+        current_site = get_current_site(request)
+        mail_subject = f"Activation link for {username}"
+        message = render_to_string(
+            "user/acc_active_email.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
+        to_email = form.cleaned_data.get("email")
+        email = EmailMessage(
+            mail_subject,
+            message,
+            settings.EMAIL_FROM,
+            [to_email],
+        )
+        email.send()
+
+        return Response(
+            {
+                "detail": "Please confirm your email address to complete the registration."
+            },
+            status=200,
+        )
 
 
 class UserLoginViewSet(viewsets.ViewSet):
