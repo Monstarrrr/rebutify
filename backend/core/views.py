@@ -72,19 +72,27 @@ class RegisterViewSet(viewsets.ViewSet):
         return Response({"errors": form.errors}, status=400)
 
 
-def Login(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+class UserLoginViewSet(viewsets.ViewSet):
+    def create(self, request):
+        form = AuthenticationForm(request, data=request.data)
+
+        if not form.is_valid():
+            return Response({"errors": form.errors}, status=400)
+
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            form = login(request, user)
-            messages.success(request, f"Welcome {username}")
-            return redirect("index")
-        else:
-            messages.info(request, "Account done not exist. Please log in.")
-    form = AuthenticationForm()
-    return render(request, "user/login.html", {"form": form, "title": "log in"})
+
+        if user is None:
+            messages.info(request, "Account does not exist. Please log in.")
+            return Response(
+                {"detail": "Invalid username or password."},
+                status=401,
+            )
+
+        login(request, user)
+        messages.success(request, f"Welcome {username}")
+        return Response({"detail": "Login successful."}, status=200)
 
 
 @login_required
