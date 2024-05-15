@@ -92,7 +92,7 @@ repos:
         "
         stages: [pre-commit]
         # Apply to all files in the frontend directory
-        files: 'frontend/*'
+        files: 'frontend/.*'
         args:
           [
             '--tab-width',
