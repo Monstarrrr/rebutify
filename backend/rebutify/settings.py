@@ -51,8 +51,6 @@ INSTALLED_APPS = [
     "core",
     "rest_framework",
     "rebutify",
-    "crispy_bootstrap4",
-    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -92,7 +90,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 WSGI_APPLICATION = "rebutify.wsgi.application"
 
