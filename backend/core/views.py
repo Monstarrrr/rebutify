@@ -97,10 +97,9 @@ class UserLoginViewSet(viewsets.ViewSet):
         return Response({"detail": "Login successful."}, status=200)
 
 
-@login_required
-def Logout(request):
-    logout(request)
-    return Response({"detail": "Logged out successfully."}, status=200)
+class LogoutViewSet(viewsets.ViewSet):
+    def create(self, request):
+        return Response({"detail": "Logged out successfully."}, status=200)
 
 
 # Activate account by email

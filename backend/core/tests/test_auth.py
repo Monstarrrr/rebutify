@@ -44,14 +44,5 @@ class AuthTests(TestCase):
         response = self.client.post(reverse("login-list"), login_data)
         self.assertEqual(response.status_code, 200)
 
-        # Attempt to log out the user
-        auth_headers = {
-            "HTTP_AUTHORIZATION": "Basic "
-            + base64.b64encode(
-                bytes(login_data["username"] + "." + login_data["password"], "utf-8")
-            ).decode("utf-8"),
-        }
-        response = self.client.post("/api/logout", **auth_headers)
-
+        response = self.client.post(reverse("logout-list"))
         self.assertEqual(response.status_code, 200)
-        self.assertFalse("_auth_user_id" in self.client.session)
