@@ -6,7 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -20,10 +19,6 @@ from .token import account_activation_token
 class StatusViewSet(viewsets.ViewSet):
     def list(self, request):
         return Response(status=200)
-
-
-def index(request):
-    return render(request, "user/index.html", {"title": "index"})
 
 
 class RegisterViewSet(viewsets.ViewSet):
