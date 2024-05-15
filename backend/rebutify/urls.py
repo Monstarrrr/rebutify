@@ -26,6 +26,7 @@ router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
 router.register(r"register", views.RegisterViewSet, basename="register")
 router.register(r"login", views.UserLoginViewSet, basename="login")
+router.register(r"logout", views.UserLoginViewSet, basename="logout")
 
 
 urlpatterns = [
@@ -33,5 +34,4 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("", include("core.urls")),
-    path("logout/", views.Logout, name="logout"),
 ]

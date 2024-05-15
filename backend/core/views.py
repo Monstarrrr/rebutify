@@ -98,7 +98,7 @@ class UserLoginViewSet(viewsets.ViewSet):
 @login_required
 def Logout(request):
     logout(request)
-    return render(request, "user/logout.html", {})
+    return Response({"detail": "Logged out successfully."}, status=200)
 
 
 # Activate account by email
