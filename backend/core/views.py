@@ -26,15 +26,14 @@ def index(request):
     return render(request, "user/index.html", {"title": "index"})
 
 
-def register(request):
-    if request.method == "POST":
-        form = UserRegisterForm(request.POST)
+class RegisterViewSet(viewsets.ViewSet):
+    def create(self, request):
+        form = UserRegisterForm(request.data)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
             username = form.cleaned_data.get("username")
-            ######################### mail ####################################
             current_site = get_current_site(request)
             mail_subject = f"Activation link for {username}"
             message = render_to_string(
@@ -48,25 +47,29 @@ def register(request):
             )
             to_email = form.cleaned_data.get("email")
             email = EmailMessage(
-                send_mail(
-                    mail_subject,
-                    message,
-                    settings.EMAIL_FROM,
-                    [
-                        to_email,
-                    ],
-                )
+                mail_subject,
+                message,
+                settings.EMAIL_FROM,
+                [to_email],
             )
             email.send()
-            ##################################################################
-            return HttpResponse(
-                "Please confirm your email address to complete the registration."
+            return Response(
+                {
+                    "detail": "Please confirm your email address to complete the registration."
+                },
+                status=200,
             )
-    else:
-        form = UserRegisterForm()
-    return render(
-        request, "user/register.html", {"form": form, "title": "register here"}
-    )
+        else:
+            ("user/acc_active_email.html",)
+            (
+                {
+                    "user": user,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": account_activation_token.make_token(user),
+                },
+            )
+        return Response({"errors": form.errors}, status=400)
 
 
 def Login(request):

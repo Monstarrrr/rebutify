@@ -24,6 +24,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
+router.register(r"register", views.RegisterViewSet, basename="register")
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
@@ -33,5 +34,4 @@ urlpatterns = [
     path("", include("core.urls")),
     path("login/", views.Login, name="login"),
     path("logout/", views.Logout, name="logout"),
-    path("register/", views.register, name="register"),
 ]
