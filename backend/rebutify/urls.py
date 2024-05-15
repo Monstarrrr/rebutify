@@ -28,6 +28,9 @@ router.register(r"register", views.RegisterViewSet, basename="register")
 router.register(r"login", views.UserLoginViewSet, basename="login")
 router.register(r"logout", views.UserLoginViewSet, basename="logout")
 
+router.register(r"posts", views.PostViewSet, basename="posts")
+router.register(r"tags", views.TagViewSet, basename="tags")
+
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),

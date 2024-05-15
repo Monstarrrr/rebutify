@@ -7,13 +7,26 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
+from .models import Posts, Tags
+from .serializers import PostSerializer, TagSerializer
 from .token import account_activation_token
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Posts.objects.all()
+    serializer_class = PostSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tags.objects.all()
+    serializer_class = TagSerializer
 
 
 class StatusViewSet(viewsets.ViewSet):
