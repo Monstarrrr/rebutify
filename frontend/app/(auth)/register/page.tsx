@@ -19,7 +19,7 @@ export default function Register() {
     const password = formData.get('password')
 
     try {
-      const data = await fetch('localhost:8000/register', {
+      const data = await fetch('http://localhost:8000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
