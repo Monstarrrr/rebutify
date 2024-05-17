@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function Login() {
+export default function Register() {
   const router = useRouter()
 
   const [apiResponse, setApiResponse] = useState<Response | null>(
@@ -15,17 +15,17 @@ export default function Login() {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
-    const username = formData.get('username')
+    const email = formData.get('email')
     const password = formData.get('password')
 
     try {
-      const data = await fetch('localhost:8000/login', {
+      const data = await fetch('localhost:8000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          email,
           password,
         }),
       })
@@ -39,20 +39,21 @@ export default function Login() {
   return (
     <form onSubmit={handleSubmit}>
       <input
-        type='text'
-        name='username'
-        placeholder='Username'
-        value='kminchelle'
+        type='email'
+        name='email'
+        placeholder='Email'
+        defaultValue='monstar.dev@protonmail.com'
         required
       />
       <input
         type='password'
         name='password'
         placeholder='Password'
-        value='0lelplR'
+        defaultValue='123'
         required
       />
-      <button type='submit'>Login</button>
+      <button type='submit'>Register</button>
+      <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
     </form>
   )
 }

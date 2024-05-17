@@ -6,6 +6,23 @@
       Turning off all linting rules that are unnecessary or might conflict with Prettier.
       (https://github.com/prettier/eslint-config-prettier)
     */
-    "prettier"
-  ]
+    "prettier",
+    // Enabling eslint-plugin-react recommended rules
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["react", "react-hooks"],
+  "settings": {
+    "react": {
+      // We need to set react version for eslint-plugin-react
+      "version": "18"
+    }
+  },
+  "rules": {
+    // We need to disable these rules because React ^17 doesn't require them anymore
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off",
+    "react/jsx-uses-vars": "off"
+    // ----
+  }
 }
