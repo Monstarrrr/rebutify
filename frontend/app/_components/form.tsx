@@ -1,13 +1,16 @@
 import { InputType } from '@/app/_types/inputs'
+import { FormEvent } from 'react'
 
-export default function Form(props: {
+type FormProps = {
   inputs: InputType[]
-  onSubmit: (e: React.FormEvent) => void
-}) {
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void
+}
+
+export default function Form(props: FormProps) {
   const { inputs, onSubmit } = props
 
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       {inputs.map((input) => (
         <label key={input.id}>
           {input.label}

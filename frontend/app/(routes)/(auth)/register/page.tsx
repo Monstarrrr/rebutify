@@ -3,13 +3,34 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import api from '@/app/_api/api'
-
-type Error = {
-  [index: string]: string
-}
+import Form from '@/app/_components/form'
+import { InputType } from '@/app/_types/inputs'
 
 export default function Register() {
   const router = useRouter()
+
+  const registerInputs: InputType[] = [
+    {
+      id: 'username',
+      label: 'Username',
+      type: 'text',
+    },
+    {
+      id: 'email',
+      label: 'Email',
+      type: 'email',
+    },
+    {
+      id: 'password1',
+      label: 'Password',
+      type: 'password',
+    },
+    {
+      id: 'password2',
+      label: 'Confirm password',
+      type: 'password',
+    },
+  ]
 
   const [apiResponse, setApiResponse] = useState<Response | null>(
     null,
@@ -47,40 +68,8 @@ export default function Register() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Username</label>
-      <input
-        type='text'
-        name='Username'
-        placeholder='Username'
-        defaultValue='Monstar'
-        required
-      />
-      <label>Email</label>
-      <input
-        type='text'
-        name='email'
-        placeholder='Email'
-        defaultValue='monstar.dev@protonmail.com'
-        required
-      />
-      <label>Password</label>
-      <input
-        type='password'
-        name='password1'
-        placeholder='Password'
-        defaultValue='dnZQUicqz1r7sZaXPX70'
-        required
-      />
-      <label>Confirm password</label>
-      <input
-        type='password'
-        name='password2'
-        placeholder='Confirm password'
-        defaultValue='dnZQUicqz1r7sZaXPX70'
-        required
-      />
-      <button type='submit'>Register</button>
+    <>
+      <Form inputs={registerInputs} onSubmit={handleSubmit} />
       {errors && (
         <ul>
           {Object.entries(errors).map(([key, value]) => (
@@ -88,6 +77,6 @@ export default function Register() {
           ))}
         </ul>
       )}
-    </form>
+    </>
   )
 }
