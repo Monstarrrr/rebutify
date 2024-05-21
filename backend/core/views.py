@@ -19,6 +19,10 @@ from .serializers import PostSerializer, TagSerializer
 from .token import account_activation_token
 
 
+def success(request):
+    return HttpResponse("", status=200)
+
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
