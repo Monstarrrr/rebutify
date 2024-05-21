@@ -1,4 +1,4 @@
-import { InputType } from '@/app/_models/inputs'
+import { InputType } from '@/app/_types/inputs'
 
 export default function Form(props: {
   inputs: InputType[]

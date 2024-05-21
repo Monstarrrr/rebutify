@@ -1,5 +1,6 @@
 'use client'
 
+import api from '@/app/_api/api'
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -19,15 +20,9 @@ export default function Login() {
     const password = formData.get('password')
 
     try {
-      const data = await fetch('localhost:8000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+      const { data } = await api.post('/api/login', {
+        username,
+        password,
       })
       setApiResponse(data)
     } catch (error) {
@@ -42,14 +37,14 @@ export default function Login() {
         type='text'
         name='username'
         placeholder='Username'
-        value='kminchelle'
+        defaultValue='monstar.dev@protonmail.com'
         required
       />
       <input
         type='password'
         name='password'
         placeholder='Password'
-        value='0lelplR'
+        defaultValue='dnZQUicqz1r7sZaXPX70'
         required
       />
       <button type='submit'>Login</button>

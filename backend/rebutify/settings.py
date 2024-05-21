@@ -66,12 +66,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Domains that can access the API
 CORS_ALLOWED_ORIGINS = [
     "https://rebutify.org",
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
     "http://0.0.0.0:3000",
 ]
+
+# Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
+APPEND_SLASH = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

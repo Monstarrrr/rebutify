@@ -8,7 +8,8 @@ Instructions for contributing to the rebutify repository.
   - [1.2. Install pre-commit](#12-install-pre-commit)
   - [1.3. Verify install](#13-verify-install)
   - [1.4. Skip pre-commit](#14-skip-pre-commit)
-- [2. Running Django](#2-running-django)
+- [2. Running Back-end (Django)](#2-running-back-end-django)
+- [3. Running Front-end (Next.js)](#3-running-front-end-nextjs)
 
 ## 1. Installing `pre-commit` hooks
 
@@ -42,7 +43,7 @@ pre-commit run --all-files
 git commit -m "emergency! skipping hooks" --no-verify
 ```
 
-## 2. Running Django
+## 2. Running Back-end (Django)
 
 Install the project first as lined out in the [README](README.md).
 
@@ -57,4 +58,11 @@ Create and run database migrations with
 ```
 python backend/manage.py makemigrations
 python backend/manage.py migrate
+```
+## 3. Running Front-end (Next.js)
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
