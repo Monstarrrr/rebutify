@@ -26,9 +26,11 @@ api.interceptors.request.use(
       req.url += '/'
     }
 
-    // Add tokens to headers
-    req.headers.access_token = localStorage.getItem('access_token')
-    req.headers.refresh_token = localStorage.getItem('refresh_token')
+    // Add access token to header if it exists
+    const access_token = localStorage.getItem('access_token')
+    if (access_token !== 'null' && access_token !== 'undefined') {
+      req.headers.access_token = localStorage.getItem('access_token')
+    }
 
     console.log('# Intercepted request:', req)
     return req

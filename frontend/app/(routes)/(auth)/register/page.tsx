@@ -32,7 +32,7 @@ export default function Register() {
     const password2 = formData.get('password2')
 
     try {
-      const { data } = await api.post('/register', {
+      const { data } = await api.post('/auth/users', {
         username,
         email,
         password1,
@@ -56,6 +56,7 @@ export default function Register() {
         defaultValue='Monstar'
         required
       />
+      <label>Email</label>
       <input
         type='text'
         name='email'
