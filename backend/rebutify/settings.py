@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "core",
     "rest_framework",
     "rebutify",
+    "djoser",
 ]
 
 MIDDLEWARE = [
