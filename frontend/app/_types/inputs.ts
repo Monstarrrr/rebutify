@@ -1,7 +1,9 @@
-export type InputType = {
+export type TextInputType = {
   id: string
-  type: 'text' | 'password' | 'email' | 'number' | 'date' | 'time'
-  label: string
-  placeholder?: string
+  placeholder: string
+  errors?: Record<string, string> | string
+  label?: string
+  defaultValue?: string
+  type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'time'
   required?: boolean
 }

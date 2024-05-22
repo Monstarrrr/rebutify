@@ -4,79 +4,85 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import api from '@/app/_api/api'
 import Form from '@/app/_components/form'
-import { InputType } from '@/app/_types/inputs'
+import { TextInputType } from '@/app/_types/inputs'
 
 export default function Register() {
   const router = useRouter()
 
-  const registerInputs: InputType[] = [
+  const registerInputs: TextInputType[] = [
     {
       id: 'username',
-      label: 'Username',
-      type: 'text',
+      placeholder: 'Username',
+      defaultValue: 'test',
     },
     {
       id: 'email',
-      label: 'Email',
+      placeholder: 'Email',
       type: 'email',
+      defaultValue: 'test@test.com',
     },
     {
-      id: 'password1',
-      label: 'Password',
+      id: 'password',
+      placeholder: 'Password',
       type: 'password',
+      defaultValue: 'test',
     },
     {
-      id: 'password2',
-      label: 'Confirm password',
+      id: 're_password',
+      placeholder: 'Confirm password',
       type: 'password',
+      defaultValue: 'test',
     },
   ]
 
   const [apiResponse, setApiResponse] = useState<Response | null>(
     null,
   )
-  const [isLoading, setLoading] = useState<boolean>(false)
-  const [errors, setErrors] = useState<Object | null>(null)
-
-  useEffect(() => {
-    console.log('# apiResponse :', apiResponse)
-  }, [apiResponse])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [inputs, setInputs] = useState(registerInputs)
+  const [formErrors, setFormErrors] = useState<Record<
+    string,
+    string
+  > | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setErrors(null)
+    setIsLoading(true)
+    setFormErrors(null)
 
     const formData = new FormData(event.currentTarget)
     const username = formData.get('email')
     const email = formData.get('email')
-    const password1 = formData.get('password1')
-    const password2 = formData.get('password2')
+    const password = formData.get('password')
+    const re_password = formData.get('re_password')
 
     try {
       const { data } = await api.post('/auth/users', {
         username,
         email,
-        password1,
-        password2,
+        password,
+        re_password,
       })
+      setIsLoading(false)
       setApiResponse(data)
       console.log('# data :', data)
     } catch (error: any) {
-      const { errors } = error.response.data
-      setErrors(errors)
+      setIsLoading(false)
+      const { data } = error.response
+      console.log('# error :', data)
+      setFormErrors(data)
     }
   }
 
   return (
     <>
-      <Form inputs={registerInputs} onSubmit={handleSubmit} />
-      {errors && (
-        <ul>
-          {Object.entries(errors).map(([key, value]) => (
-            <li key={key}>{value}</li>
-          ))}
-        </ul>
-      )}
+      <h1>Register</h1>
+      <Form
+        inputs={registerInputs}
+        errors={formErrors}
+        onSubmit={handleSubmit}
+      />
+      {isLoading && <p>Loading...</p>}
     </>
   )
 }
