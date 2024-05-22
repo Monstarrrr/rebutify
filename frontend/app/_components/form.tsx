@@ -26,7 +26,8 @@ export default function Form(props: FormProps) {
     <form onSubmit={onSubmit}>
       {inputsState.map((input) => (
         <label key={input.id}>
-          {input.label}
+          {input.label || input.placeholder}
+          <br />
           <input
             name={input.id}
             placeholder={input.placeholder}

@@ -34,10 +34,6 @@ export default function Register() {
       defaultValue: 'test',
     },
   ]
-
-  const [apiResponse, setApiResponse] = useState<Response | null>(
-    null,
-  )
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [inputs, setInputs] = useState(registerInputs)
   const [formErrors, setFormErrors] = useState<Record<
@@ -64,12 +60,10 @@ export default function Register() {
         re_password,
       })
       setIsLoading(false)
-      setApiResponse(data)
-      console.log('# data :', data)
+      setInputs(data)
     } catch (error: any) {
       setIsLoading(false)
       const { data } = error.response
-      console.log('# error :', data)
       setFormErrors(data)
     }
   }
@@ -77,11 +71,7 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
-      <Form
-        inputs={registerInputs}
-        errors={formErrors}
-        onSubmit={handleSubmit}
-      />
+      <Form inputs={inputs} errors={formErrors} onSubmit={handleSubmit} />
       {isLoading && <p>Loading...</p>}
     </>
   )
