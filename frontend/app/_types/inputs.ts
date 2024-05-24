@@ -1,7 +1,9 @@
-export type InputType = {
+export type TextInputType = {
   id: string
-  type: 'text' | 'password' | 'email' | 'number' | 'date' | 'time'
-  label: string
-  placeholder?: string // Optional
-  required?: boolean // Optional
+  placeholder: string
+  defaultValue?: string
+  errors?: string[]
+  label?: string
+  required?: boolean
+  type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'time'
 }
