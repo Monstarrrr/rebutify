@@ -33,7 +33,7 @@ export default function Register() {
   ]
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [inputs, setInputs] = useState(registerInputs)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiErrorsType | null>(null)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,8 +57,8 @@ export default function Register() {
       setInputs(data)
     } catch (error: any) {
       setIsLoading(false)
-      const { data } = error.response
-      setApiFormErrors(data)
+      const { response } = error
+      setApiFormErrors(response)
     }
   }
 
@@ -67,8 +67,8 @@ export default function Register() {
       <h1>Register</h1>
       <Form
         buttonLabel='Register'
-        inputs={inputs}
-        apiErrors={apiFormErrors}
+        inputsFields={inputs}
+        inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
       />
       {isLoading && <p>Loading...</p>}
