@@ -2,25 +2,27 @@ import { TextInputType } from '@/app/_types/inputs'
 import { FormEvent, useEffect, useState } from 'react'
 
 type FormProps = {
+  buttonLabel: string
+  apiErrors: ApiErrorsType | null
   inputs: TextInputType[]
-  errors: Record<string, string> | null
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
 }
 
 export default function Form(props: FormProps) {
-  const { inputs, onSubmit, errors } = props
+  const { inputs, onSubmit, apiErrors, buttonLabel } = props
   const [inputsState, setInputsState] = useState(inputs)
 
   useEffect(() => {
-    if (errors) {
+    if (apiErrors) {
+      console.log('# errors :', apiErrors)
       setInputsState((prev) => {
         return prev.map((input) => ({
           ...input,
-          errors: errors[input.id],
+          errors: apiErrors[input.id],
         }))
       })
     }
-  }, [errors])
+  }, [apiErrors])
 
   return (
     <form onSubmit={onSubmit}>
@@ -45,7 +47,7 @@ export default function Form(props: FormProps) {
           <br />
         </label>
       ))}
-      <button type='submit'>Submit</button>
+      <button type='submit'>{buttonLabel}</button>
     </form>
   )
 }

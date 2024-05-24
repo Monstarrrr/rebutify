@@ -1,77 +1,76 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { FormEvent, useState } from 'react'
 import api from '@/app/_api/api'
 import Form from '@/app/_components/form'
 import { TextInputType } from '@/app/_types/inputs'
 
 export default function Register() {
-  const router = useRouter()
-
   const registerInputs: TextInputType[] = [
     {
+      defaultValue: 'test',
       id: 'username',
       placeholder: 'Username',
-      defaultValue: 'test',
     },
     {
+      defaultValue: 'test@test.com',
       id: 'email',
       placeholder: 'Email',
       type: 'email',
-      defaultValue: 'test@test.com',
     },
     {
+      defaultValue: 'test',
       id: 'password',
       placeholder: 'Password',
       type: 'password',
-      defaultValue: 'test',
     },
     {
+      defaultValue: 'test',
       id: 're_password',
       placeholder: 'Confirm password',
       type: 'password',
-      defaultValue: 'test',
     },
   ]
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [inputs, setInputs] = useState(registerInputs)
-  const [formErrors, setFormErrors] = useState<Record<
-    string,
-    string
-  > | null>(null)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiErrorsType | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
-    setFormErrors(null)
+    setApiFormErrors(null)
 
     const formData = new FormData(event.currentTarget)
-    const username = formData.get('email')
+    const username = formData.get('username')
     const email = formData.get('email')
     const password = formData.get('password')
     const re_password = formData.get('re_password')
 
     try {
       const { data } = await api.post('/auth/users', {
-        username,
         email,
         password,
         re_password,
+        username,
       })
       setIsLoading(false)
       setInputs(data)
     } catch (error: any) {
       setIsLoading(false)
       const { data } = error.response
-      setFormErrors(data)
+      setApiFormErrors(data)
     }
   }
 
   return (
     <>
       <h1>Register</h1>
-      <Form inputs={inputs} errors={formErrors} onSubmit={handleSubmit} />
+      <Form
+        buttonLabel='Register'
+        inputs={inputs}
+        apiErrors={apiFormErrors}
+        onSubmit={handleSubmit}
+      />
       {isLoading && <p>Loading...</p>}
     </>
   )

@@ -21,6 +21,8 @@
     "plugin:react-hooks/recommended"
   ],
   "rules": {
+    // Enforcing alphabetical sorting of object keys
+    "sort-keys": "error",
     /* 
       We need to disable these rules because React ^17 doesn't require them anymore
       See https://stackoverflow.com/a/61160875/11149106

@@ -101,5 +101,5 @@ repos:
             '--no-semi',
             '--jsx-single-quote',
             '--print-width',
-            '75',
+            '82',
           ]

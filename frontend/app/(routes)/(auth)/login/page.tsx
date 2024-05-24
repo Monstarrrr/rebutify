@@ -1,16 +1,24 @@
 'use client'
 
 import api from '@/app/_api/api'
-import { FormEvent, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { FormEvent } from 'react'
+import Form from '@/app/_components/form'
+import { TextInputType } from '@/app/_types/inputs'
 
 export default function Login() {
-  const router = useRouter()
-
-  const [apiResponse, setApiResponse] = useState<Response | null>(
-    null,
-  )
-  const [isLoading, setLoading] = useState<boolean>(false)
+  const loginInputs: TextInputType[] = [
+    {
+      defaultValue: 'test',
+      id: 'username',
+      placeholder: 'Username',
+    },
+    {
+      defaultValue: 'test',
+      id: 'password',
+      placeholder: 'Password',
+      type: 'password',
+    },
+  ]
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -20,34 +28,22 @@ export default function Login() {
     const password = formData.get('password')
 
     try {
-      const { data } = await api.post('/api/login', {
-        username,
+      const { data } = await api.post('auth/token/login', {
         password,
+        username,
       })
-      setApiResponse(data)
+      console.log('# data :', data)
     } catch (error) {
-      setLoading(false)
-      console.error(error)
+      console.log('# error :', error)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type='text'
-        name='username'
-        placeholder='Username'
-        defaultValue='monstar.dev@protonmail.com'
-        required
-      />
-      <input
-        type='password'
-        name='password'
-        placeholder='Password'
-        defaultValue='dnZQUicqz1r7sZaXPX70'
-        required
-      />
-      <button type='submit'>Login</button>
-    </form>
+    <Form
+      inputs={loginInputs}
+      apiErrors={null}
+      onSubmit={handleSubmit}
+      buttonLabel='Login'
+    />
   )
 }
