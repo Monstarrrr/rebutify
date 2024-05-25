@@ -1,8 +1,8 @@
 ## Frontend Server
 
-* Status: proposed
-* Deciders: Monstar, void, seporterfield
-* Date: 2024-05-25
+- Status: proposed
+- Deciders: @Monstarrrr, @purple_void, @seporterfield
+- Date: 2024-05-25
 
 ## Context and Problem Statement
 
@@ -10,7 +10,7 @@ Based on our [high level architecture](DECISION-000-highlevel.md), what software
 
 ## Considered Options
 
-* Next.js
+- Next.js
 
 ## Decision Outcome
 

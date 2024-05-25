@@ -1,7 +1,7 @@
 ## High-Level Software Architecture
 
 * Status: proposed
-* Deciders: Monstar, void, seporterfield
+* Deciders: @Monstarrrr, @purple_void, @seporterfield
 * Date: 2024-05-25
 
 ## Context and Problem Statement
