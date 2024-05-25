@@ -14,8 +14,14 @@ export default function Form(props: FormProps) {
   const [globalFormErrors, setGlobalFormErrors] = useState<string[] | null>(null)
 
   useEffect(() => {
+    // Reset errors
+    setInputsState((prev) => {
+      return prev.map((inputField) => ({
+        ...inputField,
+        errors: [],
+      }))
+    })
     // Field errors
-    console.log('# inputsErrors?.status :', inputsErrors?.status)
     if (inputsErrors?.status === 400) {
       // Add error(s) to the corresponding field(s)
       setInputsState((prev) => {

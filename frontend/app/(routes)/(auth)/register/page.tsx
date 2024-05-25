@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import api from '@/app/_api/api'
 import Form from '@/app/_components/form'
 import { TextInputType } from '@/app/_types/inputs'
+import { register } from 'module'
 
 export default function Register() {
   const registerInputs: TextInputType[] = [
@@ -24,15 +25,8 @@ export default function Register() {
       placeholder: 'Password',
       type: 'password',
     },
-    {
-      defaultValue: 'test',
-      id: 're_password',
-      placeholder: 'Confirm password',
-      type: 'password',
-    },
   ]
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [inputs, setInputs] = useState(registerInputs)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -47,14 +41,13 @@ export default function Register() {
     const re_password = formData.get('re_password')
 
     try {
-      const { data } = await api.post('/auth/users', {
+      await api.post('/auth/users', {
         email,
         password,
         re_password,
         username,
       })
       setIsLoading(false)
-      setInputs(data)
     } catch (error: any) {
       setIsLoading(false)
       const { response } = error
@@ -67,7 +60,7 @@ export default function Register() {
       <h1>Register</h1>
       <Form
         buttonLabel='Register'
-        inputsFields={inputs}
+        inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
       />
