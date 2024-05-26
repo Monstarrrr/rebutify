@@ -4,7 +4,6 @@ import { FormEvent, useState } from 'react'
 import api from '@/app/_api/api'
 import Form from '@/app/_components/form'
 import { TextInputType } from '@/app/_types/inputs'
-import { register } from 'module'
 
 export default function Register() {
   const registerInputs: TextInputType[] = [
