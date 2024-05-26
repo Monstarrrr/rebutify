@@ -1,10 +1,14 @@
 ## Which Code Of Conduct for Kiwi Labs & Rebutify ?
 
 - **Impact**: 🟢 Low
-- **Confidence**: [1 <-> 5] / 5️
-- **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
-- **Deciders**: [tag everyone involved in the decision]
-- **Last updated**: [DD-MM-YYYY]
+- **Status**: 🔒 Decided
+- **Deciders & Confidence**:
+
+  - [@purple-void](https://github.com/purple-void)
+  - [@seporterfield](https://github.com/seporterfield)
+  - [@Monstarrrr](https://github.com/Monstarrrr) 4 / 5
+
+- **Last updated**: 26-05-2024
 
 **Technical Story**: [related issue URL] <!-- optional -->
 
@@ -18,39 +22,15 @@ The impact of the following is low as we do not have a community yet.
 - [driver 2, e.g., a force, facing concern, …]
 - … <!-- numbers of drivers can vary -->
 
-## Considered Options
-
-### [option 1]
-
-[description | example | … ] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
-
-...
-
 ## Decision Outcome
 
-**Chosen option**: "[option 1]"  
-**Reason(s)**: [e.g., only option which meets criterion | comes out best (see below)].
+**Chosen option**: "Slightly modified default github `CODE_OF_CONDUCT.md`"  
+**Reason(s)**: The most basic code of conduct should suffice especially since we don't have a community yet anyways.
 
 ### Positive Consequences <!-- optional -->
 
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-- …
+- Quickly implemented
 
 ### Negative Consequences <!-- optional -->
 
-- [e.g., compromising quality attribute, follow-up decisions required, …]
-- …
+- May have overlooked flaws
