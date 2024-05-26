@@ -1,6 +1,6 @@
 ## [short title of solved problem]
 
-- **Impact**: [🔴 Critical | 🟠 High | 🟡 Medium | 🟢 Low]
+- **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
 - **Confidence**: [1 <-> 5] / 5️
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders**: [tag everyone involved in the decision]
