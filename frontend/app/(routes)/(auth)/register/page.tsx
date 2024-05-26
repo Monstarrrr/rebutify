@@ -24,16 +24,9 @@ export default function Register() {
       placeholder: 'Password',
       type: 'password',
     },
-    {
-      defaultValue: 'test',
-      id: 're_password',
-      placeholder: 'Confirm password',
-      type: 'password',
-    },
   ]
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [inputs, setInputs] = useState(registerInputs)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiErrorsType | null>(null)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -47,18 +40,17 @@ export default function Register() {
     const re_password = formData.get('re_password')
 
     try {
-      const { data } = await api.post('/auth/users', {
+      await api.post('/auth/users', {
         email,
         password,
         re_password,
         username,
       })
       setIsLoading(false)
-      setInputs(data)
     } catch (error: any) {
       setIsLoading(false)
-      const { data } = error.response
-      setApiFormErrors(data)
+      const { response } = error
+      setApiFormErrors(response)
     }
   }
 
@@ -67,8 +59,8 @@ export default function Register() {
       <h1>Register</h1>
       <Form
         buttonLabel='Register'
-        inputs={inputs}
-        apiErrors={apiFormErrors}
+        inputsFields={registerInputs}
+        inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
       />
       {isLoading && <p>Loading...</p>}

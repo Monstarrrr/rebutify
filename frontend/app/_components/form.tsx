@@ -3,42 +3,56 @@ import { FormEvent, useEffect, useState } from 'react'
 
 type FormProps = {
   buttonLabel: string
-  apiErrors: ApiErrorsType | null
-  inputs: TextInputType[]
+  inputsErrors: ApiResponseType | null
+  inputsFields: TextInputType[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
 }
 
 export default function Form(props: FormProps) {
-  const { inputs, onSubmit, apiErrors, buttonLabel } = props
-  const [inputsState, setInputsState] = useState(inputs)
+  const { inputsFields, onSubmit, inputsErrors, buttonLabel } = props
+  const [inputsState, setInputsState] = useState(inputsFields)
+  const [globalFormErrors, setGlobalFormErrors] = useState<string[] | null>(null)
 
   useEffect(() => {
-    if (apiErrors) {
-      console.log('# errors :', apiErrors)
+    // Reset errors
+    setInputsState((prev) => {
+      return prev.map((inputField) => ({
+        ...inputField,
+        errors: [],
+      }))
+    })
+    // Field errors
+    if (inputsErrors?.status === 400) {
+      // Add error(s) to the corresponding field(s)
       setInputsState((prev) => {
-        return prev.map((input) => ({
-          ...input,
-          errors: apiErrors[input.id],
+        return prev.map((inputField) => ({
+          ...inputField,
+          errors: inputsErrors.data[inputField.id],
         }))
       })
     }
-  }, [apiErrors])
+    // Global errors
+    if (inputsErrors?.status === 401) {
+      setGlobalFormErrors(inputsErrors.data.detail)
+    }
+  }, [inputsErrors])
 
   return (
     <form onSubmit={onSubmit}>
-      {inputsState.map((input) => (
-        <label key={input.id}>
-          {input.label || input.placeholder}
+      {inputsState.map((inputField) => (
+        <label key={inputField.id}>
+          {inputField.label || inputField.placeholder}
           <br />
           <input
-            name={input.id}
-            placeholder={input.placeholder}
-            required={input.required || true}
-            defaultValue={input.defaultValue}
-            type={input.type || 'text'}
+            name={inputField.id}
+            placeholder={inputField.placeholder}
+            required={inputField.required || true}
+            defaultValue={inputField.defaultValue}
+            type={inputField.type || 'text'}
           />
-          {input.errors &&
-            Object.values(input.errors).map((error) => (
+          {/* Field errors */}
+          {inputField.errors &&
+            Object.values(inputField.errors).map((error) => (
               <span style={{ color: 'red' }} key={error}>
                 <br />
                 {error}
@@ -47,6 +61,13 @@ export default function Form(props: FormProps) {
           <br />
         </label>
       ))}
+      {/* Global errors */}
+      {globalFormErrors &&
+        globalFormErrors.map((error, index) => (
+          <span key={index} style={{ color: 'red' }}>
+            {error}
+          </span>
+        ))}
       <button type='submit'>{buttonLabel}</button>
     </form>
   )
