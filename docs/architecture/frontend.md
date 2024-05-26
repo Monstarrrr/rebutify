@@ -14,19 +14,21 @@ Which front-end technology should we use for Rebutify ?
 
 ## Decision Drivers <!-- optional -->
 
+- SEO
 - Scalability
   - Code maintainability
   - Long-term support
+- Performance
 - Expertise
   - Popularity
   - Learning curve
 - Integration
   - Back-end synergy
+  - Deployment
+  - Routing
   - Testing
   - Type-checking
   - Debugging
-  - Accessibility
-- Maintainers
 
 ## Considered Options
 
