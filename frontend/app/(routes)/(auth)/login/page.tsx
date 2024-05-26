@@ -29,15 +29,13 @@ export default function Login() {
     const password = formData.get('password')
 
     try {
-      const { data } = await api.post('/auth/jwt/create', {
+      await api.post('/auth/jwt/create', {
         password,
         username,
       })
-      console.log('# data :', data)
     } catch (error: any) {
       const { response } = error
       setApiErrors(response)
-      console.log('# error :', error)
     }
   }
 
