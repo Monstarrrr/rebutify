@@ -1,6 +1,6 @@
-## [short title of solved problem]
+## Which Code Of Conduct for Kiwi Labs & Rebutify ?
 
-- **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
+- **Impact**: 🟢 Low
 - **Confidence**: [1 <-> 5] / 5️
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders**: [tag everyone involved in the decision]
@@ -10,7 +10,7 @@
 
 ## Context and Problem Statement
 
-[It should make readers **curious** and communicate a sense of **urgency**; Can be a **question**;]
+The impact of the following is low as we do not have a community yet.
 
 ## Decision Drivers <!-- optional -->
 
