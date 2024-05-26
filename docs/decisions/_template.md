@@ -1,3 +1,5 @@
+**File title**: [title]\_DECISION.md
+
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
