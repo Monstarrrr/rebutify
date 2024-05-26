@@ -1,11 +1,9 @@
-**File title**: [title]\_DECISION.md
+## Writing a good Contribution Policy
 
-## [short title of solved problem]
-
-- **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
+- **Impact**: 🟡 Medium
 - **Confidence**: [1 <-> 5] / 5️
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
-- **Deciders**: [tag everyone involved in the decision] e.g.
+- **Deciders**:
   - [@purple-void](https://github.com/purple-void)
   - [@seporterfield](https://github.com/seporterfield)
   - [@Monstarrrr](https://github.com/Monstarrrr)
