@@ -25,8 +25,11 @@ export default function Register() {
       type: 'password',
     },
   ]
+  const successMessage = 'Check your email to verify your account.'
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
+  const [formSuccess, setFormSuccess] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -47,6 +50,7 @@ export default function Register() {
         username,
       })
       setIsLoading(false)
+      setFormSuccess(true)
     } catch (error: any) {
       setIsLoading(false)
       const { response } = error
@@ -62,6 +66,7 @@ export default function Register() {
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
+        successMessage={formSuccess ? successMessage : undefined}
       />
       {isLoading && <p>Loading...</p>}
     </>
