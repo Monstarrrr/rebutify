@@ -20,7 +20,11 @@ import os
 from core import views
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -40,6 +44,11 @@ urlpatterns = [
         "api/schema/swagger-ui/",
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
+    ),
+    path(
+        "api/schema/redoc-ui/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc-ui",
     ),
     path("login/", views.Login, name="login"),
     path("logout/", views.Logout, name="logout"),
