@@ -20,6 +20,7 @@ import os
 from core import views
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -34,6 +35,12 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     ##### user related path##########################
     path("", include("core.urls")),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
     path("login/", views.Login, name="login"),
     path("logout/", views.Logout, name="logout"),
     path("register/", views.register, name="register"),
