@@ -74,6 +74,12 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Rebutify API",
+    "DESCRIPTION": "Rebutify",
+    "VERSION": "1.0.0",
+}
+
 ROOT_URLCONF = "rebutify.urls"
 
 TEMPLATES = [
