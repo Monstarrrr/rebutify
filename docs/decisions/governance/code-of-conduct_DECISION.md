@@ -5,7 +5,7 @@
 - **Deciders & Confidence**:
 
   - [@purple-void](https://github.com/purple-void)
-  - [@seporterfield](https://github.com/seporterfield)
+  - [@seporterfield](https://github.com/seporterfield) 5 / 5
   - [@Monstarrrr](https://github.com/Monstarrrr) 4 / 5
 
 - **Technical Story**:
