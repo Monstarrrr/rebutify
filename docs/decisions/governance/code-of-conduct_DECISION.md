@@ -47,7 +47,7 @@ Slightly modified default github `CODE_OF_CONDUCT.md`:
    - Temporary ban
    - Permanent ban
 7. Inclusivity emphasized multiple times throuhought the document
-8. Not community input options provided
+8. No community input options provided
 
 **Reason(s)**: A basic code of conduct (heavily inspired by the default github code of conduct) should suffice especially since we don't have a community yet anyways.
 
