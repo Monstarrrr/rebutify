@@ -1,9 +1,12 @@
 from django.urls import path
-from rest_framework.response import Response
 
-from .views import activate, success
+from .views import ActivateUser, success
 
 urlpatterns = [
     path("", success, name="index"),
-    path("activate/<uidb64>/<token>/", activate, name="activate"),
+    path(
+        "activate/<uid>/<token>",
+        ActivateUser.as_view({"get": "activation"}),
+        name="activation",
+    ),
 ]

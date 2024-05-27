@@ -191,3 +191,10 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT", ""))
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+
+DJOSER = {
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SERIALIZERS": {},
+}
