@@ -6,10 +6,12 @@ type FormProps = {
   inputsErrors: ApiResponseType | null
   inputsFields: TextInputType[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  successMessage?: string
 }
 
 export default function Form(props: FormProps) {
-  const { inputsFields, onSubmit, inputsErrors, buttonLabel } = props
+  const { inputsFields, onSubmit, inputsErrors, buttonLabel, successMessage } =
+    props
   const [inputsState, setInputsState] = useState(inputsFields)
   const [globalFormErrors, setGlobalFormErrors] = useState<string[] | null>(null)
 
@@ -68,6 +70,9 @@ export default function Form(props: FormProps) {
             {error}
           </span>
         ))}
+      {/* Success message */}
+      {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
+      <br />
       <button type='submit'>{buttonLabel}</button>
     </form>
   )
