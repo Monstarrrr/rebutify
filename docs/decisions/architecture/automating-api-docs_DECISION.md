@@ -4,8 +4,8 @@
   - Status: 🔓 Awaiting decision...
   - Deciders & Confidence:
     - @purple-void [1 <-> 5] /5
-    - @seporterfield [1 <-> 5] /5 5️
-    - @Monstarrrr [1 <-> 5] /5 5️
+    - @seporterfield [1 <-> 5] /5 
+    - @Monstarrrr 5/5 
 - Technical Story: [related URLs] e.
     - #44
     - #73 
