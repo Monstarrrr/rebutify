@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import api from '@/app/_api/api'
 import Form from '@/app/_components/form'
 import { TextInputType } from '@/app/_types/inputs'
+import { formDataToObj } from '@/app/_helpers/formDataToObj'
 
 export default function Register() {
   const registerInputs: TextInputType[] = [
@@ -36,18 +37,11 @@ export default function Register() {
     setIsLoading(true)
     setApiFormErrors(null)
 
-    const formData = new FormData(event.currentTarget)
-    const username = formData.get('username')
-    const email = formData.get('email')
-    const password = formData.get('password')
-    const re_password = formData.get('re_password')
+    const data = formDataToObj(event)
 
     try {
       await api.post('/auth/users', {
-        email,
-        password,
-        re_password,
-        username,
+        ...data,
       })
       setIsLoading(false)
       setFormSuccess(true)
