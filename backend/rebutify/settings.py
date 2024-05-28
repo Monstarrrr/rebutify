@@ -48,14 +48,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "core",
     "rest_framework",
     "rebutify",
-    "crispy_bootstrap4",
-    "crispy_forms",
+    "djoser",
 ]
 
 MIDDLEWARE = [
+    # CorsMiddleware should be placed as high as possible
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,6 +66,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Domains that can access the API
+CORS_ALLOWED_ORIGINS = [
+    "https://rebutify.org",
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
+]
+
+# Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
+APPEND_SLASH = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -92,7 +104,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 WSGI_APPLICATION = "rebutify.wsgi.application"
 

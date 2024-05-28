@@ -8,16 +8,19 @@ from django.core.mail import EmailMessage, send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
-from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
-from .models import Posts, Tags
-from .serializers import PostSerializer, TagSerializer
-from .token import account_activation_token
+from .models import Posts, Tags, UserProfile
+from .serializers import PostSerializer, TagSerializer, UserProfileSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tags.objects.all()
+    serializer_class = TagSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -25,9 +28,9 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
-    serializer_class = TagSerializer
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 
 class StatusViewSet(viewsets.ViewSet):
