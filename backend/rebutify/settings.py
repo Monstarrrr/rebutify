@@ -38,6 +38,7 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
 
 # Application definition
 
