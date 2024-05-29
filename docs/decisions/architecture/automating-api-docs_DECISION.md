@@ -3,7 +3,7 @@
   - Impact: 🟡 Medium
   - Status: 🔓 Awaiting decision...
   - Deciders & Confidence:
-    - @purple-void [1 <-> 5] /5
+    - @purple-void 3.5/5
     - @seporterfield 5/5 
     - @Monstarrrr 5/5 
 - Technical Story: [related URLs] e.
