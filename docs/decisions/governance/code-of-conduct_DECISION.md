@@ -4,7 +4,7 @@
 - **Status**: 🔒 Decided
 - **Deciders & Confidence**:
 
-  - [@purple-void](https://github.com/purple-void)
+  - [@purple-void](https://github.com/purple-void) 4 / 5
   - [@seporterfield](https://github.com/seporterfield) 5 / 5
   - [@Monstarrrr](https://github.com/Monstarrrr) 4 / 5
 
