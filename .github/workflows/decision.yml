@@ -32,28 +32,43 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Extract filename and decision type from issue title
+    - name: Extract subject and category from issue title
       id: extract_info
       run: |
-        echo "::set-output name=fileName::$(echo '${{ github.event.issue.title }}' | awk -F'[()]' '{split($2,a,","); print a[1]}'"
-        echo "::set-output name=decisionType::$(echo '${{ github.event.issue.title }}' | awk -F'[()]' '{split($2,a,","); print a[2]}'"
-
+        title="${{ github.event.issue.title }}"
+        if [[ "$title" =~ ^Opening\ decision\ on\ ([^/]+)(/([^/]+))?$ ]]; then
+          subject=$(echo "${BASH_REMATCH[1]}" | tr -d ' ')
+          category=$(echo "${BASH_REMATCH[3]}" | tr -d ' ')
+          if [[ -z "$category" ]]; then
+            category=""
+          fi
+          echo "::set-output name=subject::$subject"
+          echo "::set-output name=category::$category"
+        else
+          echo "Issue title does not follow the required format: 'Opening decision on [category]/[subject]'"
+          exit 1
+        fi
     - name: Create new branch
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git checkout -b "issue-${{ github.event.issue.number }}"
-        
+        git checkout -b "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.fileName }}"
+
+        # Determine the directory structure
+        if [[ -z "${{ steps.extract_info.outputs.category }}" ]]; then
+          dir_path="docs/decisions"
+        else
+          dir_path="docs/decisions/${{ steps.extract_info.outputs.category }}"
+        fi
+
         # Create the directory structure for the documentation
-        mkdir -p docs/${{ steps.extract_info.outputs.decisionType }}/${{ steps.extract_info.outputs.fileName }}
+        mkdir -p "$dir_path"
         
-        # Create a new.md file with the issue's body as content
-        echo "${{ github.event.issue.body }}" > docs/${{ steps.extract_info.outputs.decisionType }}/${{ steps.extract_info.outputs.fileName }}.md
-        
-        git lfs track "*.md" # Track markdown files if they are large
-        git add.
-        git commit -m "Add documentation for ${{ github.event.issue.title }}"
-        git push origin "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.fileName }}"
+        # Create a new markdown file with the issue's body as content
+        echo "${{ github.event.issue.body }}" > "$dir_path/${{ steps.extract_info.outputs.subject }}_DECISION.md"
+        git add .
+        git commit -m "${{ github.event.issue.title }}"
+        git push origin "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.subject }}"
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
