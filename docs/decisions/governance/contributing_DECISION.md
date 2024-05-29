@@ -20,8 +20,10 @@ There is a need to provide clear and concise **guidance** to potential contribut
 ## Decision Drivers <!-- optional -->
 
 - **Clarity**: The contributing.md file should provide clear and concise instructions on how individuals can contribute to the project. Clear communication ensures that contributors understand the process and can engage effectively.
+
 - **Accessibility**: It's important to make the contributing.md file easily accessible to potential contributors. This involves placing it prominently in the project repository and ensuring it's easy to understand for individuals with varying levels of technical expertise.
-- **Inclusivity**: The contributing.md file should foster an inclusive environment by welcoming contributions from individuals of diverse backgrounds and skill levels. It should avoid using exclusive language or assumptions about contributors' knowledge.
+
+- **Inclusivity**: The contributing.md file should welcome contributions from individuals of diverse backgrounds and skill levels. It should avoid using exclusive language or assumptions about contributors' knowledge.
 
 - **Guidance**: The file should provide comprehensive guidance on various ways to contribute to the project, including reporting bugs, suggesting enhancements, and submitting pull requests. It should also outline any specific requirements or expectations for contributions.
 
