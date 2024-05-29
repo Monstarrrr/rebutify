@@ -3,12 +3,14 @@
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
-- **Confidence**: [1 <-> 5] / 5️
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
-- **Deciders**: [tag everyone involved in the decision]
+- **Deciders & Confidence**:
+  - [@purple-void](https://github.com/purple-void) [1 <-> 5] / 5️
+  - [@seporterfield](https://github.com/seporterfield) [1 <-> 5] / 5️
+  - [@Monstarrrr](https://github.com/Monstarrrr) [1 <-> 5] / 5️
+- **Technical Story**: [related URLs] e.g.
+  - Pull Request #58 - ["Write CODE_OF_CONDUCT.md"](https://github.com/Monstarrrr/rebutify/pull/58) <!-- optional -->
 - **Last updated**: [DD-MM-YYYY]
-
-**Technical Story**: [related issue URL] <!-- optional -->
 
 ## Context and Problem Statement
 
@@ -20,7 +22,7 @@
 - [driver 2, e.g., a force, facing concern, …]
 - … <!-- numbers of drivers can vary -->
 
-## Considered Options
+## Considered Options <!-- optional -->
 
 ### [option 1]
 
