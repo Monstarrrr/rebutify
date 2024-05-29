@@ -13,6 +13,22 @@ jobs:
       pull-requests: write
 
     steps:
+    - name: Authorization
+      run: |
+        # Get username of GitHub account that triggered this flow
+        opener=${{ github.actor }}
+        
+        # Get list of approved contributors
+        contributors=$(curl https://api.github.com/repos/Monstarrrr/Rebutify/contributors | jq -r '[.[] | select(.type == "User") | .login] | join(",")')
+        
+        # Convert the comma-separated string to an array
+        IFS=',' read -r -a contributor_array <<< "$contributors"
+
+        # Check if triggering user is in the array
+        if [[ ! " ${contributor_array[@]} " =~ " $opener " ]]; then
+          echo "Triggering user is unauthorized."
+          exit 1
+        fi
     - name: Check out code
       uses: actions/checkout@v3
 
