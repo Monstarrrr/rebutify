@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from .forms import UserRegisterForm
 from .models import Posts, Tags, UserProfile
 from .serializers import PostSerializer, TagSerializer, UserProfileSerializer
+from .token import account_activation_token
 
 
 class TagViewSet(viewsets.ModelViewSet):
