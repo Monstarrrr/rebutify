@@ -49,8 +49,9 @@ class Posts(models.Model):
 
 class UserProfile(models.Model):
     # Public
-    user = None  # type: ignore
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user: models.OneToOneField = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True
+    )
     username: models.CharField = models.CharField(
         max_length=USERNAME_MAX_LEN, null=True
     )
@@ -67,6 +68,6 @@ class UserProfile(models.Model):
     savedPosts: models.ManyToManyField = models.ManyToManyField(
         Posts, related_name="saved_posts"
     )
-    privateRebuttals: models.ManyToManyField = models.ManyToManyField(
-        Posts, related_name="private_rebuttals"
+    private_post: models.ManyToManyField = models.ManyToManyField(
+        Posts, related_name="private_post"
     )
