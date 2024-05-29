@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     "core",
     "rest_framework",
     "rebutify",
-    "djoser",
+    "crispy_bootstrap4",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
