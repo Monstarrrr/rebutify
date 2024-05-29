@@ -12,16 +12,15 @@ and orientation.
 We pledge to act and interact in ways that contribute to an **open**, **welcoming**,
 **diverse**, **inclusive**, and **healthy** community.
 
-## Our Standards
+## Our Requirements
 
-Examples of **standard** behavior that contributes to a positive environment for our
+Examples of **required** behavior that contributes to a positive environment for our
 community include:
 
 - **Being kind**: Demonstrating empathy and kindness toward other people
 - **Being respectful**: Towards differing opinions, viewpoints, and experiences
 - **Constructive feedback**: Giving and gracefully accepting constructive feedback
-- **Reponsibility**: Accepting responsibility and apologizing to those affected by our mistakes,
-  and learning from the experience
+- **Reponsibility**: Accepting responsibility and apologizing to those affected by our mistakes
 
 Examples of **unacceptable** behavior include:
 
