@@ -8,6 +8,6 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 
-site = Site.objects.get(id=1)
+site = Site.objects.get(id=settings.SITE_ID)
 site.domain = settings.SITE_URL
 site.save()
