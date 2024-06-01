@@ -38,6 +38,10 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+# URL used in activation, password reset emails, etc.
+SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
+
+SITE_ID = 1
 
 # Application definition
 
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "corsheaders",
     "core",
     "rest_framework",
