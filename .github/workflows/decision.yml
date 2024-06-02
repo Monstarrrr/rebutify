@@ -77,4 +77,4 @@ jobs:
         commit-message: "Add documentation for decision: ${{ github.event.issue.title }}"
         title: "${{ github.event.issue.title }}"
         labels: "automerge"
-        body: "This PR was automatically created to document the issue."
+        body: "This PR was automatically created to document ${{ github.event.issue.number }}."
