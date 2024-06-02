@@ -52,7 +52,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git checkout -b "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.fileName }}"
+        git checkout -b "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.subject }}"
 
         # Determine the directory structure
         if [[ -z "${{ steps.extract_info.outputs.category }}" ]]; then
