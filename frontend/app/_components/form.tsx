@@ -1,4 +1,4 @@
-import { TextInputType } from '@/app/_types/inputs'
+import { TextInputType } from '@/types/inputs'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 type FormProps = {

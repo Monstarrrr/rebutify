@@ -1,10 +1,10 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import api from '@/app/_api/api'
-import Form from '@/app/_components/form'
-import { TextInputType } from '@/app/_types/inputs'
-import { formDataToObj } from '@/app/_helpers/formDataToObj'
+import api from '@/api'
+import Form from '@/components/form'
+import { TextInputType } from '@/types/inputs'
+import { formDataToObj } from '@/_helpers/formDataToObj'
 
 export default function Register() {
   const registerInputs: TextInputType[] = [
