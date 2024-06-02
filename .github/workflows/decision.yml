@@ -76,5 +76,5 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "Add documentation for decision: ${{ github.event.issue.title }}"
         title: "Automated PR ${{ github.event.issue.title }}"
-        labels: "automerge"
+        labels: "documentation,decision"
         body: "This PR was automatically created to document ${{ github.event.issue.number }}."
