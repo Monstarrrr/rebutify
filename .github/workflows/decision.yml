@@ -65,7 +65,7 @@ jobs:
         mkdir -p "$dir_path"
         
         # Create a new markdown file with the issue's body as content
-        echo "${{ github.event.issue.body }}" > "$dir_path/$subject_DECISION.md"
+        echo "${{ github.event.issue.body }}" > "$dir_path/${subject}_DECISION.md"
         git add .
         git commit -m "${{ github.event.issue.title }}"
         git push origin "docs/${{ github.event.issue.number }}_decision-$subject"
