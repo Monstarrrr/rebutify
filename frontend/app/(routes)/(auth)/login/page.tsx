@@ -9,15 +9,15 @@ export default function Login() {
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
   const loginInputs: TextInputType[] = [
     {
-      defaultValue: 'test',
       id: 'username',
       placeholder: 'Username',
+      value: 'test',
     },
     {
-      defaultValue: 'test',
       id: 'password',
       placeholder: 'Password',
       type: 'password',
+      value: 'test',
     },
   ]
 
@@ -42,6 +42,7 @@ export default function Login() {
   return (
     <>
       <Form
+        id='login-form'
         inputsFields={loginInputs}
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}
