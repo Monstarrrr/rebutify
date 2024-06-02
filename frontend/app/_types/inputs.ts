@@ -1,7 +1,7 @@
 export type TextInputType = {
   id: string
   placeholder: string
-  defaultValue?: string
+  value: string | number
   errors?: string[]
   label?: string
   required?: boolean

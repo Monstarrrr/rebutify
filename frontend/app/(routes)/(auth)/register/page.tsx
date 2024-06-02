@@ -9,21 +9,21 @@ import { formDataToObj } from '@/app/_helpers/formDataToObj'
 export default function Register() {
   const registerInputs: TextInputType[] = [
     {
-      defaultValue: 'test',
       id: 'username',
       placeholder: 'Username',
+      value: '',
     },
     {
-      defaultValue: 'test@test.com',
       id: 'email',
       placeholder: 'Email',
       type: 'email',
+      value: '',
     },
     {
-      defaultValue: 'test',
       id: 'password',
       placeholder: 'Password',
       type: 'password',
+      value: '',
     },
   ]
   const successMessage = 'Check your email to verify your account.'
@@ -56,6 +56,7 @@ export default function Register() {
     <>
       <h1>Register</h1>
       <Form
+        id='register-form'
         buttonLabel='Register'
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
