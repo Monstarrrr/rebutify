@@ -38,6 +38,10 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+# URL used in activation, password reset emails, etc.
+SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
+
+SITE_ID = 1
 
 # Application definition
 
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "corsheaders",
     "core",
     "rest_framework",
@@ -193,7 +198,7 @@ EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
 
 DJOSER = {
-    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "ACTIVATION_URL": "activate?uid={uid}&token={token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
     "SERIALIZERS": {},
