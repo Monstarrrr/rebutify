@@ -8,12 +8,15 @@ import { useEffect, useState } from 'react'
 
 export default function Verify() {
   const [verificationError, setVerificationError] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
+
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
   const uid = searchParams.get('uid')
 
   useEffect(() => {
+    setLoading(true)
     let fetchApi = async () => {
       try {
         const { status } = await api.post(`/auth/users/activation`, {
@@ -24,6 +27,7 @@ export default function Verify() {
           router.push('/')
         }
       } catch (error: any) {
+        setLoading(false)
         setVerificationError(true)
       }
     }
@@ -32,6 +36,7 @@ export default function Verify() {
 
   return (
     <div>
+      {loading && <div>Activating account...</div>}
       {verificationError && (
         <div style={{ color: 'red' }}>
           The link is invalid and has likely expired, please try&nbsp;

@@ -36,6 +36,7 @@ export default function Register() {
     event.preventDefault()
     setIsLoading(true)
     setApiFormErrors(null)
+    setFormSuccess(false)
 
     const data = formDataToObj(event)
 
