@@ -1,9 +1,9 @@
 export type TextInputType = {
   id: string
   placeholder: string
-  value: string | number
+  value: string
   errors?: string[]
   label?: string
   required?: boolean
-  type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'time'
+  type?: 'text' | 'password' | 'email'
 }
