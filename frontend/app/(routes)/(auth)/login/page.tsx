@@ -1,23 +1,23 @@
 'use client'
 
-import api from '@/app/_api/api'
+import api from '@/_api/api'
 import { FormEvent, useState } from 'react'
-import Form from '@/app/_components/form'
-import { TextInputType } from '@/app/_types/inputs'
+import Form from '@/components/form'
+import { TextInputType } from '@/types/inputs'
 
 export default function Login() {
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
   const loginInputs: TextInputType[] = [
     {
-      defaultValue: 'test',
       id: 'username',
       placeholder: 'Username',
+      value: 'test',
     },
     {
-      defaultValue: 'test',
       id: 'password',
       placeholder: 'Password',
       type: 'password',
+      value: 'test',
     },
   ]
 
@@ -42,6 +42,7 @@ export default function Login() {
   return (
     <>
       <Form
+        id='login-form'
         inputsFields={loginInputs}
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}

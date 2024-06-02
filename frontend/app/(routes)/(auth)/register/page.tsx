@@ -1,29 +1,29 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import api from '@/app/_api/api'
-import Form from '@/app/_components/form'
-import { TextInputType } from '@/app/_types/inputs'
-import { formDataToObj } from '@/app/_helpers/formDataToObj'
+import api from '@/api'
+import Form from '@/components/form'
+import { TextInputType } from '@/types/inputs'
+import { formDataToObj } from '@/_helpers/formDataToObj'
 
 export default function Register() {
   const registerInputs: TextInputType[] = [
     {
-      defaultValue: 'test',
       id: 'username',
       placeholder: 'Username',
+      value: '',
     },
     {
-      defaultValue: 'test@test.com',
       id: 'email',
       placeholder: 'Email',
       type: 'email',
+      value: '',
     },
     {
-      defaultValue: 'test',
       id: 'password',
       placeholder: 'Password',
       type: 'password',
+      value: '',
     },
   ]
   const successMessage = 'Check your email to verify your account.'
@@ -36,6 +36,7 @@ export default function Register() {
     event.preventDefault()
     setIsLoading(true)
     setApiFormErrors(null)
+    setFormSuccess(false)
 
     const data = formDataToObj(event)
 
@@ -56,6 +57,7 @@ export default function Register() {
     <>
       <h1>Register</h1>
       <Form
+        id='register-form'
         buttonLabel='Register'
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
