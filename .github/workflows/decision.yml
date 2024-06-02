@@ -71,7 +71,7 @@ jobs:
         git push origin "docs/${{ github.event.issue.number }}_decision-${{ steps.extract_info.outputs.subject }}"
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "Add documentation for decision: ${{ github.event.issue.title }}"
