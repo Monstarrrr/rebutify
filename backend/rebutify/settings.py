@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rebutify",
     "djoser",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,14 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Rebutify API",
+    "DESCRIPTION": "Rebutify",
+    "VERSION": "1.0.0",
 }
 
 ROOT_URLCONF = "rebutify.urls"
