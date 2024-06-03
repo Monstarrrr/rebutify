@@ -4,37 +4,40 @@ import api from '@/_api/api'
 import { FormEvent, useState } from 'react'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
+import { formDataToObj } from '@/_helpers/formDataToObj'
 
 export default function Login() {
+  const [loading, setLoading] = useState(false)
+
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
   const loginInputs: TextInputType[] = [
     {
       id: 'username',
       placeholder: 'Username',
-      value: 'test',
+      value: '',
     },
     {
       id: 'password',
       placeholder: 'Password',
       type: 'password',
-      value: 'test',
+      value: '',
     },
   ]
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
-    const formData = new FormData(event.currentTarget)
-    const username = formData.get('username')
-    const password = formData.get('password')
+    setLoading(true)
+    setApiErrors(null)
+    const formData = formDataToObj(event)
 
     try {
       await api.post('/auth/jwt/create', {
-        password,
-        username,
+        ...formData,
       })
+      setLoading(false)
     } catch (error: any) {
       const { response } = error
+      setLoading(false)
       setApiErrors(response)
     }
   }
@@ -46,6 +49,7 @@ export default function Login() {
         inputsFields={loginInputs}
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}
+        loading={loading}
         buttonLabel='Login'
       />
     </>

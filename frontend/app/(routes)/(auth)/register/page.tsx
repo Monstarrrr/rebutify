@@ -7,6 +7,10 @@ import { TextInputType } from '@/types/inputs'
 import { formDataToObj } from '@/_helpers/formDataToObj'
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
+  const [formSuccess, setFormSuccess] = useState(false)
+
   const registerInputs: TextInputType[] = [
     {
       id: 'username',
@@ -27,10 +31,6 @@ export default function Register() {
     },
   ]
   const successMessage = 'Check your email to verify your account.'
-
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
-  const [formSuccess, setFormSuccess] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

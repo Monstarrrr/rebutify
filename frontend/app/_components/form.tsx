@@ -7,16 +7,18 @@ type FormProps = {
   inputsErrors: ApiResponseType | null
   inputsFields: TextInputType[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  loading?: boolean
   successMessage?: string
 }
 
 export default function Form(props: FormProps) {
   const {
-    inputsFields,
-    id,
-    onSubmit,
-    inputsErrors,
     buttonLabel,
+    id,
+    inputsErrors,
+    inputsFields,
+    loading,
+    onSubmit,
     successMessage,
   } = props
   // Renaming to avoid confusion with fields ids
@@ -96,6 +98,7 @@ export default function Form(props: FormProps) {
           {inputField.label || inputField.placeholder}
           <br />
           <input
+            disabled={loading}
             name={inputField.id}
             placeholder={inputField.placeholder}
             required={inputField.required || true}
@@ -124,7 +127,9 @@ export default function Form(props: FormProps) {
       {/* Success message */}
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
       <br />
-      <button type='submit'>{buttonLabel}</button>
+      <button disabled={loading} type='submit'>
+        {loading ? 'Loading...' : buttonLabel}
+      </button>
     </form>
   )
 }
