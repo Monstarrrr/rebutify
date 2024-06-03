@@ -8,6 +8,7 @@ import { formDataToObj } from '@/_helpers/formDataToObj'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
   const loginInputs: TextInputType[] = [
@@ -23,6 +24,7 @@ export default function Login() {
       value: '',
     },
   ]
+  const successMessage = 'Logged in successfully.'
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -35,6 +37,7 @@ export default function Login() {
         ...formData,
       })
       setLoading(false)
+      setSuccess(true)
     } catch (error: any) {
       const { response } = error
       setLoading(false)
@@ -50,6 +53,7 @@ export default function Login() {
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}
         loading={loading}
+        successMessage={success ? successMessage : null}
         buttonLabel='Login'
       />
     </>

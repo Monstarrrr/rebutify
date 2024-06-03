@@ -8,7 +8,7 @@ type FormProps = {
   inputsFields: TextInputType[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
   loading?: boolean
-  successMessage?: string
+  successMessage?: string | null
 }
 
 export default function Form(props: FormProps) {
