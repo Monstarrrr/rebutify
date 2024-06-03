@@ -20,16 +20,18 @@ import os
 from core import views
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
-router.register(r"register", views.RegisterViewSet, basename="register")
-router.register(r"login", views.UserLoginViewSet, basename="login")
-router.register(r"logout", views.LogoutViewSet, basename="logout")
-
-router.register(r"posts", views.PostViewSet, basename="posts")
 router.register(r"tags", views.TagViewSet, basename="tags")
+router.register(r"posts", views.PostViewSet, basename="posts")
+router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
 
 
 urlpatterns = [
@@ -39,4 +41,15 @@ urlpatterns = [
     path("", include("core.urls")),
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/schema/redoc-ui/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc-ui",
+    ),
 ]
