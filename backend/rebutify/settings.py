@@ -38,6 +38,10 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+# URL used in activation, password reset emails, etc.
+SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
+
+SITE_ID = 1
 
 # Application definition
 
@@ -48,15 +52,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "corsheaders",
     "core",
     "rest_framework",
     "rebutify",
-    "crispy_bootstrap4",
-    "crispy_forms",
+    "djoser",
     "drf_spectacular",
 ]
 
 MIDDLEWARE = [
+    # CorsMiddleware should be placed as high as possible
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,6 +71,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+# Domains that can access the API
+CORS_ALLOWED_ORIGINS = [
+    "https://rebutify.org",
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
 ]
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
@@ -103,7 +117,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 WSGI_APPLICATION = "rebutify.wsgi.application"
 
@@ -191,3 +204,10 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT", ""))
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+
+DJOSER = {
+    "ACTIVATION_URL": "activate?uid={uid}&token={token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SERIALIZERS": {},
+}

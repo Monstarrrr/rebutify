@@ -1,8 +1,15 @@
+from django.conf import settings
 from django.urls import path
 
-from .views import activate, index
+from .views import ActivateUser, success
 
-urlpatterns = [
-    path("", index, name="index"),
-    path("activate/<uidb64>/<token>/", activate, name="activate"),
-]
+urlpatterns = [path("", success, name="index")]
+
+if settings.DEBUG:
+    urlpatterns.append(
+        path(
+            "activate/<uid>/<token>",
+            ActivateUser.as_view({"get": "activation"}),
+            name="activation",
+        )
+    )

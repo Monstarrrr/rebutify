@@ -1,11 +1,40 @@
 {
+  "plugins": [
+    "react", // eslint-plugin-react
+    "react-hooks" // eslint-plugin-react-hooks
+  ],
+  // Extends is used to inherit configurations for plugins and rules
   "extends": [
-    // Next.js core linting rules
+    // Next.js recommended rules
     "next/core-web-vitals",
+
     /*
       Turning off all linting rules that are unnecessary or might conflict with Prettier.
       (https://github.com/prettier/eslint-config-prettier)
     */
-    "prettier"
-  ]
+    "prettier",
+
+    // Enabling eslint-plugin-react recommended rules
+    "plugin:react/recommended",
+
+    // Enabling eslint-plugin-react-hooks recommended rules
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    // Enforcing alphabetical sorting of object keys
+    "sort-keys": "error",
+    /* 
+      We need to disable these rules because React ^17 doesn't require them anymore
+      See https://stackoverflow.com/a/61160875/11149106
+    */
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off",
+    "react/jsx-uses-vars": "off"
+  },
+  "settings": {
+    "react": {
+      // We need to set react version for eslint-plugin-react
+      "version": "18"
+    }
+  }
 }
