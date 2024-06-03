@@ -24,7 +24,7 @@ export default function Activate() {
           uid,
         })
         if (status >= 200 && status < 300) {
-          router.push('/')
+          router.push('/login')
         }
       } catch (error: any) {
         setLoading(false)

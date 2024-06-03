@@ -44,8 +44,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (res) => {
     // Add tokens to local storage
-    localStorage.setItem('access_token', res.headers?.access_token)
-    localStorage.setItem('refresh_token', res.headers?.refresh_token)
+    localStorage.setItem('access_token', res.data?.access)
+    localStorage.setItem('refresh_token', res.data?.refresh)
 
     // Update user state if user is not logged in
     if (res.data.loggedIn === false) {
