@@ -1,0 +1,7 @@
+# Browser environment variables (NEXT_PUBLIC_...)
+
+# URL of backend API i.e. the Django server
+# Will be prepended to the URL of the Next.js server unless it is absolute.
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+# Server environment variables
