@@ -64,7 +64,7 @@ class CoreTests(TestCase):
         self.sample_user_profile.posts.set([self.sample_post])
         self.sample_user_profile.edits.set([self.sample_post])
         self.sample_user_profile.savedPosts.set([self.sample_post])
-        self.sample_user_profile.privateRebuttals.set([self.sample_post])
+        self.sample_user_profile.private_post.set([self.sample_post])
 
     def test_tags_api(self):
         # Test the tags API endpoint
