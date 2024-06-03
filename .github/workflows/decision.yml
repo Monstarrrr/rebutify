@@ -13,68 +13,78 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Authorization
-      run: |
-        # Get username of GitHub account that triggered this flow
-        opener=${{ github.actor }}
-        
-        # Get list of approved contributors
-        contributors=$(curl https://api.github.com/repos/Monstarrrr/Rebutify/contributors | jq -r '[.[] | select(.type == "User") | .login] | join(",")')
-        
-        # Convert the comma-separated string to an array
-        IFS=',' read -r -a contributor_array <<< "$contributors"
+      - name: Authorization
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          # Get username of GitHub account that triggered this flow
+          opener=$ACTOR
 
-        # Check if triggering user is in the array
-        if [[ ! " ${contributor_array[@]} " =~ " $opener " ]]; then
-          echo "Triggering user is unauthorized."
-          exit 1
-        fi
-    - name: Checkout
-      uses: actions/checkout@v3
+          # Get list of approved contributors
+          contributors=$(curl https://api.github.com/repos/Monstarrrr/Rebutify/contributors | jq -r '[.[] | select(.type == "User") | .login] | join(",")')
 
-    - name: Extract subject and category from issue title
-      id: extract_info
-      run: |
-        title="${{ github.event.issue.title }}"
-        if [[ "$title" =~ ^Opening\ decision\ on\ ([^/]+)(/([^/]+))?$ ]]; then
-          subject=$(echo "${BASH_REMATCH[1]}" | tr -d ' ')
-          category=$(echo "${BASH_REMATCH[3]}" | tr -d ' ')
-          if [[ -z "$category" ]]; then
-            category=""
+          # Convert the comma-separated string to an array
+          IFS=',' read -r -a contributor_array <<< "$contributors"
+
+          # Check if triggering user is in the array
+          if [[ ! " ${contributor_array[@]} " =~ " $opener " ]]; then
+            echo "Triggering user is unauthorized."
+            exit 1
           fi
-          echo "subject=$subject" >> $GITHUB_ENV
-          echo "category=$category" >> $GITHUB_ENV
-        else
-          echo "Issue title does not follow the required format: 'Opening decision on [category]/[subject]'"
-          exit 1
-        fi
-    - name: Create new branch
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git checkout -b "docs/${{ github.event.issue.number }}_decision-$subject"
 
-        # Determine the directory structure
-        if [[ -z "$category" ]]; then
-          dir_path="docs/decisions"
-        else
-          dir_path="docs/decisions/$category"
-        fi
+      - name: Checkout
+        uses: actions/checkout@v3
 
-        # Create the directory structure for the documentation
-        mkdir -p "$dir_path"
-        
-        # Create a new markdown file with the issue's body as content
-        echo "${{ github.event.issue.body }}" > "$dir_path/${subject}_DECISION.md"
-        git add .
-        git commit -m "${{ github.event.issue.title }}"
-        git push origin "docs/${{ github.event.issue.number }}_decision-$subject"
+      - name: Extract subject and category from issue title
+        id: extract_info
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        run: |
+          title="$TITLE"
+          if [[ "$title" =~ ^Opening\ decision\ on\ ([^/]+)(/([^/]+))?$ ]]; then
+            subject=$(echo "${BASH_REMATCH[1]}" | tr -d ' ')
+            category=$(echo "${BASH_REMATCH[3]}" | tr -d ' ')
+            if [[ -z "$category" ]]; then
+              category=""
+            fi
+            echo "subject=$subject" >> $GITHUB_ENV
+            echo "category=$category" >> $GITHUB_ENV
+          else
+            echo "Issue title does not follow the required format: 'Opening decision on [category]/[subject]'"
+            exit 1
+          fi
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Add documentation for decision: ${{ github.event.issue.title }}"
-        title: "Automated PR ${{ github.event.issue.title }}"
-        labels: "documentation,decision"
-        body: "This PR was automatically created to document ${{ github.event.issue.number }}."
+      - name: Create new branch
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b "docs/${ISSUE_NUMBER}_decision-$subject"
+
+          # Determine the directory structure
+          if [[ -z "$category" ]]; then
+            dir_path="docs/decisions"
+          else
+            dir_path="docs/decisions/$category"
+          fi
+
+          # Create the directory structure for the documentation
+          mkdir -p "$dir_path"
+
+          # Create a new markdown file with the issue's body as content
+          echo "$ISSUE_BODY" > "$dir_path/${subject}_DECISION.md"
+          git add .
+          git commit -m "$ISSUE_TITLE"
+          git push origin "docs/${ISSUE_NUMBER}_decision-$subject"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Add documentation for decision: ${{ github.event.issue.title }}'
+          title: 'Automated PR ${{ github.event.issue.title }}'
+          labels: 'documentation,decision'
+          body: 'This PR was automatically created to document ${{ github.event.issue.number }}.'
