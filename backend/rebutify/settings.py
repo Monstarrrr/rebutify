@@ -214,5 +214,6 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT",),
+    # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
