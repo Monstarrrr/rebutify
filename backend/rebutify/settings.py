@@ -200,7 +200,7 @@ CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", False))
 EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", ""))
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
