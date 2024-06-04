@@ -57,7 +57,6 @@ jobs:
       - name: Create new branch
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           git config --local user.email "action@github.com"
@@ -74,8 +73,8 @@ jobs:
           # Create the directory structure for the documentation
           mkdir -p "$dir_path"
 
-          # Create a new markdown file with the issue's body as content
-          echo "$ISSUE_BODY" > "$dir_path/${subject}_DECISION.md"
+          # Create a new markdown file with the deicison template as content
+          cat docs/decisions/_template.md > "$dir_path/${subject}_DECISION.md"
           git add .
           git commit -m "$ISSUE_TITLE"
           git push origin "docs/${ISSUE_NUMBER}_decision-$subject"
