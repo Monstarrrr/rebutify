@@ -2,8 +2,6 @@
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Posts, Tags
-
 
 class CoreTests(TestCase):
     def setUp(self):
