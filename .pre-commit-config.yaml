@@ -44,6 +44,11 @@ repos:
         name: Linting python code
         types: [python]
         stages: [pre-commit]
+        args: ['--fix']
+      - id: ruff
+        name: Linting python imports
+        types: [python]
+        stages: [pre-commit]
         args: ['--select', 'I', '--fix']
       - id: ruff-format
         name: Formatting python code
