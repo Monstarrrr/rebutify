@@ -73,7 +73,7 @@ jobs:
           # Create the directory structure for the documentation
           mkdir -p "$dir_path"
 
-          # Create a new markdown file with the deicison template as content
+          # Create a new markdown file with the decision template as content
           cat docs/decisions/_template.md > "$dir_path/${subject}_DECISION.md"
           git add .
           git commit -m "$ISSUE_TITLE"
