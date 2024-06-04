@@ -1,0 +1,58 @@
+name: Backend CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          working-directory: ./backend
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run ruff
+      run: |
+        pip install ruff
+        ruff check .
+
+    - name: Run tests
+      run: pytest --junit-xml report.xml
+
+    - name: Generate OpenAPI
+      run: python manage.py spectacular --file schema.yml
+
+    - name: Upload OpenAPI Schema
+      if: ${{ matrix.python-version == '3.11' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: schema
+        path: schema.yml
+        if-no-files-found: error
+    
+    - name: Upload Backend Test Results
+      if: ${{ matrix.python-version == '3.11' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: report
+        path: report.xml
+        if-no-files-found: error
