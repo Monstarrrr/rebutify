@@ -1,7 +1,7 @@
 repos:
   # BUILT-IN HOOKS
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-merge-conflict
         name: Checking merge conflicts
@@ -38,10 +38,15 @@ repos:
   
   # LINTING & FORMATTING PYTHON
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.7
+    rev: v0.4.7
     hooks:
       - id: ruff
         name: Linting python code
+        types: [python]
+        stages: [pre-commit]
+        args: ['--fix']
+      - id: ruff
+        name: Linting python imports
         types: [python]
         stages: [pre-commit]
         args: ['--select', 'I', '--fix']
@@ -63,7 +68,7 @@ repos:
 
   # TYPE CHECKING PYTHON
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
+    rev: v1.10.0
     hooks:
       - id: mypy
         types: [python]
