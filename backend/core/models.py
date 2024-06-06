@@ -20,6 +20,17 @@ class Tags(models.Model):
 
 
 class Posts(models.Model):
+    """Posts database model
+
+    Posts include the following types, marked
+    by their postTypeId
+
+    Arguments (1)
+    Rebuttals (2)
+    Comments (3)
+    Tag wikis (4)
+    """
+
     postTypeId: models.IntegerField = models.IntegerField()
     acceptedAnswerId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
