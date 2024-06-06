@@ -9,13 +9,14 @@ repos:
       - id: detect-private-key
         name: Detecting private keys
         stages: [pre-commit]
-      # No commit to main branch;
+      # No commit to main branch
+      # No commit to branch that isn't named correctly
       - id: no-commit-to-branch
         name: "
           Preventing commits to main branch \n
           AND \n
           incorrectly named branches \n
-          (Note: Must be feat|fix|hotfix|release/[issue-number]_[branch-name])\n
+          (Note: Must be feat|fix|docs/[issue-number]_[branch-name])\n
           (Note: Use 'git branch -m <new-branch-name>' to rename branch if needed)
         "
         stages: [pre-commit]
@@ -24,7 +25,7 @@ repos:
             '--branch',
             'main',
             '--pattern',
-            '^(?!^(feat|fix|hotfix|release)\/[0-9]+_).*$',
+            '^(?!^(feat|fix|docs)\/[0-9]+_).*$',
           ]
   
   # ADD ISSUE NUMBER TO COMMIT
