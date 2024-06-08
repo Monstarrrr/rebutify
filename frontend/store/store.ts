@@ -12,7 +12,10 @@ export const makeStore = () => {
     },
   })
 }
+// Create a store for each request
+export const store = makeStore()
 
+export default store
 // Infer the type of makeStore
 export type AppStore = ReturnType<typeof makeStore>
 // Infer the `RootState` and `AppDispatch` types from the store itself

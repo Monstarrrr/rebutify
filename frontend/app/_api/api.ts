@@ -1,15 +1,13 @@
 import axios from 'axios'
-// import {
-//   updateUser
-// } from '../Redux/reducers/user';
+import { AppStore } from '@/store/store'
+import { updateUser } from '@/store/slices/user'
 
-// INJECT STORE TO PREVENT IMPORT ISSUES
-// let store
-// export const injectStore = _store => {
-//   store = _store
-// }
+// INJECT STORE TO PREVENT CIRCULAR DEPENDENCIES
+let store: AppStore | undefined
+export const injectStore = (_store: AppStore) => {
+  store = _store
+}
 
-// URLs
 const baseURL = process.env.NEXT_PUBLIC_API_URL
 
 // API INSTANCE
@@ -17,7 +15,8 @@ const api = axios.create({
   baseURL,
 })
 
-// # INTERCEPTORS #
+// INTERCEPTORS
+
 // On request
 api.interceptors.request.use(
   (req) => {
@@ -46,13 +45,11 @@ api.interceptors.response.use(
     // Add tokens to local storage
     localStorage.setItem('access_token', res.data?.access)
     localStorage.setItem('refresh_token', res.data?.refresh)
-
+    console.log('# store :', store)
     // Update user state if user is not logged in
-    if (res.data.loggedIn === false) {
-      // store.dispatch(
-      //   updateUser(res.data)
-      // )
-    }
+    // if (res.data.loggedIn === false) {
+    store?.dispatch(updateUser({ name: 'Monstar from interceptor' }))
+    // }
 
     console.log('# Intercepted response:', res)
     return res
