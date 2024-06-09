@@ -29,7 +29,24 @@
     */
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
-    "react/jsx-uses-vars": "off"
+    "react/jsx-uses-vars": "off",
+
+    // Disallowing relative imports in favor of absolute imports
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["./", "../"],
+            "message": "Relative imports are not allowed."
+          },
+          {
+            "group": ["@/_*"],
+            "message": "Make sure to use paths aliases from the `tsconfig.json` file."
+          }
+        ]
+      }
+    ]
   },
   "settings": {
     "react": {

@@ -1,10 +1,10 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import api from '@/api'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/_helpers/formDataToObj'
+import { formDataToObj } from '@/helpers/formDataToObj'
 import { useAppSelector } from '@/store/hooks'
 
 export default function Register() {
@@ -12,10 +12,6 @@ export default function Register() {
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
   const user = useAppSelector((state) => state.user)
-
-  useEffect(() => {
-    console.log('# user :', user)
-  }, [user])
 
   const registerInputs: TextInputType[] = [
     {
@@ -62,7 +58,11 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+
+      {/* We show the username to demonstrate that the user is logged in */}
+      <p>user.username:</p>
+      <pre>{JSON.stringify(user.username, null, 2)}</pre>
+
       <Form
         id='register-form'
         buttonLabel='Register'

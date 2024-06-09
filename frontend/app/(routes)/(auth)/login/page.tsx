@@ -1,17 +1,18 @@
 'use client'
 
-import api from '@/_api/api'
-import { FormEvent, useEffect, useState } from 'react'
+import api from '@/api'
+import { FormEvent, useState } from 'react'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/_helpers/formDataToObj'
+import { formDataToObj } from '@/helpers/formDataToObj'
 import { useAppSelector } from '@/store/hooks'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
+  const user = useAppSelector((state) => state.user)
+
   const loginInputs: TextInputType[] = [
     {
       id: 'username',
@@ -26,12 +27,6 @@ export default function Login() {
     },
   ]
   const successMessage = 'Logged in successfully.'
-
-  const user = useAppSelector((state) => state.user)
-
-  useEffect(() => {
-    console.log('# user :', user)
-  }, [user])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -54,7 +49,9 @@ export default function Login() {
 
   return (
     <>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {/* We show the username to demonstrate that the user is logged in */}
+      <pre>{JSON.stringify(user.username, null, 2)}</pre>
+
       <Form
         id='login-form'
         inputsFields={loginInputs}

@@ -4,16 +4,16 @@ export type UserType = {
   access?: string
   email: string
   id: number
-  username: string
   refresh?: string
+  username: string
 }
 
 const initialState: UserType = {
   access: '',
-  email: 'guest@guest.com',
+  email: '',
   id: 0,
   refresh: '',
-  username: 'Guest',
+  username: '',
 }
 
 const userSlice = createSlice({

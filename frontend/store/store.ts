@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userSlice from './slices/user'
+import userSlice from '@/store/slices/user'
 /* 
   Next's multi-page architecture requires moving from defining store as a global 
   to instead defining a makeStore function that returns a new store for each request.
@@ -16,7 +16,7 @@ export const makeStore = () => {
 export const store = makeStore()
 
 export default store
-// Infer the type of makeStore
+// Infer the type of makeStore from the store itself
 export type AppStore = ReturnType<typeof makeStore>
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<AppStore['getState']>
