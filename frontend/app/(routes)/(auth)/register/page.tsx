@@ -11,7 +11,7 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
-  const user = useAppSelector((state) => state.user.name)
+  const user = useAppSelector((state) => state.user)
 
   useEffect(() => {
     console.log('# user :', user)

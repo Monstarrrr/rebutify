@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AppStore } from '@/store/store'
-import { updateUser } from '@/store/slices/user'
+import { UserType, updateUser } from '@/store/slices/user'
 
 // INJECT STORE TO PREVENT CIRCULAR DEPENDENCIES
 let store: AppStore | undefined
@@ -47,9 +47,8 @@ api.interceptors.response.use(
     localStorage.setItem('refresh_token', res.data?.refresh)
     console.log('# store :', store)
     // Update user state if user is not logged in
-    // if (res.data.loggedIn === false) {
-    store?.dispatch(updateUser({ name: 'Monstar from interceptor' }))
-    // }
+    const user: UserType = res.data
+    store?.dispatch(updateUser(user))
 
     console.log('# Intercepted response:', res)
     return res

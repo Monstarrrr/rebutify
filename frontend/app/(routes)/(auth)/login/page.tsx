@@ -1,10 +1,11 @@
 'use client'
 
 import api from '@/_api/api'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
 import { formDataToObj } from '@/_helpers/formDataToObj'
+import { useAppSelector } from '@/store/hooks'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
@@ -25,6 +26,12 @@ export default function Login() {
     },
   ]
   const successMessage = 'Logged in successfully.'
+
+  const user = useAppSelector((state) => state.user)
+
+  useEffect(() => {
+    console.log('# user :', user)
+  }, [user])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -47,6 +54,7 @@ export default function Login() {
 
   return (
     <>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
       <Form
         id='login-form'
         inputsFields={loginInputs}
