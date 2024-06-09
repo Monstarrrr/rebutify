@@ -90,3 +90,4 @@ jobs:
           labels: 'documentation,decision'
           body: 'This PR was automatically created to document ${{ github.event.issue.number }}.'
           branch: 'docs/${{ github.event.issue.number }}_decision-${{ steps.new_branch.outputs.subject }}'
+          draft: true
