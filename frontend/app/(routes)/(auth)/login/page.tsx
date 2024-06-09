@@ -1,16 +1,18 @@
 'use client'
 
-import api from '@/_api/api'
+import api from '@/api'
 import { FormEvent, useState } from 'react'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/_helpers/formDataToObj'
+import { formDataToObj } from '@/helpers/formDataToObj'
+import { useAppSelector } from '@/store/hooks'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-
   const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
+  const user = useAppSelector((state) => state.user)
+
   const loginInputs: TextInputType[] = [
     {
       id: 'username',
@@ -47,6 +49,12 @@ export default function Login() {
 
   return (
     <>
+      {/* 
+        We show the username to demonstrate that the user logged in
+        through the API and their data was updated in the Redux store
+      */}
+      <pre>{JSON.stringify(user.username, null, 2)}</pre>
+
       <Form
         id='login-form'
         inputsFields={loginInputs}
