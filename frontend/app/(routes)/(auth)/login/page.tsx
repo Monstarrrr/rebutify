@@ -49,7 +49,10 @@ export default function Login() {
 
   return (
     <>
-      {/* We show the username to demonstrate that the user is logged in */}
+      {/* 
+        We show the username to demonstrate that the user logged in
+        through the API and their data was updated in the Redux store
+      */}
       <pre>{JSON.stringify(user.username, null, 2)}</pre>
 
       <Form
