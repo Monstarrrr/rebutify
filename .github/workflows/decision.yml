@@ -55,6 +55,7 @@ jobs:
           fi
 
       - name: Create new branch
+        id: new_branch
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
@@ -78,6 +79,7 @@ jobs:
           git add .
           git commit -m "$ISSUE_TITLE"
           git push origin "docs/${ISSUE_NUMBER}_decision-$subject"
+          echo "subject=$subject" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -87,4 +89,4 @@ jobs:
           title: 'Automated PR ${{ github.event.issue.title }}'
           labels: 'documentation,decision'
           body: 'This PR was automatically created to document ${{ github.event.issue.number }}.'
-          branch: 'docs/${{ github.event.issue.number }}_decision-$subject'
+          branch: 'docs/${{ github.event.issue.number }}_decision-${{ steps.new_branch.outputs.subject }}'
