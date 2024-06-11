@@ -1,48 +1,47 @@
-**File title**: [title]\_DECISION.md
+## Which Unit Testing Solution to use on the Front-end ?
 
-## [short title of solved problem]
-
-- **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
-- **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
+- **Impact**: 🟠 High
+- **Status**: 🔓 Awaiting decision...
 - **Deciders & Confidence**:
-  - [@purple-void](https://github.com/purple-void) [1 <-> 5] / 5️
-  - [@seporterfield](https://github.com/seporterfield) [1 <-> 5] / 5️
-  - [@Monstarrrr](https://github.com/Monstarrrr) [1 <-> 5] / 5️
-- **Technical Story**: [related URLs] e.g.
-  - Pull Request #58 - ["Write CODE_OF_CONDUCT.md"](https://github.com/Monstarrrr/rebutify/pull/58) <!-- optional -->
-- **Last updated**: [DD-MM-YYYY]
 
-## Context and Problem Statement
+  - @purple-void (? / 5️)
+  - @seporterfield (? / 5️)
+  - @Monstarrrr (? / 5️)
 
-[It should make readers **curious** and communicate a sense of **urgency**; Can be a **question**;]
+- **Technical Story**: <!-- optional related URLs -->
+
+  - [Write tests. Not too many. Mostly integration. - (kentcdodds.com)](https://kentcdodds.com/blog/write-tests)
+  - [Comparing Next.js Testing Tools and Strategies - (logrocket.com)](https://blog.logrocket.com/comparing-next-js-testing-tools-strategies/)
+
+- **Last updated**: 09-06-2024
+
+## Context
+
+Important decision because once chosen we won't be able to switch unless we rewrite a lot of code, presumably.
 
 ## Decision Drivers <!-- optional -->
 
-- [driver 1, e.g., a force, facing concern, …]
-- [driver 2, e.g., a force, facing concern, …]
-- … <!-- numbers of drivers can vary -->
+- Scalability
+- Ease of use
+- Speed
 
 ## Considered Options <!-- optional -->
 
-### [option 1]
+### Jest
 
 [description | example | … ] <!-- optional -->
 
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
+- Good, because
 
-### [option 2]
+### Vitest
 
-[example | description | pointer to more information | …] <!-- optional -->
+- Good, because faster than Jest
 
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
+### No unit tests
 
-...
+- Good, because unit tests in React [aren't good ROI](https://www.reddit.com/r/reactjs/comments/10panfs/comment/j6jr2n4/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+- Good, because if we need unit testing we would wait to have specific complex functions to test before we start even thinking about implementing unit tests, which we don't have (yet).
+- Bad, because unit tests facilitate refactoring and maintainability. In a team with multiple developers tests are very important to ensure people don't accidentally break functionality.
 
 ## Decision Outcome
 
@@ -51,10 +50,10 @@
 
 ### Positive Consequences <!-- optional -->
 
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+-
 - …
 
 ### Negative Consequences <!-- optional -->
 
-- [e.g., compromising quality attribute, follow-up decisions required, …]
+-
 - …

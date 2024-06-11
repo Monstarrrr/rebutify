@@ -1,20 +1,22 @@
-**File title**: [title]\_DECISION.md
-
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders & Confidence**:
-  - [@purple-void](https://github.com/purple-void) [1 <-> 5] / 5️
-  - [@seporterfield](https://github.com/seporterfield) [1 <-> 5] / 5️
-  - [@Monstarrrr](https://github.com/Monstarrrr) [1 <-> 5] / 5️
-- **Technical Story**: [related URLs] e.g.
-  - Pull Request #58 - ["Write CODE_OF_CONDUCT.md"](https://github.com/Monstarrrr/rebutify/pull/58) <!-- optional -->
+
+  - @purple-void (? / 5️)
+  - @seporterfield (? / 5️)
+  - @Monstarrrr (? / 5️)
+
+- **Technical Story**: <!-- optional related URLs -->
+
+  - [e.g. [Pull Request #58 | "Write CODE_OF_CONDUCT.md - (github.com)"](https://github.com/Monstarrrr/rebutify/pull/58)]
+
 - **Last updated**: [DD-MM-YYYY]
 
-## Context and Problem Statement
+## Context <!--optional -->
 
-[It should make readers **curious** and communicate a sense of **urgency**; Can be a **question**;]
+[Communicate the importance of this decision; Add any necessary context here;]
 
 ## Decision Drivers <!-- optional -->
 
@@ -46,15 +48,15 @@
 
 ## Decision Outcome
 
-**Chosen option**: "[option 1]"  
+**Chosen option**:  
 **Reason(s)**: [e.g., only option which meets criterion | comes out best (see below)].
 
 ### Positive Consequences <!-- optional -->
 
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+-
 - …
 
 ### Negative Consequences <!-- optional -->
 
-- [e.g., compromising quality attribute, follow-up decisions required, …]
+-
 - …
