@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from typing import List
 
@@ -214,6 +215,8 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
     # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
