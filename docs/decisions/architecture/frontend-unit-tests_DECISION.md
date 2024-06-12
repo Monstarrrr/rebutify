@@ -47,7 +47,7 @@ _Vitest is a newer testing framework using vite_
 
 **Ease of use:**
 
-- :orange_circle: Requires more setup than Jest & than no unit tests
+- :orange_circle: Requires more setup than Jest
 
 **Performance**
 
