@@ -119,10 +119,14 @@ export default function Form(props: FormProps) {
       ))}
       {/* Global errors */}
       {globalFormErrors &&
-        globalFormErrors.map((error, index) => (
-          <span key={index} style={{ color: 'red' }}>
-            {error}
-          </span>
+        (typeof globalFormErrors === 'string' ? (
+          <span style={{ color: 'red' }}>{globalFormErrors}</span>
+        ) : (
+          globalFormErrors.map((error) => (
+            <span style={{ color: 'red' }} key={error}>
+              {error}
+            </span>
+          ))
         ))}
       {/* Success message */}
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}

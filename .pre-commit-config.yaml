@@ -1,7 +1,7 @@
 repos:
   # BUILT-IN HOOKS
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-merge-conflict
         name: Checking merge conflicts
@@ -9,13 +9,14 @@ repos:
       - id: detect-private-key
         name: Detecting private keys
         stages: [pre-commit]
-      # No commit to main branch;
+      # No commit to main branch
+      # No commit to branch that isn't named correctly
       - id: no-commit-to-branch
         name: "
           Preventing commits to main branch \n
           AND \n
           incorrectly named branches \n
-          (Note: Must be feat|fix|hotfix|release/[issue-number]_[branch-name])\n
+          (Note: Must be feat|fix|docs/[issue-number]_[branch-name])\n
           (Note: Use 'git branch -m <new-branch-name>' to rename branch if needed)
         "
         stages: [pre-commit]
@@ -24,7 +25,7 @@ repos:
             '--branch',
             'main',
             '--pattern',
-            '^(?!^(feat|fix|hotfix|release)\/[0-9]+_).*$',
+            '^(?!^(feat|fix|docs)\/[0-9]+_).*$',
           ]
   
   # ADD ISSUE NUMBER TO COMMIT
@@ -38,10 +39,15 @@ repos:
   
   # LINTING & FORMATTING PYTHON
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.7
+    rev: v0.4.7
     hooks:
       - id: ruff
         name: Linting python code
+        types: [python]
+        stages: [pre-commit]
+        args: ['--fix']
+      - id: ruff
+        name: Linting python imports
         types: [python]
         stages: [pre-commit]
         args: ['--select', 'I', '--fix']
@@ -63,7 +69,7 @@ repos:
 
   # TYPE CHECKING PYTHON
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
+    rev: v1.10.0
     hooks:
       - id: mypy
         types: [python]

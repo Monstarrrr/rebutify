@@ -81,12 +81,14 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
-APPEND_SLASH = False
+APPEND_SLASH = True
+PREPEND_WWW = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
@@ -210,4 +212,9 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
     "SERIALIZERS": {},
+}
+
+SIMPLE_JWT = {
+    # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }

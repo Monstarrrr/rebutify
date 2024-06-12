@@ -4,12 +4,14 @@ import { FormEvent, useState } from 'react'
 import api from '@/api'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/_helpers/formDataToObj'
+import { formDataToObj } from '@/helpers/formDataToObj'
+import { useAppSelector } from '@/store/hooks'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
+  const user = useAppSelector((state) => state.user)
 
   const registerInputs: TextInputType[] = [
     {
@@ -56,6 +58,14 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
+
+      {/* 
+        We show the username to demonstrate that the user registered
+        through the API and their data was updated in the Redux store
+      */}
+      <p>user.username:</p>
+      <pre>{JSON.stringify(user.username, null, 2)}</pre>
+
       <Form
         id='register-form'
         buttonLabel='Register'

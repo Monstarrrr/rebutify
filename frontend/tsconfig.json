@@ -25,7 +25,9 @@
     "paths": {
       "@/*": ["./*"],
       "@/api": ["./_api/api"],
+      "@/helpers/*": ["./_helpers/*"],
       "@/components/*": ["./_components/*"],
+      "@/store/*": ["../store/*"],
       "@/types/*": ["./_types/*"]
     }
   },

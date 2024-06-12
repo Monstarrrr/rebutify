@@ -5,4 +5,5 @@ uvicorn==0.29.0
 djangorestframework==3.15.1
 djoser==2.2.2
 djangorestframework_simplejwt==5.3.1
+django-cors-headers==4.3.1
 drf-spectacular==0.27.2

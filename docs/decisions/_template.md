@@ -1,60 +1,58 @@
-**File title**: [title]\_DECISION.md
-
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
 - **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders & Confidence**:
-  - [@purple-void](https://github.com/purple-void) [1 <-> 5] / 5️
-  - [@seporterfield](https://github.com/seporterfield) [1 <-> 5] / 5️
-  - [@Monstarrrr](https://github.com/Monstarrrr) [1 <-> 5] / 5️
-- **Technical Story**: [related URLs] e.g.
-  - Pull Request #58 - ["Write CODE_OF_CONDUCT.md"](https://github.com/Monstarrrr/rebutify/pull/58) <!-- optional -->
+
+  - @purple-void (? / 5️)
+  - @seporterfield (? / 5️)
+  - @Monstarrrr (? / 5️)
+
+- **Technical Story**: <!-- optional related URLs -->
+
+  - [e.g. [Pull Request #58 | "Write CODE_OF_CONDUCT.md - (github.com)"](https://github.com/Monstarrrr/rebutify/pull/58)]
+
 - **Last updated**: [DD-MM-YYYY]
 
-## Context and Problem Statement
+## Context <!--optional -->
 
-[It should make readers **curious** and communicate a sense of **urgency**; Can be a **question**;]
+[Communicate what this decision is about exactly; the importance of it;]
 
-## Decision Drivers <!-- optional -->
+## Decision Drivers
 
-- [driver 1, e.g., a force, facing concern, …]
-- [driver 2, e.g., a force, facing concern, …]
-- … <!-- numbers of drivers can vary -->
+- [driver 1, e.g., "scalability", "ease of use"]
+- ...
 
 ## Considered Options <!-- optional -->
 
+<!-- Add reasons why to pick or not to pick each of them based on decision drivers -->
+
 ### [option 1]
 
-[description | example | … ] <!-- optional -->
+[ description ] <!-- optional -->
 
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
+**[Driver 1]:**
+
+- :green_circle: [argument A]
+- :green_circle: [argument B]
+- :orange_circle: [argument C]
+
+**[Driver 2]:**  
+...
 
 ### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
 
 ...
 
 ## Decision Outcome
 
-**Chosen option**: "[option 1]"  
-**Reason(s)**: [e.g., only option which meets criterion | comes out best (see below)].
+**Chosen option**:  
+**Reason**:
 
 ### Positive Consequences <!-- optional -->
 
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-- …
+-
 
 ### Negative Consequences <!-- optional -->
 
-- [e.g., compromising quality attribute, follow-up decisions required, …]
-- …
+-

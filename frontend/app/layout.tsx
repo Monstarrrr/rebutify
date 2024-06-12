@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import '@/globals.css'
+import StoreProvider from '@/store/Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -9,14 +10,16 @@ export const metadata: Metadata = {
   title: 'Create Next App',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+type PropsType = Readonly<{
   children: React.ReactNode
-}>) {
+}>
+
+export default function RootLayout({ children }: PropsType) {
   return (
     <html lang='en'>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   )
 }

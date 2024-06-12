@@ -42,8 +42,8 @@ jobs:
         run: |
           title="$TITLE"
           if [[ "$title" =~ ^Opening\ decision\ on\ ([^/]+)(/([^/]+))?$ ]]; then
-            subject=$(echo "${BASH_REMATCH[1]}" | tr -d ' ')
-            category=$(echo "${BASH_REMATCH[3]}" | tr -d ' ')
+            subject=$(echo "${BASH_REMATCH[3]}" | tr -d ' ')
+            category=$(echo "${BASH_REMATCH[1]}" | tr -d ' ')
             if [[ -z "$category" ]]; then
               category=""
             fi
@@ -55,9 +55,9 @@ jobs:
           fi
 
       - name: Create new branch
+        id: new_branch
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           git config --local user.email "action@github.com"
@@ -74,11 +74,12 @@ jobs:
           # Create the directory structure for the documentation
           mkdir -p "$dir_path"
 
-          # Create a new markdown file with the issue's body as content
-          echo "$ISSUE_BODY" > "$dir_path/${subject}_DECISION.md"
+          # Create a new markdown file with the decision template as content
+          cat docs/decisions/_template.md > "$dir_path/${subject}_DECISION.md"
           git add .
           git commit -m "$ISSUE_TITLE"
           git push origin "docs/${ISSUE_NUMBER}_decision-$subject"
+          echo "subject=$subject" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -88,3 +89,6 @@ jobs:
           title: 'Automated PR ${{ github.event.issue.title }}'
           labels: 'documentation,decision'
           body: 'This PR was automatically created to document ${{ github.event.issue.number }}.'
+          base: 'main'
+          branch: 'docs/${{ github.event.issue.number }}_decision-${{ steps.new_branch.outputs.subject }}'
+          draft: true
