@@ -25,18 +25,20 @@
 
 ## Considered Options <!-- optional -->
 
+<!-- Add reasons why to pick or not to pick each of them based on decision drivers -->
+
 ### [option 1]
 
 [ description ] <!-- optional -->
 
-- :green_circle: Better **[driver 1]**
-  - [argument]
-  - [argument]
-- :green_circle: Better **[driver 2]**
-  - [argument]
-- :orange_circle: Worse **[driver 3]**
-  - [argument]
-- … <!-- numbers of pros and cons can vary -->
+**[Driver 1]:**
+
+- :green_circle: [argument A]
+- :green_circle: [argument B]
+- :orange_circle: [argument C]
+
+**[Driver 2]:**  
+...
 
 ### [option 2]
 
