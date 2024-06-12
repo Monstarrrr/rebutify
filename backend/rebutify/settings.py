@@ -82,7 +82,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
 APPEND_SLASH = True
-PREPEND_WWW = True
+PREPEND_WWW = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
