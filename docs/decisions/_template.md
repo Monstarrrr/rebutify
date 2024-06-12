@@ -16,47 +16,41 @@
 
 ## Context <!--optional -->
 
-[Communicate the importance of this decision; Add any necessary context here;]
+[Communicate what this decision is about exactly; the importance of it;]
 
-## Decision Drivers <!-- optional -->
+## Decision Drivers
 
-- [driver 1, e.g., a force, facing concern, …]
-- [driver 2, e.g., a force, facing concern, …]
-- … <!-- numbers of drivers can vary -->
+- [driver 1, e.g., "scalability", "ease of use"]
+- ...
 
 ## Considered Options <!-- optional -->
 
 ### [option 1]
 
-[description | example | … ] <!-- optional -->
+[ description ] <!-- optional -->
 
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
+- :green_circle: Better **[driver 1]**
+  - [argument]
+  - [argument]
+- :green_circle: Better **[driver 2]**
+  - [argument]
+- :orange_circle: Worse **[driver 3]**
+  - [argument]
 - … <!-- numbers of pros and cons can vary -->
 
 ### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
 
 ...
 
 ## Decision Outcome
 
 **Chosen option**:  
-**Reason(s)**: [e.g., only option which meets criterion | comes out best (see below)].
+**Reason**:
 
 ### Positive Consequences <!-- optional -->
 
 -
-- …
 
 ### Negative Consequences <!-- optional -->
 
 -
-- …
