@@ -84,6 +84,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create --base main --head 'docs/${{ github.event.issue.number }}_decision-${{ steps.new_branch.outputs.subject }}' --draft --label decision --label documentation --title "Add documentation for decision: ${{ github.event.issue.title }}" --body "Created by Github action from ${{ github.event.issue.number }}"
+          gh pr create --base main --head 'docs/${ISSUE_NUMBER}_decision-${{ steps.new_branch.outputs.subject }}' --draft --label decision --label documentation --title "Add documentation for decision: ${ISSUE_TITLE}" --body "Created by Github action from ${ISSUE_NUMBER}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
