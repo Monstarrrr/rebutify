@@ -199,6 +199,12 @@ SECURE_SSL_REDIRECT = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", False))
 SESSION_COOKIE_SECURE = bool(os.getenv("DJANGO_SESSION_COOKIE_SECURE", False))
 CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", False))
 
+# Write emails to directory EMAIL_FILE_PATH if special debug flag is true
+DEBUG_MAIL = bool(os.getenv("DEBUG_MAIL", "True") == "True")
+if DEBUG_MAIL:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = ".emails"
+
 EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
