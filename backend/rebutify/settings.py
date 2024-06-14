@@ -38,6 +38,9 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+# Name of website used in activation, password reset emails, etc.
+SITE_NAME = os.getenv("SITE_NAME", "rebutify.org")
+
 # URL used in activation, password reset emails, etc.
 SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
 
