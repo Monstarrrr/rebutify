@@ -71,16 +71,23 @@ jobs:
           else
             dir_path="docs/decisions/$category"
           fi
+          echo "The directory path is: $dir_path"
 
           # Create the directory structure for the documentation
           mkdir -p "$dir_path"
 
           # Create a new markdown file with the decision template as content
           cat docs/decisions/_template.md > "$dir_path/${subject}_DECISION.md"
+          echo "The decision file has been created: $dir_path/${subject}_DECISION.md"
           git add .
+          echo "Committing changes..."
           git commit -m "$ISSUE_TITLE"
+          echo "Pushing changes..."
           git push origin "docs/${ISSUE_NUMBER}_decision-$subject"
           echo "subject=$subject" >> $GITHUB_OUTPUT
+          git status
+          git branch
+          git log --oneline -n 3
 
       - name: Create Pull Request
         run: |
