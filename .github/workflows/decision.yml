@@ -84,6 +84,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create --base main --head 'docs/${ISSUE_NUMBER}_decision-${subject}' --draft --label decision --label documentation --title "Add documentation for decision: ${ISSUE_TITLE}" --body "Created by Github action from ${ISSUE_NUMBER}"
+          gh pr create --base main --head "docs/${ISSUE_NUMBER}_decision-${subject}" --draft --label decision --label documentation --title "Add documentation for decision: ${ISSUE_TITLE}" --body "Created by Github action from ${ISSUE_NUMBER}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
