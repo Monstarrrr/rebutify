@@ -57,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: schema
-        path: schema.yml
+        path: backend/schema.yml
         if-no-files-found: error
     
     - name: Upload Backend Test Results
@@ -65,5 +65,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: report
-        path: report.xml
+        path: backend/report.xml
         if-no-files-found: error
