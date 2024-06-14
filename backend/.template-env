@@ -27,6 +27,9 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_HOST=
 
+# Write emails to a local file
+DEBUG_MAIL=True
+
 # SMTP settings
 EMAIL_HOST=
 EMAIL_HOST_USER=
