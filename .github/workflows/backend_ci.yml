@@ -34,6 +34,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
+    
+    - name: Write dummy .env
+      run: |
+        cp .template-env .env
+        sed -i 's/^DJANGO_SECRET_KEY=.*/^DJANGO_SECRET_KEY=abc123/' .env
+        sed -i 's/^EMAIL_PORT=$/EMAIL_PORT=587/' .env
+        sed -i 's/^DJANGO_SECURE_HSTS_SECONDS=$/DJANGO_SECURE_HSTS_SECONDS=60/' .env
 
     - name: Run ruff
       run: |
