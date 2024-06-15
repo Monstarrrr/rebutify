@@ -17,6 +17,7 @@ API Paradigms define the structure, principles, and methodologies used to create
 
 ## Decision Drivers <!-- optional -->
 
+- Security
 - Performance
 - Ease of use
 - Scalability
@@ -37,6 +38,9 @@ RESTful APIs are based on stateless communication and use standard HTTP methods 
 
 ### GraphQL
 
+- **:red_circle: Worse** security
+  - https://news.ycombinator.com/item?id=40521518
+  - https://blog.logrocket.com/graphql-vs-rest-api-why-you-shouldnt-use-graphql/
 - **:green_circle: Better** performance
   - GraphQL reduces over-fetching and under-fetching by allowing clients to request exactly what they need
 - **:green_circle: Better** scalability
@@ -44,6 +48,11 @@ RESTful APIs are based on stateless communication and use standard HTTP methods 
 - **:orange_circle: Worse** ease of use
   - [Using graphQL is a lot less common.](https://blog.postman.com/graphql-vs-rest/)
   - [Testing is more difficult.](https://www.reddit.com/r/laravel/comments/yc4073/comment/itkea7o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+  - Ensuring security vulnerabilities are covered costs time
+
+### gRPC
+
+_gRPC is not relevant to us (yet) as it can only be used for API-to-API communication (it uses HTTP/2 which is not properly supported by client browsers)_
 
 ## Decision Outcome
 
