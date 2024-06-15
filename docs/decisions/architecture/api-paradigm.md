@@ -3,12 +3,11 @@
 ## [short title of solved problem]
 
 - **Impact**: 🟠 High
-- **Status**: 🔓 Awaiting decision...
+- **Status**: 🔒 Decided
 - **Deciders & Confidence**:
   - @purple-void ? / 5️
   - @seporterfield ? / 5️
-  - @Monstarrrr ? / 5️
-- **Links**:
+  - @Monstarrrr 5 / 5️
 - **Last updated**: [12-06-2024]
 
 ## Context and Problem Statement
@@ -56,15 +55,6 @@ _gRPC is not relevant to us (yet) as it can only be used for API-to-API communic
 
 ## Decision Outcome
 
-**Chosen option**:  
-**Reason**:
+**Chosen option**: REST
 
-### Positive Consequences <!-- optional -->
-
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-- …
-
-### Negative Consequences <!-- optional -->
-
-- [e.g., compromising quality attribute, follow-up decisions required, …]
-- …
+**Reason**: GraphQL is not secure and seem to easily turn into a nightmare; Rest is an established standard;

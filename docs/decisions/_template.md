@@ -43,5 +43,6 @@
 
 ## Decision Outcome
 
-**Chosen option**:  
+**Chosen option**:
+
 **Reason**:
