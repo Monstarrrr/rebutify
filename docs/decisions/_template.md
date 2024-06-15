@@ -1,7 +1,7 @@
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
-- **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
+- **Status**: [🔓 Deciding... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders & Confidence**:
 
   - @purple-void (? / 5️)
@@ -31,14 +31,17 @@
 
 [ description ] <!-- optional -->
 
-**[Driver 1]:**
+- :green_circle: **Better** [driver 1]
+  - [argument A]
+- :orange_circle: **Worse** [driver 2]
+  - [argument C]
+- :green_circle: **Better** [driver 3]
+  - [argument B]
+  - [argument C]
 
 - :green_circle: [argument A]
 - :green_circle: [argument B]
 - :orange_circle: [argument C]
-
-**[Driver 2]:**  
-...
 
 ### [option 2]
 
@@ -46,13 +49,6 @@
 
 ## Decision Outcome
 
-**Chosen option**:  
+**Chosen option**:
+
 **Reason**:
-
-### Positive Consequences <!-- optional -->
-
--
-
-### Negative Consequences <!-- optional -->
-
--
