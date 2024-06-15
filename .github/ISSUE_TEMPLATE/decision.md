@@ -1,3 +1,13 @@
+---
+name: Decision
+about: This category is for discussions and documentation of key decisions made within
+  the project.
+title: Decide on <TOPIC>
+labels: decision
+assignees: ''
+
+---
+
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
@@ -20,12 +30,10 @@
 
 ## Decision Drivers
 
-- [driver 1, e.g., "scalability", "ease of use"]
+- [driver 1 ("scalability"; "ease of use"; ...)]
 - ...
 
 ## Considered Options <!-- optional -->
-
-<!-- Add reasons why to pick or not to pick each of them based on decision drivers -->
 
 ### [option 1]
 
@@ -39,16 +47,11 @@
   - [argument B]
   - [argument C]
 
-- :green_circle: [argument A]
-- :green_circle: [argument B]
-- :orange_circle: [argument C]
-
 ### [option 2]
 
 ...
 
 ## Decision Outcome
 
-**Chosen option**:
-
+**Chosen option**:  
 **Reason**:

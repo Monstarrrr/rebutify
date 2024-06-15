@@ -38,6 +38,9 @@ ALLOWED_HOSTS: List[str] = (
     else ["localhost", "127.0.0.1"]
 )
 
+# Name of website used in activation, password reset emails, etc.
+SITE_NAME = os.getenv("SITE_NAME", "rebutify.org")
+
 # URL used in activation, password reset emails, etc.
 SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
 
@@ -81,7 +84,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
-APPEND_SLASH = False
+APPEND_SLASH = True
+PREPEND_WWW = False
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -198,13 +202,20 @@ SECURE_SSL_REDIRECT = bool(os.getenv("DJANGO_SECURE_SSL_REDIRECT", False))
 SESSION_COOKIE_SECURE = bool(os.getenv("DJANGO_SESSION_COOKIE_SECURE", False))
 CSRF_COOKIE_SECURE = bool(os.getenv("DJANGO_CSRF_COOKIE_SECURE", False))
 
+# Write emails to directory EMAIL_FILE_PATH if special debug flag is true
+DEBUG_MAIL = bool(os.getenv("DEBUG_MAIL", "True") == "True")
+if DEBUG_MAIL:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = ".emails"
+
 EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", ""))
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 
-EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+EMAIL_FROM = os.getenv("EMAIL_FROM", "noreply@rebutify.org")
+DEFAULT_FROM_EMAIL = EMAIL_FROM
 
 DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",

@@ -10,4 +10,5 @@ from django.contrib.sites.models import Site
 
 site = Site.objects.get(id=settings.SITE_ID)
 site.domain = settings.SITE_URL
+site.name = settings.SITE_NAME
 site.save()
