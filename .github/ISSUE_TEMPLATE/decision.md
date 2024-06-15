@@ -1,26 +1,21 @@
 ---
 name: Decision
-about: This category is for discussions and documentation of key decisions made within
-  the project.
+about: To open a discussion and documentation for a key decision about the project's repository.
 title: Decide on <TOPIC>
 labels: decision
 assignees: ''
 
 ---
 
-## [short title of solved problem]
-
-- **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
-- **Status**: [🔓 Deciding... | 🔒 Decided | ⛔ Deprecated]
+- **Impact**:
+<!-- [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low] -->
+- **Status**:
+<!-- [🔓 Deciding... | 🔒 Decided | ⛔ Deprecated] -->
 - **Deciders & Confidence**:
 
   - @purple-void (? / 5️)
   - @seporterfield (? / 5️)
   - @Monstarrrr (? / 5️)
-
-- **Technical Story**: <!-- optional related URLs -->
-
-  - [e.g. [Pull Request #58 | "Write CODE_OF_CONDUCT.md - (github.com)"](https://github.com/Monstarrrr/rebutify/pull/58)]
 
 - **Last updated**: [DD-MM-YYYY]
 
@@ -30,10 +25,12 @@ assignees: ''
 
 ## Decision Drivers
 
-- [driver 1 ("scalability"; "ease of use"; ...)]
+- [driver 1, e.g., "scalability", "ease of use"]
 - ...
 
 ## Considered Options <!-- optional -->
+
+<!-- Add reasons why to pick or not to pick each of them based on decision drivers -->
 
 ### [option 1]
 
@@ -47,11 +44,16 @@ assignees: ''
   - [argument B]
   - [argument C]
 
+- :green_circle: [argument A]
+- :green_circle: [argument B]
+- :orange_circle: [argument C]
+
 ### [option 2]
 
 ...
 
 ## Decision Outcome
 
-**Chosen option**:  
+**Chosen option**:
+
 **Reason**:
