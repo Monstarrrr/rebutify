@@ -11,7 +11,7 @@ assignees: ''
 ## [short title of solved problem]
 
 - **Impact**: [🔴 Major | 🟠 High | 🟡 Medium | 🟢 Low]
-- **Status**: [🔓 Awaiting decision... | 🔒 Decided | ⛔ Deprecated]
+- **Status**: [🔓 Deciding... | 🔒 Decided | ⛔ Deprecated]
 - **Deciders & Confidence**:
 
   - @purple-void (? / 5️)
@@ -30,25 +30,22 @@ assignees: ''
 
 ## Decision Drivers
 
-- [driver 1, e.g., "scalability", "ease of use"]
+- [driver 1 ("scalability"; "ease of use"; ...)]
 - ...
 
 ## Considered Options <!-- optional -->
-
-<!-- Add reasons why to pick or not to pick each of them based on decision drivers -->
 
 ### [option 1]
 
 [ description ] <!-- optional -->
 
-**[Driver 1]:**
-
-- :green_circle: [argument A]
-- :green_circle: [argument B]
-- :orange_circle: [argument C]
-
-**[Driver 2]:**  
-...
+- :green_circle: **Better** [driver 1]
+  - [argument A]
+- :orange_circle: **Worse** [driver 2]
+  - [argument C]
+- :green_circle: **Better** [driver 3]
+  - [argument B]
+  - [argument C]
 
 ### [option 2]
 
@@ -58,11 +55,3 @@ assignees: ''
 
 **Chosen option**:  
 **Reason**:
-
-### Positive Consequences <!-- optional -->
-
--
-
-### Negative Consequences <!-- optional -->
-
--
