@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { getInjectedStore } from '@/store/injector'
-import { UserType, updateUser } from '@/store/slices/user'
 import isTokenExpired from '@/helpers/isTokenExpired'
 
 // API INSTANCE
@@ -53,12 +51,20 @@ api.interceptors.request.use(
 // On response
 api.interceptors.response.use(
   (res) => {
-    // Add tokens to local storage
-    localStorage.setItem('access_token', res.data?.access)
-    localStorage.setItem('refresh_token', res.data?.refresh)
-    const user: UserType = res.data
-    const store = getInjectedStore()
-    store?.dispatch(updateUser(user))
+    // Add tokens to local storage if they are in the response
+    if (res.data?.access || res.data?.refresh) {
+      localStorage.setItem('access_token', res.data?.access)
+      localStorage.setItem('refresh_token', res.data?.refresh)
+    }
+    if (res.data?.token) {
+      localStorage.setItem('access_token', res.data?.token)
+    }
+    if (res.headers['Authorization'].includes('Bearer')) {
+      localStorage.setItem(
+        'access_token',
+        res.headers['Authorization'].split(' ')[1],
+      )
+    }
 
     console.log('# Intercepted response:', res)
     return res
