@@ -44,10 +44,6 @@ assignees: ''
   - [argument B]
   - [argument C]
 
-- :green_circle: [argument A]
-- :green_circle: [argument B]
-- :orange_circle: [argument C]
-
 ### [option 2]
 
 ...
