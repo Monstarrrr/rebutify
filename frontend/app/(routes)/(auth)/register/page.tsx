@@ -5,13 +5,11 @@ import api from '@/api'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
 import { formDataToObj } from '@/helpers/formDataToObj'
-import { useAppSelector } from '@/store/hooks'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
-  const user = useAppSelector((state) => state.user)
 
   const registerInputs: TextInputType[] = [
     {
