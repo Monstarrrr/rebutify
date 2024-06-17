@@ -58,14 +58,6 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
-
-      {/* 
-        We show the username to demonstrate that the user registered
-        through the API and their data was updated in the Redux store
-      */}
-      <p>user.username:</p>
-      <pre>{JSON.stringify(user.username, null, 2)}</pre>
-
       <Form
         id='register-form'
         buttonLabel='Register'

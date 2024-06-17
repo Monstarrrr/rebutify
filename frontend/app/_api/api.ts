@@ -23,7 +23,7 @@ api.interceptors.request.use(
         console.log('# Access token is not expired.')
         req.headers['authorization'] = `Bearer ${accessToken}`
       } else {
-        console.log('# Access token is expired.')
+        localStorage.removeItem('access_token')
       }
     } else if (
       refreshToken &&
@@ -34,7 +34,7 @@ api.interceptors.request.use(
         console.log('# Refresh token is not expired.')
         req.headers['authorization'] = `Bearer ${refreshToken}`
       } else {
-        console.log('# Refresh token is expired.')
+        localStorage.removeItem('refresh_token')
       }
     } else {
       console.log('# No tokens found in local storage.')
@@ -44,6 +44,12 @@ api.interceptors.request.use(
     return req
   },
   (error) => {
+    console.error('# error :', error)
+    if (error?.response?.status === 429) {
+      console.error('# Too many API requests: status', error.response.status)
+    } else if (error?.response?.status === 500) {
+      console.error('# Internal server error: status', error.response.status)
+    }
     return Promise.reject(error)
   },
 )
@@ -59,7 +65,7 @@ api.interceptors.response.use(
     if (res.data?.token) {
       localStorage.setItem('access_token', res.data?.token)
     }
-    if (res.headers['authorization'].includes('Bearer')) {
+    if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',
         res.headers['authorization'].split(' ')[1],
@@ -70,6 +76,7 @@ api.interceptors.response.use(
     return res
   },
   (error) => {
+    console.error('# res error :', error)
     return Promise.reject(error)
   },
 )
