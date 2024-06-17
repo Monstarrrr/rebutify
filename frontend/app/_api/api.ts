@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { getInjectedStore } from '@/store/injector'
-import { UserType, updateUser } from '@/store/slices/user'
+import isTokenExpired from '@/helpers/isTokenExpired'
 
 // API INSTANCE
 const api = axios.create({
@@ -16,10 +15,29 @@ api.interceptors.request.use(
       req.url += '/'
     }
 
-    // Add access token to header if it exists
-    const access_token = localStorage.getItem('access_token')
-    if (access_token !== 'null' && access_token !== 'undefined') {
-      req.headers.access_token = localStorage.getItem('access_token')
+    // Add tokens to request headers
+    const accessToken = localStorage.getItem('access_token')
+    const refreshToken = localStorage.getItem('refresh_token')
+    if (accessToken && accessToken !== 'null' && accessToken !== 'undefined') {
+      if (!isTokenExpired(accessToken)) {
+        console.log('# Access token is not expired.')
+        req.headers['authorization'] = `Bearer ${accessToken}`
+      } else {
+        console.log('# Access token is expired.')
+      }
+    } else if (
+      refreshToken &&
+      refreshToken !== 'null' &&
+      refreshToken !== 'undefined'
+    ) {
+      if (!isTokenExpired(refreshToken)) {
+        console.log('# Refresh token is not expired.')
+        req.headers['authorization'] = `Bearer ${refreshToken}`
+      } else {
+        console.log('# Refresh token is expired.')
+      }
+    } else {
+      console.log('# No tokens found in local storage.')
     }
 
     console.log('# Intercepted request:', req)
@@ -33,12 +51,20 @@ api.interceptors.request.use(
 // On response
 api.interceptors.response.use(
   (res) => {
-    // Add tokens to local storage
-    localStorage.setItem('access_token', res.data?.access)
-    localStorage.setItem('refresh_token', res.data?.refresh)
-    const user: UserType = res.data
-    const store = getInjectedStore()
-    store?.dispatch(updateUser(user))
+    // Add tokens to local storage if they are in the response
+    if (res.data?.access || res.data?.refresh) {
+      localStorage.setItem('access_token', res.data?.access)
+      localStorage.setItem('refresh_token', res.data?.refresh)
+    }
+    if (res.data?.token) {
+      localStorage.setItem('access_token', res.data?.token)
+    }
+    if (res.headers['authorization'].includes('Bearer')) {
+      localStorage.setItem(
+        'access_token',
+        res.headers['authorization'].split(' ')[1],
+      )
+    }
 
     console.log('# Intercepted response:', res)
     return res

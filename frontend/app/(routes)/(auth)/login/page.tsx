@@ -49,7 +49,7 @@ export default function Login() {
 
   return (
     <>
-      {/* 
+      {/*
         We show the username to demonstrate that the user logged in
         through the API and their data was updated in the Redux store
       */}
