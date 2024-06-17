@@ -21,7 +21,7 @@ api.interceptors.request.use(
     if (accessToken && accessToken !== 'null' && accessToken !== 'undefined') {
       if (!isTokenExpired(accessToken)) {
         console.log('# Access token is not expired.')
-        req.headers['Authorization'] = `Bearer ${accessToken}`
+        req.headers['authorization'] = `Bearer ${accessToken}`
       } else {
         console.log('# Access token is expired.')
       }
@@ -32,7 +32,7 @@ api.interceptors.request.use(
     ) {
       if (!isTokenExpired(refreshToken)) {
         console.log('# Refresh token is not expired.')
-        req.headers['Authorization'] = `Bearer ${refreshToken}`
+        req.headers['authorization'] = `Bearer ${refreshToken}`
       } else {
         console.log('# Refresh token is expired.')
       }
@@ -59,10 +59,10 @@ api.interceptors.response.use(
     if (res.data?.token) {
       localStorage.setItem('access_token', res.data?.token)
     }
-    if (res.headers['Authorization'].includes('Bearer')) {
+    if (res.headers['authorization'].includes('Bearer')) {
       localStorage.setItem(
         'access_token',
-        res.headers['Authorization'].split(' ')[1],
+        res.headers['authorization'].split(' ')[1],
       )
     }
 
