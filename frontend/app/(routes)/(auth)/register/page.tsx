@@ -1,10 +1,10 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import api from '@/api'
 import Form from '@/components/form'
 import { TextInputType } from '@/types/inputs'
 import { formDataToObj } from '@/helpers/formDataToObj'
+import api from '@/api/api'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)

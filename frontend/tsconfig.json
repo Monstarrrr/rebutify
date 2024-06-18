@@ -24,11 +24,12 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/api": ["./_api/api"],
+      "@/api/*": ["./_api/*"],
       "@/helpers/*": ["./_helpers/*"],
       "@/components/*": ["./_components/*"],
       "@/store/*": ["../store/*"],
-      "@/types/*": ["./_types/*"]
+      "@/types/*": ["./_types/*"],
+      "@/typeGuards/*": ["./_typeGuards/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
