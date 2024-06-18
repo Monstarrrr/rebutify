@@ -1,12 +1,5 @@
+import { UserType } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
-
-export type UserType = {
-  access?: string
-  email: string
-  id: number | null
-  refresh?: string
-  username: string
-}
 
 const initialState: UserType = {
   email: '',

@@ -1,4 +1,4 @@
-export type TextInputType = {
+export type TextInput = {
   id: string
   placeholder: string
   value: string

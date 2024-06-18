@@ -1,5 +1,5 @@
 import axios from 'axios'
-import isTokenExpired from '@/helpers/isTokenExpired'
+import { isTokenExpired } from '@/helpers'
 
 // API INSTANCE
 const api = axios.create({

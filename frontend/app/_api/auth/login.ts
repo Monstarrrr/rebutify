@@ -1,18 +1,13 @@
-import { isLoginRequestType } from '@/typeGuards/isLoginRequest'
+import { FormDataObj } from '@/types'
 import api from '@/api/api'
 
-export const login = async (formData: unknown) => {
+export const login = async (formData: FormDataObj) => {
   try {
-    // Check if the formData is a LoginRequest type
-    if (isLoginRequestType(formData)) {
-      // Request JWT access & refresh tokens
-      const response = await api.post('/auth/jwt/create', {
-        ...formData,
-      })
-      return response.data
-    } else {
-      throw new Error('formData must be a LoginRequest type.')
-    }
+    // Request JWT access & refresh tokens
+    const response = await api.post('/auth/jwt/create', {
+      ...formData,
+    })
+    return response.data
   } catch (error) {
     console.error('# Login request aborted: ', error)
     throw error

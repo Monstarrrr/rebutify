@@ -1,15 +1,15 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import Form from '@/components/form'
-import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/helpers/formDataToObj'
+import { Form } from '@/components'
+import { ApiResponse, TextInput } from '@/types'
+import { formDataToObj } from '@/helpers'
 import { useAppDispatch } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, getUserInfo } from '@/api/auth'
 
-const loginInputs: TextInputType[] = [
+const loginInputs: TextInput[] = [
   {
     id: 'username',
     placeholder: 'Username',
@@ -27,7 +27,7 @@ const successMessage = 'Logged in successfully.'
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [apiErrors, setApiErrors] = useState<ApiResponseType | null>(null)
+  const [apiErrors, setApiErrors] = useState<ApiResponse | null>(null)
   const dispatch = useAppDispatch()
   const router = useRouter()
 

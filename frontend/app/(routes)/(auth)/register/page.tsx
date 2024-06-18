@@ -1,17 +1,17 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import Form from '@/components/form'
-import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/helpers/formDataToObj'
-import api from '@/api/api'
+import { Form } from '@/components'
+import { ApiResponse, TextInput } from '@/types'
+import { formDataToObj } from '@/helpers'
+import { register } from '@/api/auth/register'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiResponse | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
 
-  const registerInputs: TextInputType[] = [
+  const registerInputs: TextInput[] = [
     {
       id: 'username',
       placeholder: 'Username',
@@ -38,12 +38,10 @@ export default function Register() {
     setApiFormErrors(null)
     setFormSuccess(false)
 
-    const data = formDataToObj(event)
+    const formData = formDataToObj(event)
 
     try {
-      await api.post('/auth/users', {
-        ...data,
-      })
+      register(formData)
       setIsLoading(false)
       setFormSuccess(true)
     } catch (error: any) {

@@ -25,9 +25,12 @@
     "paths": {
       "@/*": ["./*"],
       "@/api/*": ["./_api/*"],
+      "@/helpers": ["./_helpers"],
       "@/helpers/*": ["./_helpers/*"],
+      "@/components": ["./_components"],
       "@/components/*": ["./_components/*"],
       "@/store/*": ["../store/*"],
+      "@/types": ["./_types"],
       "@/types/*": ["./_types/*"],
       "@/typeGuards/*": ["./_typeGuards/*"]
     }
