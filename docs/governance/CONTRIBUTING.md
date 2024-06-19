@@ -86,5 +86,12 @@ Start the development server with
 python backend/manage.py runserver
 ```
 
+#### 2.1 OpenAPI Spec
 
+We use [drf-spectacular](https://github.com/tfranzel/drf-spectacular) to autogenerate our OpenAPI spec.
+
+Access the OpenAPI spec in three ways while running the django server:
+- Download the spec from `/api/schema/`
+- Use Swagger UI at `/api/schema/swagger-ui/`
+- Use Redoc UI at `/api/schema/redoc-ui/`
 
