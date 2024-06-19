@@ -67,6 +67,12 @@ git commit -m "emergency! skipping hooks" --no-verify
 
 Install the project first as lined out in the [README](README.md).
 
+Add the site URL in the database
+
+```bash
+python manage.py shell < scripts/update_site_domain.py
+```
+
 Start the development server with
 
 ```bash

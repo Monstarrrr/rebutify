@@ -1,4 +1,4 @@
-type ApiResponseType = {
+export type ApiResponse = {
   config: Object
   data: {
     [key: string]: string[]

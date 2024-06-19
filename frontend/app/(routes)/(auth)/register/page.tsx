@@ -1,19 +1,17 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import api from '@/api'
-import Form from '@/components/form'
-import { TextInputType } from '@/types/inputs'
-import { formDataToObj } from '@/helpers/formDataToObj'
-import { useAppSelector } from '@/store/hooks'
+import { Form } from '@/components'
+import { ApiResponse, TextInput } from '@/types'
+import { formDataToObj } from '@/helpers'
+import { register } from '@/api/auth/register'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiResponseType | null>(null)
+  const [apiFormErrors, setApiFormErrors] = useState<ApiResponse | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
-  const user = useAppSelector((state) => state.user)
 
-  const registerInputs: TextInputType[] = [
+  const registerInputs: TextInput[] = [
     {
       id: 'username',
       placeholder: 'Username',
@@ -40,12 +38,10 @@ export default function Register() {
     setApiFormErrors(null)
     setFormSuccess(false)
 
-    const data = formDataToObj(event)
+    const formData = formDataToObj(event)
 
     try {
-      await api.post('/auth/users', {
-        ...data,
-      })
+      register(formData)
       setIsLoading(false)
       setFormSuccess(true)
     } catch (error: any) {
@@ -58,14 +54,6 @@ export default function Register() {
   return (
     <>
       <h1>Register</h1>
-
-      {/* 
-        We show the username to demonstrate that the user registered
-        through the API and their data was updated in the Redux store
-      */}
-      <p>user.username:</p>
-      <pre>{JSON.stringify(user.username, null, 2)}</pre>
-
       <Form
         id='register-form'
         buttonLabel='Register'

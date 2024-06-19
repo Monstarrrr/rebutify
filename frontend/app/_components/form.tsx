@@ -1,15 +1,6 @@
-import { TextInputType } from '@/types/inputs'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-
-type FormProps = {
-  buttonLabel: string
-  id: string
-  inputsErrors: ApiResponseType | null
-  inputsFields: TextInputType[]
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void
-  loading?: boolean
-  successMessage?: string | null
-}
+'use client'
+import { FormProps, TextInput } from '@/types'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 export default function Form(props: FormProps) {
   const {
@@ -32,7 +23,7 @@ export default function Form(props: FormProps) {
     if (Object.keys(cachedInputs).length > 0) {
       setInputsState((prevInputs) =>
         prevInputs.map(
-          (input): TextInputType => ({
+          (input): TextInput => ({
             ...input,
             value: Object.keys(cachedInputs).includes(input.id)
               ? cachedInputs[input.id]

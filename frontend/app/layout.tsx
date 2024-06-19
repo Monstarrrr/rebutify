@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/globals.css'
 import StoreProvider from '@/store/Provider'
+import { Header } from '@/components'
+import { ReactNode } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,14 +13,17 @@ export const metadata: Metadata = {
 }
 
 type PropsType = Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>
 
 export default function RootLayout({ children }: PropsType) {
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <Header />
+          {children}
+        </StoreProvider>
       </body>
     </html>
   )

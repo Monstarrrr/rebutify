@@ -1,6 +1,6 @@
 'use client'
 
-import Activate from '@/components/activate'
+import { Activate } from '@/components'
 import { Suspense } from 'react'
 
 export default function Verify() {

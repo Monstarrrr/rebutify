@@ -1,6 +1,6 @@
 'use client'
 
-import api from '@/api'
+import api from '@/api/api'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'

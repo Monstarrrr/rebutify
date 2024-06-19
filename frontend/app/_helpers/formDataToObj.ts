@@ -1,11 +1,8 @@
+import { FormDataObj } from '@/types'
 import { FormEvent } from 'react'
 
-type FormDataObj = {
-  [key: string]: string | File
-}
-
 // Convert FormData entries to a plain object
-export function formDataToObj(event: FormEvent<HTMLFormElement>) {
+export default function formDataToObj(event: FormEvent<HTMLFormElement>) {
   /* 
     Use FormData to collect values (rather than e.g. finding <input> elements) 
     to ensure we get values from all form items correctly (e.g. checkboxes and textareas).
