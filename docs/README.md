@@ -65,4 +65,4 @@ gunicorn --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker rebutify.asgi:appl
 
 # 3. Contributing
 
-For instructions on contributing, read [CONTRIBUTING.md](CONTRIBUTING.md).
+For instructions on contributing, read [CONTRIBUTING.md](governance/CONTRIBUTING.md).
