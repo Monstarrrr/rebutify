@@ -12,3 +12,5 @@ site = Site.objects.get(id=settings.SITE_ID)
 site.domain = settings.SITE_URL
 site.name = settings.SITE_NAME
 site.save()
+
+print("Success\n")
