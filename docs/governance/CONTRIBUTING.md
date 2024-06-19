@@ -67,6 +67,13 @@ git commit -m "emergency! skipping hooks" --no-verify
 
 Install the project first as lined out in the [README](README.md).
 
+Create and run database migrations with
+
+```
+python backend/manage.py makemigrations
+python backend/manage.py migrate
+```
+
 Add the site URL in the database
 
 ```bash
@@ -79,9 +86,5 @@ Start the development server with
 python backend/manage.py runserver
 ```
 
-Create and run database migrations with
 
-```
-python backend/manage.py makemigrations
-python backend/manage.py migrate
-```
+
