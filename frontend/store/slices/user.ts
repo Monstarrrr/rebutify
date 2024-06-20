@@ -1,7 +1,7 @@
-import { UserType } from '@/types'
+import { UserInfo } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState: UserType = {
+const initialState: UserInfo = {
   email: '',
   id: null,
   username: '',
@@ -14,8 +14,8 @@ const userSlice = createSlice({
     removeUser() {
       return initialState
     },
-    updateUser(state, { payload }) {
-      return { ...state, ...payload }
+    updateUser(state, action: { payload: UserInfo }) {
+      return { ...state, ...action.payload }
     },
   },
 })

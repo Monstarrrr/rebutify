@@ -7,7 +7,7 @@ import { formDataToObj } from '@/helpers'
 import { useAppDispatch } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
-import { login, getUserInfo } from '@/api/auth'
+import { login, fetchUserInfo } from '@/api/auth'
 
 const loginInputs: TextInput[] = [
   {
@@ -39,7 +39,7 @@ export default function Login() {
 
     try {
       await login(formData)
-      const userInfo = await getUserInfo()
+      const userInfo = await fetchUserInfo()
 
       setLoading(false)
       setSuccess(true)
