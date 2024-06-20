@@ -94,7 +94,7 @@ repos:
       - id: prettier
         name: "
           Formatting front-end code \n
-          (Note: re-commit if files were formatted)
+          (Note: re-commit if files were modified by this hook)
         "
         stages: [pre-commit]
         # Apply to all files in the frontend directory
