@@ -4,7 +4,6 @@ about: To open a discussion and documentation for a key decision about the proje
 title: Decide on <TOPIC>
 labels: decision
 assignees: ''
-
 ---
 
 - **Impact**:
@@ -16,8 +15,6 @@ assignees: ''
   - @purple-void (? / 5️)
   - @seporterfield (? / 5️)
   - @Monstarrrr (? / 5️)
-
-- **Last updated**: [DD-MM-YYYY]
 
 ## Context <!--optional -->
 
