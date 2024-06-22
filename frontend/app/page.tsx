@@ -5,9 +5,10 @@ import { useEffect } from 'react'
 
 export default function Home() {
   const router = useRouter()
-  const user = useAppSelector((state) => state.user.access)
+  const user = useAppSelector((state) => state.user.username)
 
   useEffect(() => {
+    console.log('user')
     if (!user) {
       router.push('/login')
     }
