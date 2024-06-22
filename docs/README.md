@@ -8,8 +8,8 @@ Official repository of [rebutify.org](https://rebutify.org)
   - [1.1 Environment Variables](#11-environment-variables)
   - [1.2. Docker](#12-docker)
   - [1.3. Python](#13-python)
-      - [Unix OS](#unix-os)
-      - [Windows OS](#windows-os)
+    - [Unix OS](#unix-os)
+    - [Windows OS](#windows-os)
 - [2. Deployment](#2-deployment)
 - [3. Contributing](#3-contributing)
 
@@ -36,21 +36,28 @@ docker compose up
 
 ## 1.3. Python
 
-**Install** the dependencies in a new virtual environment from the root directory ``/rebutify``.
+**Install** the dependencies in a new virtual environment from the root directory `/rebutify`.
 
 ```bash
 python -m venv .venv
 ```
-----
+
+---
+
 #### Unix OS
+
 ```bash
 source .venv/bin/activate
 ```
+
 #### Windows OS
+
 ```bash
 source .venv/Scripts/activate
 ```
-----
+
+---
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -65,4 +72,4 @@ gunicorn --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker rebutify.asgi:appl
 
 # 3. Contributing
 
-For instructions on contributing, read [CONTRIBUTING.md](governance/CONTRIBUTING.md).
+For instructions on contributing, read [CONTRIBUTING.md](./CONTRIBUTING.md).
