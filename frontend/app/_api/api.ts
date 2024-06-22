@@ -1,60 +1,60 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import { isTokenExpired } from '@/helpers'
+import { refreshTheToken } from '@/api/auth/refreshTheToken'
 
 // API INSTANCE
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
-function setAuthorizationHeader(
-  token: string | null,
-  tokenType: 'access' | 'refresh',
-  req: AxiosRequestConfig,
-) {
-  if (token && token !== 'null' && token !== 'undefined') {
-    if (!isTokenExpired(token)) {
-      console.log(`# ${tokenType} token is not expired.`)
-      req.headers = {
-        ...req.headers,
-        authorization: `Bearer ${token}`,
-      }
-      return true
-    } else {
-      localStorage.removeItem(`${tokenType}_token`)
-    }
-  }
-  return false
-}
+let refreshTokenPromise // used to queue up requests
 
 // INTERCEPTORS
 // On request
 api.interceptors.request.use(
-  (req) => {
+  async (req) => {
     // Ensures '/' is added at the end of URLs to prevent 404 errors
     if (req.url && req.url[req.url.length - 1] !== '/') {
       req.url += '/'
     }
+    console.log('# req.requiresAuth :', req.requiresAuth)
     if (req.requiresAuth) {
-      /*
-        If a token is found in local storage, we add it to the header
-        otherwise, we reject the request.
-      */
+      // temp
       const accessToken = localStorage.getItem('access_token')
       const refreshToken = localStorage.getItem('refresh_token')
-      if (!setAuthorizationHeader(accessToken, 'access', req)) {
-        if (!setAuthorizationHeader(refreshToken, 'refresh', req)) {
-          return Promise.reject(
-            `${req.url} : No valid token found in local storage, aborting request.`,
-          )
-        }
+      if (
+        accessToken &&
+        accessToken !== 'null' &&
+        accessToken !== 'undefined' &&
+        !isTokenExpired(accessToken)
+      ) {
+        console.log(`# accessToken is not expired.`)
+        req.headers['authorization'] = `Bearer ${accessToken}`
+        return req
       }
+      console.log(`# accessToken is expired.`)
+      localStorage.removeItem(`access_token`)
+      if (
+        !refreshToken ||
+        refreshToken === 'null' ||
+        refreshToken === 'undefined'
+      ) {
+        console.log(`# No valid refresh token found.`)
+        return req
+      }
+      // Check for in-flight refresh requests and start one if required
+      refreshTokenPromise ??= refreshTheToken(refreshToken)
+      const newAccessToken = await refreshTokenPromise
+      refreshTokenPromise = null // clean in-flight state
+      localStorage.setItem('access_token', newAccessToken)
+      req.headers['authorization'] = `Bearer ${newAccessToken}`
     }
 
     console.log('# Intercepted request:', req)
     return req
   },
   (error) => {
-    console.error('# error :', error)
+    console.error('# request error :', error)
     return Promise.reject(error)
   },
 )
@@ -63,13 +63,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (res) => {
     // Add tokens to local storage if they are in the response
-    if (res.data?.access || res.data?.refresh) {
-      localStorage.setItem('access_token', res.data?.access)
-      localStorage.setItem('refresh_token', res.data?.refresh)
-    }
-    if (res.data?.token) {
-      localStorage.setItem('access_token', res.data?.token)
-    }
+    res.data?.access && localStorage.setItem('access_token', res.data?.access)
+    res.data?.refresh && localStorage.setItem('refresh_token', res.data?.refresh)
+    res.data?.token && localStorage.setItem('access_token', res.data?.token)
     if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',
@@ -81,9 +77,8 @@ api.interceptors.response.use(
     return res
   },
   (error) => {
-    console.error('# Intercepted error :', error)
+    console.log('# response error :', error)
     return Promise.reject(error)
   },
 )
-
 export default api
