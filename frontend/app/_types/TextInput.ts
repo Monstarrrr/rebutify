@@ -5,5 +5,5 @@ export type TextInput = {
   errors?: string[]
   label?: string
   required?: boolean
-  type?: 'text' | 'password' | 'email'
+  type?: 'text' | 'textarea' | 'password' | 'email'
 }

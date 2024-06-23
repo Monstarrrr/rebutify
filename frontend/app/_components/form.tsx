@@ -35,7 +35,9 @@ export default function Form(props: FormProps) {
   }, [formId])
 
   // Currently, only reason we update the state is to cache the fields values
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setInputsState((prev) =>
       prev.map((inputField) => {
         if (inputField.id === e.target.name) {
@@ -88,15 +90,26 @@ export default function Form(props: FormProps) {
         <label key={inputField.id}>
           {inputField.label || inputField.placeholder}
           <br />
-          <input
-            disabled={loading}
-            name={inputField.id}
-            placeholder={inputField.placeholder}
-            required={inputField.required || true}
-            onChange={handleChange}
-            value={inputField.value}
-            type={inputField.type || 'text'}
-          />
+          {inputField.type === 'textarea' ? (
+            <textarea
+              disabled={loading}
+              name={inputField.id}
+              placeholder={inputField.placeholder}
+              required={inputField.required || true}
+              onChange={handleChange}
+              value={inputField.value}
+            />
+          ) : (
+            <input
+              disabled={loading}
+              name={inputField.id}
+              placeholder={inputField.placeholder}
+              required={inputField.required || true}
+              onChange={handleChange}
+              value={inputField.value}
+              type={inputField.type || 'text'}
+            />
+          )}
           {/* Field errors */}
           {inputField.errors &&
             Object.values(inputField.errors).map((error) => (
