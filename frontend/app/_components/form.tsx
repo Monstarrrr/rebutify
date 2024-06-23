@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 
 export default function Form(props: FormProps) {
   const {
-    buttonLabel,
+    submitButtonLabel,
     id,
     inputsErrors,
     inputsFields,
@@ -136,7 +136,7 @@ export default function Form(props: FormProps) {
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
       <br />
       <button disabled={loading} type='submit'>
-        {loading ? 'Loading...' : buttonLabel}
+        {loading ? 'Loading...' : submitButtonLabel}
       </button>
     </form>
   )
