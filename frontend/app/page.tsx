@@ -1,5 +1,5 @@
 'use client'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
 import { Form } from '@/components'
 import type { TextInput } from '@/types'
