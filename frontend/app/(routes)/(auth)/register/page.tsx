@@ -12,7 +12,7 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponse | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
-  const user = useAppSelector((state) => state.user.username)
+  const user = useAppSelector((state) => state.user.id)
   const router = useRouter()
 
   const registerInputs: TextInput[] = [
