@@ -14,6 +14,11 @@ class PostSerializer(serializers.ModelSerializer):
         model = Posts
         fields = "__all__"
 
+    def validate_type(self, value):
+        if value not in ["argument", "rebuttal", "comment"]:
+            raise serializers.ValidationError("Invalid post type")
+        return value
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
