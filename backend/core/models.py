@@ -28,16 +28,7 @@ class Tags(models.Model):
 
 
 class Posts(models.Model):
-    """Posts database model
-
-    Posts include the following types, marked
-    by their postTypeId
-
-    Arguments (1)
-    Rebuttals (2)
-    Comments (3)
-    Tag wikis (4)
-    """
+    """Posts database model"""
 
     type: models.CharField = models.CharField(
         max_length=10, choices=POSTS_TYPES, default=ARGUMENT
@@ -45,29 +36,8 @@ class Posts(models.Model):
     body: models.TextField = models.TextField()  # render as HTML
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
-    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
-    # MVP moment:
-    # acceptedAnswerId: models.IntegerField = models.IntegerField(null=True)
-    # parentId: models.IntegerField = models.IntegerField(null=True)
-    # deleted_at: models.DateTimeField = models.DateTimeField(null=True)
-    # score: models.IntegerField = models.IntegerField(default=0)
-    # viewcount: models.IntegerField = models.IntegerField(default=0, null=True)
-    # ownerDisplayName: models.CharField = models.CharField(
-    #     max_length=OWNER_MAX_LEN, null=True
-    # )
-    # lastEditorUserId: models.IntegerField = models.IntegerField(null=True)
-    # lastEditorDisplayName: models.CharField = models.CharField(
-    #     max_length=LAST_EDITOR_MAX_LEN, null=True
-    # )
-    # lastEditDate: models.DateField = models.DateField(null=True)
-    # lastActivityDate: models.DateField = models.DateField()
-    # tags: models.ManyToManyField = models.ManyToManyField(Tags, related_name="tags")
-    # answerCount: models.IntegerField = models.IntegerField(default=0, null=True)
-    # commentCount: models.IntegerField = models.IntegerField(default=0, null=True)
-    # favoriteCount: models.IntegerField = models.IntegerField(default=0, null=True)
-    # closedDate: models.DateField = models.DateField(null=True)
-    # communityOwnedDate: models.DateField = models.DateField(null=True)
+    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.title} ({self.type})"
