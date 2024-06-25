@@ -39,9 +39,6 @@ class Posts(models.Model):
     createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.title} ({self.type})"
-
 
 class UserProfile(models.Model):
     # Public

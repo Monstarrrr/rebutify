@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Posts, Tags, UserProfile
+from .models import POSTS_TYPES, Posts, Tags, UserProfile
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -12,18 +12,12 @@ class TagSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
-        fields = [
-            "id",
-            "type",
-            "body",
-            "title",
-            "ownerUserId",
-            "created_at",
-            "updated_at",
-        ]
+        fields = "__all__"
 
     def validate_type(self, value):
-        if value not in ["argument", "rebuttal", "comment"]:
+        if (
+            value not in list(zip(*POSTS_TYPES))[0]
+        ):  # validate against post types in models.py
             raise serializers.ValidationError("Invalid post type")
         return value
 
