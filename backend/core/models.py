@@ -45,11 +45,11 @@ class Posts(models.Model):
     body: models.TextField = models.TextField()  # render as HTML
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
     # MVP moment:
     # acceptedAnswerId: models.IntegerField = models.IntegerField(null=True)
     # parentId: models.IntegerField = models.IntegerField(null=True)
-    # created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-    # updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
     # deleted_at: models.DateTimeField = models.DateTimeField(null=True)
     # score: models.IntegerField = models.IntegerField(default=0)
     # viewcount: models.IntegerField = models.IntegerField(default=0, null=True)
