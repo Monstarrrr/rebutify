@@ -10,16 +10,48 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.permissions import (
+    SAFE_METHODS,
+    BasePermission,
+    IsAdminUser,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
 from .models import Posts, Tags, UserProfile
-from .serializers import PostSerializer, TagSerializer, UserProfileSerializer
+from .serializers import (
+    # ArgumentSerializer,
+    PostSerializer,
+    TagSerializer,
+    UserProfileSerializer,
+)
 from .token import account_activation_token
+
+
+class IsOwnerOrReadOnly(BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.owner == request.user
 
 
 def success(request):
     return HttpResponse("", status=200)
+
+
+"""class ArgumentViewSet(viewsets.ModelViewSet):
+    queryset = Posts.objects.get(type="argument")
+    serializer_class = ArgumentSerializer"""
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -30,6 +62,16 @@ class TagViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            print("creating!")
+            return [IsAuthenticated()]
+        if self.action == "update" or self.action == "delete":
+            print("abc")
+            return [IsOwnerOrReadOnly(), IsAdminUser()]
+        print("what??")
+        return []
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
