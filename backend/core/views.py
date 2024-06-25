@@ -65,12 +65,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == "create":
-            print("creating!")
             return [IsAuthenticated()]
         if self.action == "update" or self.action == "delete":
-            print("abc")
             return [IsOwnerOrReadOnly(), IsAdminUser()]
-        print("what??")
         return []
 
 
