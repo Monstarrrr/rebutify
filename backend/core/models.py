@@ -69,6 +69,9 @@ class Posts(models.Model):
     # closedDate: models.DateField = models.DateField(null=True)
     # communityOwnedDate: models.DateField = models.DateField(null=True)
 
+    def __str__(self):
+        return f"{self.title} ({self.type})"
+
 
 class UserProfile(models.Model):
     # Public

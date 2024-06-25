@@ -12,7 +12,15 @@ class TagSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
-        fields = "__all__"
+        fields = [
+            "id",
+            "type",
+            "body",
+            "title",
+            "ownerUserId",
+            "created_at",
+            "updated_at",
+        ]
 
     def validate_type(self, value):
         if value not in ["argument", "rebuttal", "comment"]:
