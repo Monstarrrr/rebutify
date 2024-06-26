@@ -8,7 +8,6 @@ export default function ClientInitializer() {
   const dispatch = useAppDispatch()
   useEffect(() => {
     const handleFetchUserInfo = async () => {
-      console.log('##### ClientInitializer')
       try {
         const userInfo = await fetchUserInfo()
         dispatch(updateUser(userInfo))

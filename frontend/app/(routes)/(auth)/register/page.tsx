@@ -1,15 +1,19 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Form } from '@/components'
 import { ApiResponse, TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { register } from '@/api/auth/register'
+import { useAppSelector } from '@/store/hooks'
+import { useRouter } from 'next/navigation'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [apiFormErrors, setApiFormErrors] = useState<ApiResponse | null>(null)
   const [formSuccess, setFormSuccess] = useState(false)
+  const user = useAppSelector((state) => state.user.username)
+  const router = useRouter()
 
   const registerInputs: TextInput[] = [
     {
@@ -30,7 +34,14 @@ export default function Register() {
       value: '',
     },
   ]
+  const submitButtonLabel = 'Register'
   const successMessage = 'Check your email to verify your account.'
+
+  useEffect(() => {
+    if (user) {
+      router.push('/')
+    }
+  }, [user, router])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -56,7 +67,7 @@ export default function Register() {
       <h1>Register</h1>
       <Form
         id='register-form'
-        buttonLabel='Register'
+        submitButtonLabel={submitButtonLabel}
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}

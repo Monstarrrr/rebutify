@@ -1,10 +1,10 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Form } from '@/components'
 import { ApiResponse, TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
-import { useAppDispatch } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
@@ -22,6 +22,7 @@ const loginInputs: TextInput[] = [
     value: '',
   },
 ]
+const submitButtonLabel = 'Login'
 const successMessage = 'Logged in successfully.'
 
 export default function Login() {
@@ -30,6 +31,14 @@ export default function Login() {
   const [apiErrors, setApiErrors] = useState<ApiResponse | null>(null)
   const dispatch = useAppDispatch()
   const router = useRouter()
+
+  const user = useAppSelector((state) => state.user.username)
+
+  useEffect(() => {
+    if (user) {
+      router.push('/')
+    }
+  }, [user, router])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -61,7 +70,7 @@ export default function Login() {
         onSubmit={handleSubmit}
         loading={loading}
         successMessage={success ? successMessage : null}
-        buttonLabel='Login'
+        submitButtonLabel={submitButtonLabel}
       />
     </>
   )

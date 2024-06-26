@@ -10,26 +10,68 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.permissions import (
+    SAFE_METHODS,
+    AllowAny,
+    BasePermission,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
-from .models import Posts, Tags, UserProfile
-from .serializers import PostSerializer, TagSerializer, UserProfileSerializer
+from .models import Posts, UserProfile
+from .serializers import (
+    ArgumentSerializer,
+    PostSerializer,
+    UserProfileSerializer,
+)
 from .token import account_activation_token
+
+
+class IsOwnerOrReadOnly(BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in SAFE_METHODS:
+            return True
+        # Instance must have an attribute named `ownerUserId`.
+        return obj.ownerUserId == request.user
 
 
 def success(request):
     return HttpResponse("", status=200)
 
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
-    serializer_class = TagSerializer
+class ArgumentViewSet(viewsets.ModelViewSet):
+    queryset = Posts.objects.filter(type="argument")
+    serializer_class = ArgumentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
+        return [AllowAny()]
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
+        return [AllowAny()]
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):

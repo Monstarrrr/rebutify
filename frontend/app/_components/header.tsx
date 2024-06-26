@@ -23,7 +23,8 @@ export default function Header() {
     <>
       {user.id ? (
         <div>
-          <h3>Welcome, {user.username}</h3>
+          <span>{user.username}</span>
+          {' | '}
           <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
@@ -31,6 +32,7 @@ export default function Header() {
           <Link href='/login'>Login</Link> <Link href='/register'>Register</Link>
         </div>
       )}
+      <br />
     </>
   )
 }

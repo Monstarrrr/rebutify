@@ -16,6 +16,7 @@ Please take a moment to review this document to understand how you can contribut
       - [1.3. Verify install](#13-verify-install)
       - [1.4. Skip pre-commit](#14-skip-pre-commit)
     - [2. Running Django](#2-running-django)
+    - [3. Conventions](#3-conventions)
 
 ## Ways to Contribute 🚀
 
@@ -95,3 +96,8 @@ Access the OpenAPI spec in three ways while running the django server:
 - Use Swagger UI at `/api/schema/swagger-ui/`
 - Use Redoc UI at `/api/schema/redoc-ui/`
 
+### 3. Conventions
+
+#### 3.1 Database table and column names
+
+We use camelCase for our database tables and column names defined in `models.py`.
