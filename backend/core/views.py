@@ -73,7 +73,9 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             return [IsAuthenticated()]
         if self.action in ["update", "delete", "partial_update"]:
-            return [IsOwnerOrReadOnly() | IsAdminUser()]
+            return [
+                IsOwnerOrReadOnly() | IsAdminUser(),
+            ]
         return [AllowAny()]
 
 
