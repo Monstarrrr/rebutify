@@ -22,6 +22,7 @@ from .forms import UserRegisterForm
 from .models import Posts, UserProfile
 from .serializers import (
     ArgumentSerializer,
+    CommentSerializer,
     PostSerializer,
     UserProfileSerializer,
 )
@@ -50,6 +51,25 @@ def success(request):
 class ArgumentViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.filter(type="argument")
     serializer_class = ArgumentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
+        return [AllowAny()]
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        queryset = Posts.objects.filter(type="comment", parentId=parentId)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
