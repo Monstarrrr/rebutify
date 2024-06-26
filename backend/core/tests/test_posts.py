@@ -19,8 +19,28 @@ class PostsTests(TestCase):
             title="Sample Title",
         )
 
+        # Create sample rebuttal
+        self.sample_rebuttal = Posts.objects.create(
+            id="2345432",
+            parentId="654332",
+            type="rebuttal",
+            createdAt="2024-06-26 02:20:58.689998+00:00",
+            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            body="<p>Sample rebuttal content</p>",
+            ownerUserId=1,
+        )
+
     def test_posts_api(self):
         # Test the posts API endpoint
         response = self.client.get(reverse("posts-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)
+
+    def test_rebuttals_api(self):
+        # Test the rebuttals API endpoint
+        parentId = "654332"
+        response = self.client.get(
+            reverse("rebuttals-list", kwargs={"parentId": parentId})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.sample_rebuttal.type)
