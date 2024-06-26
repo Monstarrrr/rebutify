@@ -66,6 +66,9 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
