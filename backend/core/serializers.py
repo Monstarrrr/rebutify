@@ -9,6 +9,15 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ArgumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = ["id", "body", "title", "ownerUserId", "createdAt", "updatedAt"]
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts

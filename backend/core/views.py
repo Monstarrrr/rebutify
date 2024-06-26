@@ -12,6 +12,7 @@ from djoser.views import UserViewSet
 from rest_framework import viewsets
 from rest_framework.permissions import (
     SAFE_METHODS,
+    AllowAny,
     BasePermission,
     IsAdminUser,
     IsAuthenticated,
@@ -21,7 +22,7 @@ from rest_framework.response import Response
 from .forms import UserRegisterForm
 from .models import Posts, Tags, UserProfile
 from .serializers import (
-    # ArgumentSerializer,
+    ArgumentSerializer,
     PostSerializer,
     TagSerializer,
     UserProfileSerializer,
@@ -40,7 +41,6 @@ class IsOwnerOrReadOnly(BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
         if request.method in SAFE_METHODS:
             return True
-
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
 
@@ -49,9 +49,21 @@ def success(request):
     return HttpResponse("", status=200)
 
 
-"""class ArgumentViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.get(type="argument")
-    serializer_class = ArgumentSerializer"""
+class ArgumentViewSet(viewsets.ModelViewSet):
+    queryset = Posts.objects.filter(type="argument")
+    serializer_class = ArgumentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action == "update" or self.action == "delete":
+            return [
+                IsOwnerOrReadOnly() | IsAdminUser(),
+            ]
+        return [AllowAny()]
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -66,9 +78,9 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "delete":
-            return [IsOwnerOrReadOnly(), IsAdminUser()]
-        return []
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly() | IsAdminUser()]
+        return [AllowAny()]
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
