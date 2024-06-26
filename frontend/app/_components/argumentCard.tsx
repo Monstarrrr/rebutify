@@ -12,8 +12,8 @@ export default function ArgumentCard() {
       try {
         const response = await getPosts()
         setPosts(response)
-      } catch (error) {
-        console.error('# Error fetching posts: ', error)
+      } catch (error: any) {
+        console.error('# Error fetching posts: ', error.response.data)
       }
     }
     fetchApi()

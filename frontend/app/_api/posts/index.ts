@@ -1,2 +1,2 @@
-export * from '@/api/posts/createPost'
-export * from '@/api/posts/getPosts'
+export { createPost } from '@/api/posts/createPost'
+export { getPosts } from '@/api/posts/getPosts'
