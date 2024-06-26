@@ -54,7 +54,7 @@ export default function Home() {
     const formData = formDataToObj(event)
 
     try {
-      await createPost({ ...formData, postTypeId: 1 })
+      await createPost({ ...formData, type: 'argument' })
       setLoading(false)
       setSuccess(true)
     } catch (error: any) {
@@ -85,7 +85,8 @@ export default function Home() {
         />
       ) : (
         <p>
-          <Link href='/register'>Register</Link> to start sharing your rebuttals!
+          <Link href='/register'>Register</Link> or{' '}
+          <Link href='/login'>login</Link> to start sharing your rebuttals!
         </p>
       )}
       <br />

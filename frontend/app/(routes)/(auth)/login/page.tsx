@@ -55,9 +55,16 @@ export default function Login() {
       dispatch(updateUser(userInfo))
       router.push('/')
     } catch (error: any) {
-      const { response } = error
       setLoading(false)
-      setApiErrors(response)
+      setApiErrors(
+        error.response ?? {
+          data: {
+            detail:
+              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+          },
+          status: 401,
+        },
+      )
     }
   }
 

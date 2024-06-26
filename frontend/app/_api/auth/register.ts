@@ -1,8 +1,11 @@
 import api from '@/api/api'
 
 export const register = async (data: any) => {
-  const res = await api.post('/auth/users', {
-    ...data,
-  })
-  return res.data
+  try {
+    const response = await api.post('/auth/users/', { ...data })
+    return response.data
+  } catch (error: any) {
+    console.error('# Register request failed: ', error.response.data ?? error)
+    throw error
+  }
 }
