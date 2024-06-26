@@ -15,7 +15,15 @@ class ArgumentSerializer(serializers.ModelSerializer):
 class RebuttalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
-        fields = ["id", "body", "title", "ownerUserId", "createdAt", "updatedAt"]
+        fields = [
+            "id",
+            "parentId",
+            "body",
+            "title",
+            "ownerUserId",
+            "createdAt",
+            "updatedAt",
+        ]
         read_only_fields = [
             "ownerUserId",
         ]

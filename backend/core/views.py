@@ -65,7 +65,11 @@ class ArgumentViewSet(viewsets.ModelViewSet):
 
 class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
-    queryset = Posts.objects.filter(type="rebuttal")
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)

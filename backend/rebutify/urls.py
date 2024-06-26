@@ -31,7 +31,9 @@ router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
 router.register(r"posts", views.PostViewSet, basename="posts")
 router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
-router.register(r"rebuttals", views.RebuttalViewSet, basename="rebuttals")
+router.register(
+    r"rebuttals/(?P<parentId>\d+)", views.RebuttalViewSet, basename="rebuttals"
+)
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
 
 urlpatterns = [
