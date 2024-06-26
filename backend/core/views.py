@@ -23,6 +23,7 @@ from .models import Posts, UserProfile
 from .serializers import (
     ArgumentSerializer,
     PostSerializer,
+    RebuttalSerializer,
     UserProfileSerializer,
 )
 from .token import account_activation_token
@@ -50,6 +51,21 @@ def success(request):
 class ArgumentViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.filter(type="argument")
     serializer_class = ArgumentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
+        return [AllowAny()]
+
+
+class RebuttalViewSet(viewsets.ModelViewSet):
+    serializer_class = RebuttalSerializer
+    queryset = Posts.objects.filter(type="rebuttal")
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
