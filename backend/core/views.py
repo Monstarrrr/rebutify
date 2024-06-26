@@ -14,7 +14,6 @@ from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
     BasePermission,
-    IsAdminUser,
     IsAuthenticated,
 )
 from rest_framework.response import Response
@@ -58,10 +57,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "delete":
-            return [
-                IsOwnerOrReadOnly() | IsAdminUser(),
-            ]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
         return [AllowAny()]
 
 
@@ -73,9 +70,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             return [IsAuthenticated()]
         if self.action in ["update", "delete", "partial_update"]:
-            return [
-                IsOwnerOrReadOnly() | IsAdminUser(),
-            ]
+            return [IsOwnerOrReadOnly()]
         return [AllowAny()]
 
 
