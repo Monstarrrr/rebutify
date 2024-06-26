@@ -16,6 +16,9 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
         fields = "__all__"
+        read_only_fields = [
+            "ownerUserId",
+        ]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
