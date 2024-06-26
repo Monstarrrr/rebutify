@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-TAG_NAME_MAX_LEN = 50
 TITLE_MAX_LEN = 255
 LAST_EDITOR_MAX_LEN = 255
 OWNER_MAX_LEN = 255
@@ -16,15 +15,6 @@ POSTS_TYPES = [
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
 ]
-
-
-class Tags(models.Model):
-    tagName: models.CharField = models.CharField(max_length=TAG_NAME_MAX_LEN)
-    count: models.IntegerField = models.IntegerField(default=0)
-    excerptPostId: models.IntegerField = models.IntegerField(null=True)
-    wikiPostId: models.IntegerField = models.IntegerField(null=True)
-    isModeratorOnly: models.BooleanField = models.BooleanField(default=False)
-    isRequired: models.BooleanField = models.BooleanField(default=False)
 
 
 class Posts(models.Model):

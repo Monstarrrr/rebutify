@@ -29,7 +29,6 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
-router.register(r"tags", views.TagViewSet, basename="tags")
 router.register(r"posts", views.PostViewSet, basename="posts")
 router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")

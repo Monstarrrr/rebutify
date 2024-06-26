@@ -20,11 +20,10 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
-from .models import Posts, Tags, UserProfile
+from .models import Posts, UserProfile
 from .serializers import (
     ArgumentSerializer,
     PostSerializer,
-    TagSerializer,
     UserProfileSerializer,
 )
 from .token import account_activation_token
@@ -64,11 +63,6 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                 IsOwnerOrReadOnly() | IsAdminUser(),
             ]
         return [AllowAny()]
-
-
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
-    serializer_class = TagSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):

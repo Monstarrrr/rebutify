@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from .models import Posts, Tags, UserProfile
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tags
-        fields = "__all__"
+from .models import Posts, UserProfile
 
 
 class ArgumentSerializer(serializers.ModelSerializer):
