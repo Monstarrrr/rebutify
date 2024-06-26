@@ -26,6 +26,7 @@ class Posts(models.Model):
     body: models.TextField = models.TextField()  # render as HTML
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
     createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
