@@ -28,7 +28,6 @@ class PostsTests(TestCase):
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
-            title="Sample Title",
         )
 
     def test_posts_api(self):

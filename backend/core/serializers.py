@@ -19,7 +19,6 @@ class RebuttalSerializer(serializers.ModelSerializer):
             "id",
             "parentId",
             "body",
-            "title",
             "ownerUserId",
             "createdAt",
             "updatedAt",
