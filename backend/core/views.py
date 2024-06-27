@@ -24,6 +24,7 @@ from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
+    RebuttalSerializer,
     UserProfileSerializer,
 )
 from .token import account_activation_token
@@ -51,6 +52,25 @@ def success(request):
 class ArgumentViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.filter(type="argument")
     serializer_class = ArgumentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(ownerUserId=self.request.user.id)
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action in ["update", "delete", "partial_update"]:
+            return [IsOwnerOrReadOnly()]
+        return [AllowAny()]
+
+
+class RebuttalViewSet(viewsets.ModelViewSet):
+    serializer_class = RebuttalSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
