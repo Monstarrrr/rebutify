@@ -24,7 +24,7 @@ export default function ArgumentCard() {
       {posts.map((post) => (
         <div key={post.id}>
           <br />
-          <Link style={{ fontSize: '24px' }} href='/'>
+          <Link style={{ fontSize: '24px' }} href={`/argument/${post.id}`}>
             {post.title}
           </Link>
           <p>{post.body}</p>
