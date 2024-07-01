@@ -17,6 +17,7 @@ Please take a moment to review this document to understand how you can contribut
       - [1.4. Skip pre-commit](#14-skip-pre-commit)
     - [2. Running Django](#2-running-django)
     - [3. Conventions](#3-conventions)
+    - [4. Nuances](#4-nuances)
 
 ## Ways to Contribute 🚀
 
@@ -101,3 +102,10 @@ Access the OpenAPI spec in three ways while running the django server:
 #### 3.1 Database table and column names
 
 We use camelCase for our database tables and column names defined in `models.py`.
+
+### 4. Nuances
+
+Current issues that affect development are listed here for transparency.
+
+- `DELETE -> /auth/users/me` not properly documented
+    - Send `{"current_password":"<pass>"}` in the request body. Since OpenAPI doesn't support request bodies for `DELETE` methods, the swagger/redoc pages won't pick up on this.

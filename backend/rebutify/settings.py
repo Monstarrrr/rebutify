@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "core",
     "rest_framework",
+    "rest_framework.authtoken",
     "rebutify",
     "djoser",
     "drf_spectacular",
@@ -220,12 +221,11 @@ DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
-    "SERIALIZERS": {},
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10) if DEBUG else timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=50) if DEBUG else timedelta(minutes=5),
     # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
