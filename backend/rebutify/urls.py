@@ -34,6 +34,9 @@ router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
 router.register(
     r"rebuttals/(?P<parentId>\d+)", views.RebuttalViewSet, basename="rebuttals"
 )
+router.register(
+    r"comments/(?P<parentId>\d+)", views.CommentViewSet, basename="comments"
+)
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
 
 urlpatterns = [

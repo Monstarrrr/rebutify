@@ -28,6 +28,15 @@ class RebuttalSerializer(serializers.ModelSerializer):
         ]
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = ["id", "parentId", "body", "ownerUserId", "createdAt", "updatedAt"]
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
