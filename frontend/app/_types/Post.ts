@@ -1,6 +1,10 @@
 export type Post = {
   id: number
-  title: string
+  type: 'argument' | 'rebuttal' | 'comment'
   body: string
-  type: string
+  title: string
+  ownerUserId: number
+  parentId: number
+  createdAt: string
+  updatedAt: string
 }

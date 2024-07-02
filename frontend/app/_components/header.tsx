@@ -25,6 +25,8 @@ export default function Header() {
         <div>
           <span>{user.username}</span>
           {' | '}
+          <Link href='/profile'>Profile</Link>
+          {' | '}
           <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
