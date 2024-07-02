@@ -81,14 +81,14 @@ api.interceptors.response.use(
     console.log('# Intercepted response:', res)
     return res
   },
-  (error) => {
-    // console.error(
-    //   '# response error :',
-    //   error?.reponse?.data?.detail ??
-    //     error?.response?.data ??
-    //     error?.response ??
-    //     error
-    // )
+  (error: any) => {
+    console.error(
+      '# response error :',
+      error?.reponse?.data?.detail ??
+        error?.response?.data ??
+        error?.response ??
+        error,
+    )
     return Promise.reject(error)
   },
 )
