@@ -1,17 +1,19 @@
 'use client'
 import { Post } from '@/types'
 import { deleteSelfAccount } from '@/api/auth'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getPosts } from '@/api/posts'
+import { updateUser } from '@/store/slices/user'
 
 export default function Profile() {
   const user = useAppSelector((state) => state.user)
   const [password, setPassword] = useState('')
   const router = useRouter()
   const [posts, setPosts] = useState<Post[] | null>(null)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!user.id) {
@@ -25,6 +27,15 @@ export default function Profile() {
   const handleDelete = async () => {
     try {
       password && (await deleteSelfAccount(password))
+      dispatch(
+        updateUser({
+          access: '',
+          email: '',
+          id: null,
+          refresh: '',
+          username: '',
+        }),
+      )
       router.push('/')
     } catch (error: any) {
       console.error(
