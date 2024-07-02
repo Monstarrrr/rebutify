@@ -19,13 +19,14 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
-from .models import Posts, UserProfile
+from .models import Posts, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
     UserProfileSerializer,
+    VoteSerializer,
 )
 from .token import account_activation_token
 
@@ -120,6 +121,16 @@ class PostViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+class UpvoteViewSet(viewsets.ModelViewSet):
+    queryset = Vote.objects.filter(type="upvote")
+    serializer_class = VoteSerializer
+
+
+class DownvoteViewSet(viewsets.ModelViewSet):
+    queryset = Vote.objects.filter(type="downvote")
+    serializer_class = VoteSerializer
 
 
 class StatusViewSet(viewsets.ViewSet):

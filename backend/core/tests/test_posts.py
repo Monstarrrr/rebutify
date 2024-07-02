@@ -1,13 +1,29 @@
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from core.models import Posts
+from core.models import Posts, Vote
 
 
 class PostsTests(TestCase):
     def setUp(self):
         # Create a client instance
         self.client = Client()
+
+        # Create sample upvote
+        self.sample_upvote = Vote.objects.create(
+            type="upvote",
+            ownerUserId=1,
+            parentId=1,
+            createdAt="2024-06-26 02:20:58.689998+00:00",
+        )
+
+        # Create sample downvote
+        self.sample_downvote = Vote.objects.create(
+            type="downvote",
+            ownerUserId=1,
+            parentId=1,
+            createdAt="2024-06-26 02:20:58.689998+00:00",
+        )
 
         # Create sample post
         self.sample_post = Posts.objects.create(
@@ -18,6 +34,8 @@ class PostsTests(TestCase):
             ownerUserId=1,
             title="Sample Title",
         )
+        self.sample_post.upvotes.set([self.sample_upvote])
+        self.sample_post.downvotes.set([self.sample_downvote])
 
         # Create sample rebuttal
         self.sample_rebuttal = Posts.objects.create(
@@ -29,6 +47,8 @@ class PostsTests(TestCase):
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
         )
+        self.sample_rebuttal.upvotes.set([self.sample_upvote])
+        self.sample_rebuttal.downvotes.set([self.sample_downvote])
 
         # Create sample comment
         self.sample_comment = Posts.objects.create(
@@ -40,6 +60,8 @@ class PostsTests(TestCase):
             body="<p>Sample comment content</p>",
             ownerUserId=1,
         )
+        self.sample_comment.upvotes.set([self.sample_upvote])
+        self.sample_comment.downvotes.set([self.sample_downvote])
 
     def test_posts_api(self):
         # Test the posts API endpoint
