@@ -1,4 +1,4 @@
-export * from '@/api/auth/login'
-export * from '@/api/auth/fetchUserInfo'
-export * from '@/api/auth/refreshTheToken'
-export * from '@/api/auth/deleteSelfAccount'
+export { login } from '@/api/auth/login'
+export { fetchUserInfo } from '@/api/auth/fetchUserInfo'
+export { refreshTheToken } from '@/api/auth/refreshTheToken'
+export { deleteSelfAccount } from '@/api/auth/deleteSelfAccount'

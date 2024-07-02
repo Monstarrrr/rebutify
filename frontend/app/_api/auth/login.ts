@@ -8,8 +8,8 @@ export const login = async (formData: FormDataObj) => {
       ...formData,
     })
     return response.data
-  } catch (error) {
-    console.error('# Login request failed: ', error)
+  } catch (error: any) {
+    console.error('# Login request failed: ', error.response.data ?? error)
     throw error
   }
 }

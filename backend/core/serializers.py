@@ -1,18 +1,49 @@
 from rest_framework import serializers
 
-from .models import Posts, Tags, UserProfile
+from .models import Posts, UserProfile
 
 
-class TagSerializer(serializers.ModelSerializer):
+class ArgumentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Tags
-        fields = "__all__"
+        model = Posts
+        fields = ["id", "body", "title", "ownerUserId", "createdAt", "updatedAt"]
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
+class RebuttalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = [
+            "id",
+            "parentId",
+            "body",
+            "ownerUserId",
+            "createdAt",
+            "updatedAt",
+        ]
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = ["id", "parentId", "body", "ownerUserId", "createdAt", "updatedAt"]
+        read_only_fields = [
+            "ownerUserId",
+        ]
 
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
         fields = "__all__"
+        read_only_fields = [
+            "ownerUserId",
+        ]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

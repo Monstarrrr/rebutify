@@ -1,10 +1,10 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form } from '@/components'
+import { Form, ArgumentCard } from '@/components'
 import type { TextInput } from '@/types'
 import { FormEvent, useState } from 'react'
-import { newPost } from '@/api/posts'
+import { createPost } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 
 // postTypeId: 1,
@@ -54,7 +54,7 @@ export default function Home() {
     const formData = formDataToObj(event)
 
     try {
-      await newPost(formData)
+      await createPost({ ...formData, type: 'argument' })
       setLoading(false)
       setSuccess(true)
     } catch (error: any) {
@@ -85,9 +85,16 @@ export default function Home() {
         />
       ) : (
         <p>
-          <Link href='/register'>Register</Link> to start sharing your rebuttals!
+          <Link href='/register'>Register</Link> or{' '}
+          <Link href='/login'>login</Link> to start sharing your rebuttals!
         </p>
       )}
+      <br />
+      <br />
+      <hr />
+      <h2>All arguments</h2>
+      <hr />
+      <ArgumentCard />
     </>
   )
 }

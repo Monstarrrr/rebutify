@@ -17,7 +17,6 @@ api.interceptors.request.use(
     if (req.url && req.url[req.url.length - 1] !== '/') {
       req.url += '/'
     }
-    console.log('# req.requiresAuth :', req.requiresAuth)
     if (req.requiresAuth) {
       // temp
       const accessToken = localStorage.getItem('access_token')

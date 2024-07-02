@@ -52,13 +52,20 @@ export default function Register() {
     const formData = formDataToObj(event)
 
     try {
-      register(formData)
+      await register(formData)
       setIsLoading(false)
       setFormSuccess(true)
     } catch (error: any) {
       setIsLoading(false)
-      const { response } = error
-      setApiFormErrors(response)
+      setApiFormErrors(
+        error.response ?? {
+          data: {
+            detail:
+              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+          },
+          status: 401,
+        },
+      )
     }
   }
 
