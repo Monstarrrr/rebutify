@@ -11,8 +11,14 @@ export default function ClientInitializer() {
       try {
         const userInfo = await fetchUserInfo()
         dispatch(updateUser(userInfo))
-      } catch (error) {
-        console.error('ClientInitializer error:', error)
+      } catch (error: any) {
+        console.error(
+          'ClientInitializer error:',
+          error?.response?.data?.detail ??
+            error?.response?.data ??
+            error?.response ??
+            error,
+        )
       }
     }
     handleFetchUserInfo()

@@ -54,7 +54,13 @@ api.interceptors.request.use(
     return req
   },
   (error) => {
-    console.error('# request error :', error)
+    console.error(
+      '# request error :',
+      error?.reponse?.data?.detail ??
+        error?.response?.data ??
+        error?.response ??
+        error,
+    )
     return Promise.reject(error)
   },
 )
@@ -77,7 +83,13 @@ api.interceptors.response.use(
     return res
   },
   (error) => {
-    console.log('# response error :', error)
+    // console.error(
+    //   '# response error :',
+    //   error?.reponse?.data?.detail ??
+    //     error?.response?.data ??
+    //     error?.response ??
+    //     error
+    // )
     return Promise.reject(error)
   },
 )
