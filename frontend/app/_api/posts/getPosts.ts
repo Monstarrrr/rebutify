@@ -1,15 +1,17 @@
 import api from '@/api/api'
 
-export const getPosts = async (
-  self: Boolean | undefined = false,
-  id: number | undefined,
-) => {
+export const getPosts = async () => {
   try {
-    const endpoint = self ? 'api/posts/' : 'api/posts'
-    const response = await api.get(endpoint)
+    const response = await api.get('api/posts/')
     return response.data
-  } catch (error) {
-    console.error('# "Get posts" request failed: ', error)
+  } catch (error: any) {
+    console.error(
+      '# "Get posts" request failed: ',
+      error.response?.data?.detail ??
+        error.response?.data ??
+        error.response ??
+        error,
+    )
     throw error
   }
 }
