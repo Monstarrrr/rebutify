@@ -51,13 +51,12 @@ def success(request):
 
 
 # https://stackoverflow.com/a/47657610/19071246
-# cursor pagination gets previous or next page links
-# you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
+# cursor pagination uses previous or next page links
+# you can get these with pagination_class.get_previous_link or pagination_class.get_next_link
 class CursorSetPagination(CursorPagination):
     page_size = 1
     page_size_query_param = "page_size"
     ordering = "-createdAt"
-    page_query_param = "page"
 
 
 class ArgumentViewSet(viewsets.ModelViewSet):
