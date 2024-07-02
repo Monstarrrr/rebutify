@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -49,9 +50,24 @@ def success(request):
     return HttpResponse("", status=200)
 
 
+# https://stackoverflow.com/a/47657610/19071246
+# cursor pagination gets previous or next page links
+# you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
+class CursorSetPagination(CursorPagination):
+    page_size = 1
+    page_size_query_param = "page_size"
+    ordering = "-createdAt"
+    page_query_param = "page"
+
+
 class ArgumentViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.filter(type="argument")
     serializer_class = ArgumentSerializer
+    pagination_class = CursorSetPagination
+
+    def get_queryset(self):
+        # gets arguments from all posts
+        queryset = Posts.objects.filter(type="argument")
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -69,6 +85,7 @@ class RebuttalViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         parentId = self.kwargs.get("parentId")
+        # gets all rebuttals from an argument
         queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
         return queryset
 
@@ -88,6 +105,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         parentId = self.kwargs.get("parentId")
+        # gets all comments from a post
         queryset = Posts.objects.filter(type="comment", parentId=parentId)
         return queryset
 
