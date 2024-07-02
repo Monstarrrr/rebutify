@@ -15,6 +15,21 @@ POSTS_TYPES = [
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
 ]
+UPVOTE = "upvote"
+DOWNVOTE = "downvote"
+VOTE_TYPES = [
+    (UPVOTE, "upvote"),
+    (DOWNVOTE, "downvote"),
+]
+
+
+class Vote(models.Model):
+    type: models.CharField = models.CharField(
+        max_length=10, choices=VOTE_TYPES, default=UPVOTE
+    )
+    ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
+    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
 
 class Posts(models.Model):
@@ -27,6 +42,12 @@ class Posts(models.Model):
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
+    upvotes: models.ManyToManyField = models.ManyToManyField(
+        Vote, related_name="post_upvotes"
+    )
+    downvotes: models.ManyToManyField = models.ManyToManyField(
+        Vote, related_name="post_downvotes"
+    )
     createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
@@ -45,8 +66,6 @@ class UserProfile(models.Model):
     joinDate: models.DateField = models.DateField()
     posts: models.ManyToManyField = models.ManyToManyField(Posts, related_name="posts")
     edits: models.ManyToManyField = models.ManyToManyField(Posts, related_name="edits")
-    upVotes: models.IntegerField = models.IntegerField(default=0, null=True)
-    downVotes: models.IntegerField = models.IntegerField(default=0, null=True)
 
     # Private
     savedPosts: models.ManyToManyField = models.ManyToManyField(
@@ -54,4 +73,10 @@ class UserProfile(models.Model):
     )
     private_post: models.ManyToManyField = models.ManyToManyField(
         Posts, related_name="private_post"
+    )
+    upvotes: models.ManyToManyField = models.ManyToManyField(
+        Vote, related_name="user_profile_upvotes"
+    )
+    downvotes: models.ManyToManyField = models.ManyToManyField(
+        Vote, related_name="user_profile_downvotes"
     )
