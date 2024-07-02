@@ -124,13 +124,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 
 class UpvoteViewSet(viewsets.ModelViewSet):
-    queryset = Vote.objects.filter(type="upvote")
     serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        queryset = Vote.objects.filter(type="upvote", parentId=parentId)
+        return queryset
 
 
 class DownvoteViewSet(viewsets.ModelViewSet):
-    queryset = Vote.objects.filter(type="downvote")
     serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        queryset = Vote.objects.filter(type="downvote", parentId=parentId)
+        return queryset
 
 
 class StatusViewSet(viewsets.ViewSet):

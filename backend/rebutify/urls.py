@@ -38,6 +38,10 @@ router.register(
     r"comments/(?P<parentId>\d+)", views.CommentViewSet, basename="comments"
 )
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
+router.register(r"upvotes/(?P<parentId>\d+)", views.UpvoteViewSet, basename="upvotes")
+router.register(
+    r"downvotes/(?P<parentId>\d+)", views.DownvoteViewSet, basename="downvotes"
+)
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
