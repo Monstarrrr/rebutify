@@ -42,11 +42,17 @@ class Posts(models.Model):
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    upvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="post_upvotes"
+    upvotes: models.ForeignKey = models.ForeignKey(
+        Vote,
+        related_name="post_upvotes",
+        on_delete=models.CASCADE,
+        null=True,
     )
-    downvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="post_downvotes"
+    downvotes: models.ForeignKey = models.ForeignKey(
+        Vote,
+        related_name="post_downvotes",
+        on_delete=models.CASCADE,
+        null=True,
     )
     createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
@@ -64,19 +70,36 @@ class UserProfile(models.Model):
     bio: models.TextField = models.TextField(max_length=BIO_MAX_LEN, null=True)
     reputation: models.IntegerField = models.IntegerField(default=0, null=True)
     joinDate: models.DateField = models.DateField()
-    posts: models.ManyToManyField = models.ManyToManyField(Posts, related_name="posts")
+    posts: models.ForeignKey = models.ForeignKey(
+        Posts,
+        related_name="posts",
+        on_delete=models.CASCADE,
+        null=True,
+    )
     edits: models.ManyToManyField = models.ManyToManyField(Posts, related_name="edits")
 
     # Private
-    savedPosts: models.ManyToManyField = models.ManyToManyField(
-        Posts, related_name="saved_posts"
+    saved_posts: models.ForeignKey = models.ForeignKey(
+        Posts,
+        related_name="saved_posts",
+        on_delete=models.CASCADE,
+        null=True,
     )
-    private_post: models.ManyToManyField = models.ManyToManyField(
-        Posts, related_name="private_post"
+    private_post: models.ForeignKey = models.ForeignKey(
+        Posts,
+        related_name="private_posts",
+        on_delete=models.CASCADE,
+        null=True,
     )
-    upvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="user_profile_upvotes"
+    upvotes: models.ForeignKey = models.ForeignKey(
+        Vote,
+        related_name="user_profile_upvotes",
+        on_delete=models.CASCADE,
+        null=True,
     )
-    downvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="user_profile_downvotes"
+    downvotes: models.ForeignKey = models.ForeignKey(
+        Vote,
+        related_name="user_profile_downvotes",
+        on_delete=models.CASCADE,
+        null=True,
     )

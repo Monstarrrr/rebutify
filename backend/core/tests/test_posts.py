@@ -33,9 +33,9 @@ class PostsTests(TestCase):
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
+            upvotes=self.sample_upvote,
+            downvotes=self.sample_downvote,
         )
-        self.sample_post.upvotes.set([self.sample_upvote])
-        self.sample_post.downvotes.set([self.sample_downvote])
 
         # Create sample rebuttal
         self.sample_rebuttal = Posts.objects.create(
@@ -46,9 +46,9 @@ class PostsTests(TestCase):
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
+            upvotes=self.sample_upvote,
+            downvotes=self.sample_downvote,
         )
-        self.sample_rebuttal.upvotes.set([self.sample_upvote])
-        self.sample_rebuttal.downvotes.set([self.sample_downvote])
 
         # Create sample comment
         self.sample_comment = Posts.objects.create(
@@ -59,9 +59,9 @@ class PostsTests(TestCase):
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample comment content</p>",
             ownerUserId=1,
+            upvotes=self.sample_upvote,
+            downvotes=self.sample_downvote,
         )
-        self.sample_comment.upvotes.set([self.sample_upvote])
-        self.sample_comment.downvotes.set([self.sample_downvote])
 
     def test_posts_api(self):
         # Test the posts API endpoint

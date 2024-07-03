@@ -43,14 +43,14 @@ class UserTests(TestCase):
             bio="bio",
             reputation=1,
             joinDate="2024-01-01",
+            posts=self.sample_post,
+            saved_posts=self.sample_post,
+            private_post=self.sample_post,
+            upvotes=self.sample_upvote,
+            downvotes=self.sample_downvote,
         )
-        # Correctly assign the post to the user profile
-        self.sample_user_profile.posts.set([self.sample_post])
+        # Correctly assign the edits to the user profile
         self.sample_user_profile.edits.set([self.sample_post])
-        self.sample_user_profile.savedPosts.set([self.sample_post])
-        self.sample_user_profile.private_post.set([self.sample_post])
-        self.sample_user_profile.upvotes.set([self.sample_upvote])
-        self.sample_user_profile.downvotes.set([self.sample_downvote])
 
     def test_user_profile_api(self):
         # Test the user profile API endpoint
