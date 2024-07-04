@@ -32,7 +32,7 @@ export default function Login() {
   const dispatch = useAppDispatch()
   const router = useRouter()
 
-  const user = useAppSelector((state) => state.user.username)
+  const user = useAppSelector((state) => state.user.id)
 
   useEffect(() => {
     if (user) {

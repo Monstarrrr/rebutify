@@ -31,13 +31,28 @@ router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
 router.register(r"posts", views.PostViewSet, basename="posts")
 router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
+# https://stackoverflow.com/a/2325442/19071246
 router.register(
-    r"rebuttals/(?P<parentId>\d+)", views.RebuttalViewSet, basename="rebuttals"
+    r"rebuttals/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    views.RebuttalViewSet,
+    basename="rebuttals",
 )
 router.register(
-    r"comments/(?P<parentId>\d+)", views.CommentViewSet, basename="comments"
+    r"comments/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    views.CommentViewSet,
+    basename="comments",
 )
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
+router.register(
+    r"upvotes/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    views.UpvoteViewSet,
+    basename="upvotes",
+)
+router.register(
+    r"downvotes/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    views.DownvoteViewSet,
+    basename="downvotes",
+)
 
 urlpatterns = [
     path(os.getenv("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),

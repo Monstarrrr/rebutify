@@ -6,8 +6,14 @@ export const refreshTheToken = async (refreshToken: string) => {
       refresh: refreshToken,
     })
     return response.data.access
-  } catch (error) {
-    console.error('# Refresh request failed: ', error)
+  } catch (error: any) {
+    console.error(
+      '# Refresh request failed: ',
+      error?.response?.data?.detail ??
+        error?.response?.data ??
+        error?.response ??
+        error,
+    )
     throw error
   }
 }

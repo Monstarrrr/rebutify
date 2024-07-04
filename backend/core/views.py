@@ -19,13 +19,14 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
-from .models import Posts, UserProfile
+from .models import Posts, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
     UserProfileSerializer,
+    VoteSerializer,
 )
 from .token import account_activation_token
 
@@ -53,8 +54,13 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
 
     def get_queryset(self):
-        # gets arguments from all posts
-        queryset = Posts.objects.filter(type="argument")
+        ownerUserId = self.kwargs.get("ownerUserId")
+        # gets all arguments from a user
+        if ownerUserId:
+            queryset = Posts.objects.filter(type="argument", ownerUserId=ownerUserId)
+        # gets all arguments
+        else:
+            queryset = Posts.objects.filter(type="argument")
         return queryset
 
     def perform_create(self, serializer):
@@ -73,8 +79,18 @@ class RebuttalViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         parentId = self.kwargs.get("parentId")
-        # gets all rebuttals from an argument
-        queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
+        ownerUserId = self.kwargs.get("ownerUserId")
+        # gets all rebuttals from a post specific to a user
+        if parentId and ownerUserId:
+            queryset = Posts.objects.filter(
+                type="rebuttal", parentId=parentId, ownerUserId=ownerUserId
+            )
+        # gets all rebuttals from a post
+        elif parentId and not ownerUserId:
+            queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
+        # gets all rebuttals from a user
+        elif not parentId and ownerUserId:
+            queryset = Posts.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
         return queryset
 
     def perform_create(self, serializer):
@@ -93,8 +109,18 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         parentId = self.kwargs.get("parentId")
+        ownerUserId = self.kwargs.get("ownerUserId")
+        # gets all comments from a post specific to a user
+        if parentId and ownerUserId:
+            queryset = Posts.objects.filter(
+                type="comment", parentId=parentId, ownerUserId=ownerUserId
+            )
         # gets all comments from a post
-        queryset = Posts.objects.filter(type="comment", parentId=parentId)
+        elif parentId and not ownerUserId:
+            queryset = Posts.objects.filter(type="comment", parentId=parentId)
+        # gets all comments from a user
+        elif not parentId and ownerUserId:
+            queryset = Posts.objects.filter(type="comment", ownerUserId=ownerUserId)
         return queryset
 
     def perform_create(self, serializer):
@@ -126,6 +152,46 @@ class PostViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+class UpvoteViewSet(viewsets.ModelViewSet):
+    serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        ownerUserId = self.kwargs.get("ownerUserId")
+        # gets all upvotes from a post specific to a user
+        if parentId and ownerUserId:
+            queryset = Vote.objects.filter(
+                type="upvote", parentId=parentId, ownerUserId=ownerUserId
+            )
+        # gets all upvotes from a post
+        elif parentId and not ownerUserId:
+            queryset = Vote.objects.filter(type="upvote", parentId=parentId)
+        # gets all upvotes from a user
+        elif not parentId and ownerUserId:
+            queryset = Vote.objects.filter(type="upvote", ownerUserId=ownerUserId)
+        return queryset
+
+
+class DownvoteViewSet(viewsets.ModelViewSet):
+    serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        parentId = self.kwargs.get("parentId")
+        ownerUserId = self.kwargs.get("ownerUserId")
+        # gets all downvotes from a post specific to a user
+        if parentId and ownerUserId:
+            queryset = Vote.objects.filter(
+                type="downvote", parentId=parentId, ownerUserId=ownerUserId
+            )
+        # gets all downvotes from a post
+        elif parentId and not ownerUserId:
+            queryset = Vote.objects.filter(type="downvote", parentId=parentId)
+        # gets all downvotes from a user
+        elif not parentId and ownerUserId:
+            queryset = Vote.objects.filter(type="downvote", ownerUserId=ownerUserId)
+        return queryset
 
 
 class StatusViewSet(viewsets.ViewSet):
