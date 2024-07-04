@@ -189,7 +189,7 @@ class StatusViewSet(viewsets.ViewSet):
 
 
 # Activates user. https://protocolostomy.com/2021/05/06/user-activation-with-django-and-djoser/
-class ActivateUser(UserViewSet):
+class ActivateUserViewSet(UserViewSet):
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs.setdefault("context", self.get_serializer_context())
