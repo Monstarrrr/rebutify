@@ -14,7 +14,7 @@ class PostsTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -22,14 +22,14 @@ class PostsTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample post
         self.sample_post = Posts.objects.create(
             type="argument",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
@@ -42,8 +42,8 @@ class PostsTests(TestCase):
             id="2345432",
             parentId="654332",
             type="rebuttal",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
         )
@@ -55,8 +55,8 @@ class PostsTests(TestCase):
             id="7643424",
             parentId="654332",
             type="comment",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample comment content</p>",
             ownerUserId=1,
         )

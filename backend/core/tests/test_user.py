@@ -15,7 +15,7 @@ class UserTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -23,13 +23,13 @@ class UserTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         self.sample_post = Posts.objects.create(
             type="argument",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
@@ -42,7 +42,7 @@ class UserTests(TestCase):
             avatar="avatar",
             bio="bio",
             reputation=1,
-            joinDate="2024-01-01",
+            created="2024-01-01",
         )
         # Correctly assign the post to the user profile
         self.sample_user_profile.posts.set([self.sample_post])

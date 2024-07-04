@@ -13,7 +13,7 @@ class VoteTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=345432,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -21,7 +21,7 @@ class VoteTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=345433,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
     def test_upvote_api(self):

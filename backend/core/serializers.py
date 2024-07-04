@@ -6,7 +6,7 @@ from .models import Posts, UserProfile, Vote
 class ArgumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
-        fields = ["id", "body", "title", "ownerUserId", "createdAt", "updatedAt"]
+        fields = ["id", "body", "title", "ownerUserId", "created", "updated"]
         read_only_fields = [
             "ownerUserId",
         ]
@@ -20,8 +20,8 @@ class RebuttalSerializer(serializers.ModelSerializer):
             "parentId",
             "body",
             "ownerUserId",
-            "createdAt",
-            "updatedAt",
+            "created",
+            "updated",
         ]
         read_only_fields = [
             "ownerUserId",
@@ -31,7 +31,7 @@ class RebuttalSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
-        fields = ["id", "parentId", "body", "ownerUserId", "createdAt", "updatedAt"]
+        fields = ["id", "parentId", "body", "ownerUserId", "created", "updated"]
         read_only_fields = [
             "ownerUserId",
         ]
