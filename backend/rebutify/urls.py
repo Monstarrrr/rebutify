@@ -29,16 +29,18 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
-router.register(r"posts", views.PostViewSet, basename="posts")
-router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
+router.register(r"posts/(?P<page_size>\d+)", views.PostViewSet, basename="posts")
+router.register(
+    r"arguments/(?P<page_size>\d+)", views.ArgumentViewSet, basename="arguments"
+)
 # https://stackoverflow.com/a/2325442/19071246
 router.register(
-    r"rebuttals/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"rebuttals/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?/(?P<page_size>\d+)",
     views.RebuttalViewSet,
     basename="rebuttals",
 )
 router.register(
-    r"comments/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"comments/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?/(?P<page_size>\d+)",
     views.CommentViewSet,
     basename="comments",
 )

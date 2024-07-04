@@ -65,15 +65,21 @@ class PostsTests(TestCase):
 
     def test_posts_api(self):
         # Test the posts API endpoint
-        response = self.client.get(reverse("posts-list"))
+        page_size = 10
+        response = self.client.get(
+            reverse("posts-list", kwargs={"page_size": page_size})
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)
 
     def test_rebuttals_api(self):
         # Test the rebuttals API endpoint
         parentId = "654332"
+        page_size = 10
         response = self.client.get(
-            reverse("rebuttals-list", kwargs={"parentId": parentId})
+            reverse(
+                "rebuttals-list", kwargs={"parentId": parentId, "page_size": page_size}
+            )
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_rebuttal.type)
@@ -81,8 +87,11 @@ class PostsTests(TestCase):
     def test_comments_api(self):
         # Test the comments API endpoint
         parentId = "654332"
+        page_size = 10
         response = self.client.get(
-            reverse("comments-list", kwargs={"parentId": parentId})
+            reverse(
+                "comments-list", kwargs={"parentId": parentId, "page_size": page_size}
+            )
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_comment.type)
