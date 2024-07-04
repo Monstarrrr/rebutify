@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -39,10 +40,20 @@ def success(request):
     return HttpResponse("", status=200)
 
 
+# https://stackoverflow.com/a/47657610/19071246
+# cursor pagination gets previous or next page links
+# you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
+class CursorSetPagination(CursorPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+
+
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
 
     def get_queryset(self):
+        CursorSetPagination.page_size = self.kwargs.get("page_size")
+
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all arguments from a user
         if ownerUserId:
@@ -67,6 +78,8 @@ class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
 
     def get_queryset(self):
+        CursorSetPagination.page_size = self.kwargs.get("page_size")
+
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all rebuttals from a post specific to a user
@@ -97,6 +110,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
+        CursorSetPagination.page_size = self.kwargs.get("page_size")
+
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all comments from a post specific to a user
@@ -124,8 +139,13 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.all()
     serializer_class = PostSerializer
+
+    def get_queryset(self):
+        CursorSetPagination.page_size = self.kwargs.get("page_size")
+
+        queryset = Posts.objects.all()
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
