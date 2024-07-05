@@ -10,7 +10,7 @@ BIO_MAX_LEN = 255
 ARGUMENT = "argument"
 REBUTTAL = "rebuttal"
 COMMENT = "comment"
-POSTS_TYPES = [
+POST_TYPES = [
     (ARGUMENT, "argument"),
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
@@ -23,37 +23,17 @@ VOTE_TYPES = [
 ]
 
 
-class Vote(models.Model):
-    type: models.CharField = models.CharField(
-        max_length=10, choices=VOTE_TYPES, default=UPVOTE
-    )
-    ownerUserId: models.IntegerField = models.IntegerField(null=True)
-    parentId: models.IntegerField = models.IntegerField(null=True)
-    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-
-
-class Posts(models.Model):
-    """Posts database model"""
+class Post(models.Model):
+    """Post database model"""
 
     type: models.CharField = models.CharField(
-        max_length=10, choices=POSTS_TYPES, default=ARGUMENT
+        max_length=10, choices=POST_TYPES, default=ARGUMENT
     )
+    isPrivate: models.BooleanField = models.BooleanField(default=False)
     body: models.TextField = models.TextField()  # render as HTML
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    upvotes: models.ForeignKey = models.ForeignKey(
-        Vote,
-        related_name="post_upvotes",
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    downvotes: models.ForeignKey = models.ForeignKey(
-        Vote,
-        related_name="post_downvotes",
-        on_delete=models.CASCADE,
-        null=True,
-    )
     createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
@@ -70,36 +50,18 @@ class UserProfile(models.Model):
     bio: models.TextField = models.TextField(max_length=BIO_MAX_LEN, null=True)
     reputation: models.IntegerField = models.IntegerField(default=0, null=True)
     joinDate: models.DateField = models.DateField()
-    posts: models.ForeignKey = models.ForeignKey(
-        Posts,
-        related_name="posts",
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    edits: models.ManyToManyField = models.ManyToManyField(Posts, related_name="edits")
+    edits: models.ManyToManyField = models.ManyToManyField(Post, related_name="edits")
 
     # Private
-    saved_posts: models.ForeignKey = models.ForeignKey(
-        Posts,
-        related_name="saved_posts",
-        on_delete=models.CASCADE,
-        null=True,
+    saved_posts: models.ManyToManyField = models.ManyToManyField(
+        Post, related_name="saved_posts"
     )
-    private_post: models.ForeignKey = models.ForeignKey(
-        Posts,
-        related_name="private_posts",
-        on_delete=models.CASCADE,
-        null=True,
+
+
+class Vote(models.Model):
+    type: models.CharField = models.CharField(
+        max_length=10, choices=VOTE_TYPES, default=UPVOTE
     )
-    upvotes: models.ForeignKey = models.ForeignKey(
-        Vote,
-        related_name="user_profile_upvotes",
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    downvotes: models.ForeignKey = models.ForeignKey(
-        Vote,
-        related_name="user_profile_downvotes",
-        on_delete=models.CASCADE,
-        null=True,
-    )
+    ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
+    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)

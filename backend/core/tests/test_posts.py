@@ -1,70 +1,51 @@
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from core.models import Posts, Vote
+from core.models import Post
 
 
-class PostsTests(TestCase):
+class PostTests(TestCase):
     def setUp(self):
         # Create a client instance
         self.client = Client()
 
-        # Create sample upvote
-        self.sample_upvote = Vote.objects.create(
-            type="upvote",
-            ownerUserId=1,
-            parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-        )
-
-        # Create sample downvote
-        self.sample_downvote = Vote.objects.create(
-            type="downvote",
-            ownerUserId=1,
-            parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-        )
-
         # Create sample post
-        self.sample_post = Posts.objects.create(
+        self.sample_post = Post.objects.create(
             type="argument",
+            isPrivate=False,
             createdAt="2024-06-26 02:20:58.689998+00:00",
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
-            upvotes=self.sample_upvote,
-            downvotes=self.sample_downvote,
         )
 
         # Create sample rebuttal
-        self.sample_rebuttal = Posts.objects.create(
+        self.sample_rebuttal = Post.objects.create(
             id="2345432",
             parentId="654332",
             type="rebuttal",
+            isPrivate=False,
             createdAt="2024-06-26 02:20:58.689998+00:00",
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
-            upvotes=self.sample_upvote,
-            downvotes=self.sample_downvote,
         )
 
         # Create sample comment
-        self.sample_comment = Posts.objects.create(
+        self.sample_comment = Post.objects.create(
             id="7643424",
             parentId="654332",
             type="comment",
+            isPrivate=False,
             createdAt="2024-06-26 02:20:58.689998+00:00",
             updatedAt="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample comment content</p>",
             ownerUserId=1,
-            upvotes=self.sample_upvote,
-            downvotes=self.sample_downvote,
         )
 
-    def test_posts_api(self):
-        # Test the posts API endpoint
+    def test_post_api(self):
+        # Test the post API endpoint
         response = self.client.get(reverse("posts-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)

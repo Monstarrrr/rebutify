@@ -9,7 +9,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from .models import Posts, UserProfile, Vote
+from .models import Post, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
@@ -46,10 +46,10 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all arguments from a user
         if ownerUserId:
-            queryset = Posts.objects.filter(type="argument", ownerUserId=ownerUserId)
+            queryset = Post.objects.filter(type="argument", ownerUserId=ownerUserId)
         # gets all arguments
         else:
-            queryset = Posts.objects.filter(type="argument")
+            queryset = Post.objects.filter(type="argument")
         return queryset
 
     def perform_create(self, serializer):
@@ -71,15 +71,15 @@ class RebuttalViewSet(viewsets.ModelViewSet):
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all rebuttals from a post specific to a user
         if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
+            queryset = Post.objects.filter(
                 type="rebuttal", parentId=parentId, ownerUserId=ownerUserId
             )
         # gets all rebuttals from a post
         elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
+            queryset = Post.objects.filter(type="rebuttal", parentId=parentId)
         # gets all rebuttals from a user
         elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
+            queryset = Post.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
         return queryset
 
     def perform_create(self, serializer):
@@ -101,15 +101,15 @@ class CommentViewSet(viewsets.ModelViewSet):
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all comments from a post specific to a user
         if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
+            queryset = Post.objects.filter(
                 type="comment", parentId=parentId, ownerUserId=ownerUserId
             )
         # gets all comments from a post
         elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="comment", parentId=parentId)
+            queryset = Post.objects.filter(type="comment", parentId=parentId)
         # gets all comments from a user
         elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="comment", ownerUserId=ownerUserId)
+            queryset = Post.objects.filter(type="comment", ownerUserId=ownerUserId)
         return queryset
 
     def perform_create(self, serializer):
@@ -124,7 +124,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.all()
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
 
     def perform_create(self, serializer):
@@ -139,8 +139,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.all()
+        return queryset
 
 
 class UpvoteViewSet(viewsets.ModelViewSet):
@@ -184,6 +187,8 @@ class DownvoteViewSet(viewsets.ModelViewSet):
 
 
 class StatusViewSet(viewsets.ViewSet):
+    serializer_class = None
+
     def list(self, request):
         return Response(status=200)
 
@@ -199,6 +204,6 @@ class ActivateUserViewSet(UserViewSet):
 
         return serializer_class(*args, **kwargs)
 
-    def activation(self, request, uid, token, *args, **kwargs):
+    def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")
