@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 from djoser.views import UserViewSet
-from rest_framework import viewsets
-from rest_framework.pagination import CursorPagination
+from rest_framework import pagination, viewsets
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -44,18 +43,15 @@ def success(request):
 # https://stackoverflow.com/a/47657610/19071246
 # cursor pagination gets previous or next page links
 # you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
-class CursorSetPagination(CursorPagination):
-    page_size = settings.PAGE_SIZE
-    page_size_query_param = "page_size"
+DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
 
 
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
 
     def get_queryset(self):
-        CursorSetPagination.page_size = self.kwargs.get("page_size")
-        self.pagination_class = CursorPagination
-        CursorSetPagination.page_size = settings.PAGE_SIZE
+        pagination.CursorPagination.page_size = self.kwargs.get("page_size")
+        pagination.CursorPagination.page_size = DEFAULT_PAGE_SIZE
 
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all arguments from a user
@@ -81,9 +77,8 @@ class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
 
     def get_queryset(self):
-        CursorSetPagination.page_size = self.kwargs.get("page_size")
-        self.pagination_class = CursorPagination
-        CursorSetPagination.page_size = settings.PAGE_SIZE
+        pagination.CursorPagination.page_size = self.kwargs.get("page_size")
+        pagination.CursorPagination.page_size = DEFAULT_PAGE_SIZE
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -115,9 +110,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        CursorSetPagination.page_size = self.kwargs.get("page_size")
-        self.pagination_class = CursorPagination
-        CursorSetPagination.page_size = settings.PAGE_SIZE
+        pagination.CursorPagination.page_size = self.kwargs.get("page_size")
+        pagination.CursorPagination.page_size = DEFAULT_PAGE_SIZE
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -149,9 +143,8 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        CursorSetPagination.page_size = self.kwargs.get("page_size")
-        self.pagination_class = CursorPagination
-        CursorSetPagination.page_size = settings.PAGE_SIZE
+        pagination.CursorPagination.page_size = self.kwargs.get("page_size")
+        pagination.CursorPagination.page_size = DEFAULT_PAGE_SIZE
 
         queryset = Posts.objects.all()
         return queryset
