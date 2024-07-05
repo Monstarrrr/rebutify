@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse
 from djoser.views import UserViewSet
 from rest_framework import viewsets
@@ -44,7 +45,7 @@ def success(request):
 # cursor pagination gets previous or next page links
 # you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
 class CursorSetPagination(CursorPagination):
-    page_size = 10
+    page_size = settings.PAGE_SIZE
     page_size_query_param = "page_size"
 
 
