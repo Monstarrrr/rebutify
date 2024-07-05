@@ -54,6 +54,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         CursorSetPagination.page_size = self.kwargs.get("page_size")
+        self.pagination_class = CursorPagination
+        CursorSetPagination.page_size = settings.PAGE_SIZE
 
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all arguments from a user
@@ -80,6 +82,8 @@ class RebuttalViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         CursorSetPagination.page_size = self.kwargs.get("page_size")
+        self.pagination_class = CursorPagination
+        CursorSetPagination.page_size = settings.PAGE_SIZE
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -112,6 +116,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         CursorSetPagination.page_size = self.kwargs.get("page_size")
+        self.pagination_class = CursorPagination
+        CursorSetPagination.page_size = settings.PAGE_SIZE
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -144,6 +150,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         CursorSetPagination.page_size = self.kwargs.get("page_size")
+        self.pagination_class = CursorPagination
+        CursorSetPagination.page_size = settings.PAGE_SIZE
 
         queryset = Posts.objects.all()
         return queryset
