@@ -65,7 +65,7 @@ class PostsTests(TestCase):
 
     def test_posts_api(self):
         # Test the posts API endpoint
-        page_size = 1
+        page_size = 5
         response = self.client.get(
             reverse("posts-list", kwargs={"page_size": page_size})
         )
