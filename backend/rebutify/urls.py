@@ -29,27 +29,28 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
-router.register(r"posts", views.PostViewSet, basename="posts")
-router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
-# https://stackoverflow.com/a/2325442/19071246
+router.register(r"posts/(?P<ownerUserId>\d+)?", views.PostViewSet, basename="posts")
 router.register(
-    r"rebuttals/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"arguments/(?P<ownerUserId>\d+)?", views.ArgumentViewSet, basename="arguments"
+)
+router.register(
+    r"rebuttals/(?P<parentId>\d+)?/(?P<ownerUserId>\d+)?",
     views.RebuttalViewSet,
     basename="rebuttals",
 )
 router.register(
-    r"comments/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"comments/(?P<parentId>\d+)?/(?P<ownerUserId>\d+)?",
     views.CommentViewSet,
     basename="comments",
 )
 router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
 router.register(
-    r"upvotes/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"upvotes/(?P<parentId>\d+)?/(?P<ownerUserId>\d+)?",
     views.UpvoteViewSet,
     basename="upvotes",
 )
 router.register(
-    r"downvotes/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
+    r"downvotes/(?P<parentId>\d+)?/(?P<ownerUserId>\d+)?",
     views.DownvoteViewSet,
     basename="downvotes",
 )

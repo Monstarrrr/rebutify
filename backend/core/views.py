@@ -103,6 +103,9 @@ class RebuttalViewSet(viewsets.ModelViewSet):
         # gets all rebuttals from a user
         elif not parentId and ownerUserId:
             queryset = Posts.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
+        # gets all rebuttals
+        else:
+            queryset = Posts.objects.filter(type="rebuttal")
         return queryset
 
     def perform_create(self, serializer):
@@ -138,6 +141,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         # gets all comments from a user
         elif not parentId and ownerUserId:
             queryset = Posts.objects.filter(type="comment", ownerUserId=ownerUserId)
+        # gets all comments
+        else:
+            queryset = Posts.objects.filter(type="comment")
         return queryset
 
     def perform_create(self, serializer):
@@ -160,7 +166,12 @@ class PostViewSet(viewsets.ModelViewSet):
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
 
-        queryset = Posts.objects.all()
+        ownerUserId = self.kwargs.get("ownerUserId")
+        if ownerUserId:
+            queryset = Posts.objects.filter(ownerUserId=ownerUserId)
+        else:
+            # gets all posts from a user
+            queryset = Posts.objects.all()
         return queryset
 
     def perform_create(self, serializer):
@@ -175,8 +186,17 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all user profiles
+        queryset = UserProfile.objects.all()
+        return queryset
 
 
 class UpvoteViewSet(viewsets.ModelViewSet):
