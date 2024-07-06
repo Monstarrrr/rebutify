@@ -52,20 +52,14 @@ class CursorPaginationViewSet(CursorPagination):
     page_size_query_param = "page_size"
 
 
-# get page size if given. otherwise, return default
-def get_page_size(kwargs):
-    if "page_size" in kwargs:
-        return int(kwargs.get("page_size"))
-    else:
-        return DEFAULT_PAGE_SIZE
-
-
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        self.pagination_class.page_size = get_page_size(self.kwargs)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
 
         ownerUserId = self.kwargs.get("ownerUserId")
         # gets all arguments from a user
@@ -92,7 +86,9 @@ class RebuttalViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        self.pagination_class.page_size = get_page_size(self.kwargs)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -125,7 +121,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        self.pagination_class.page_size = get_page_size(self.kwargs)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
 
         parentId = self.kwargs.get("parentId")
         ownerUserId = self.kwargs.get("ownerUserId")
@@ -158,7 +156,9 @@ class PostViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        self.pagination_class.page_size = get_page_size(self.kwargs)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
 
         queryset = Posts.objects.all()
         return queryset

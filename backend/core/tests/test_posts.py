@@ -66,9 +66,7 @@ class PostsTests(TestCase):
     def test_posts_api(self):
         # Test the posts API endpoint
         page_size = 5
-        response = self.client.get(
-            reverse("posts-list", kwargs={"page_size": page_size})
-        )
+        response = self.client.get(reverse("posts-list"), {"page_size": page_size})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)
 
@@ -77,9 +75,8 @@ class PostsTests(TestCase):
         parentId = "654332"
         page_size = 2
         response = self.client.get(
-            reverse(
-                "rebuttals-list", kwargs={"parentId": parentId, "page_size": page_size}
-            )
+            reverse("rebuttals-list", kwargs={"parentId": parentId}),
+            {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_rebuttal.type)
@@ -89,9 +86,8 @@ class PostsTests(TestCase):
         parentId = "654332"
         page_size = 3
         response = self.client.get(
-            reverse(
-                "comments-list", kwargs={"parentId": parentId, "page_size": page_size}
-            )
+            reverse("comments-list", kwargs={"parentId": parentId}),
+            {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_comment.type)
