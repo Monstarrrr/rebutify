@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.http import HttpResponse
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -39,17 +41,28 @@ def success(request):
     return HttpResponse("", status=200)
 
 
+DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
+
+
+# https://stackoverflow.com/a/47657610/19071246
+# cursor pagination gets previous or next page links
+# you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
+class CursorPaginationViewSet(CursorPagination):
+    page_size = DEFAULT_PAGE_SIZE
+    page_size_query_param = "page_size"
+
+
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all arguments from a user
-        if ownerUserId:
-            queryset = Posts.objects.filter(type="argument", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
         # gets all arguments
-        else:
-            queryset = Posts.objects.filter(type="argument")
+        queryset = Posts.objects.filter(type="argument")
         return queryset
 
     def perform_create(self, serializer):
@@ -65,21 +78,15 @@ class ArgumentViewSet(viewsets.ModelViewSet):
 
 class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all rebuttals from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
-                type="rebuttal", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all rebuttals from a post
-        elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
-        # gets all rebuttals from a user
-        elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all reebuttals
+        queryset = Posts.objects.filter(type="rebuttal")
         return queryset
 
     def perform_create(self, serializer):
@@ -95,21 +102,15 @@ class RebuttalViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all comments from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
-                type="comment", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all comments from a post
-        elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="comment", parentId=parentId)
-        # gets all comments from a user
-        elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="comment", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all comments
+        queryset = Posts.objects.filter(type="comment")
         return queryset
 
     def perform_create(self, serializer):
@@ -124,8 +125,17 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.all()
     serializer_class = PostSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all posts
+        queryset = Posts.objects.all()
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -139,27 +149,25 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all user profiles
+        queryset = UserProfile.objects.all()
+        return queryset
 
 
 class UpvoteViewSet(viewsets.ModelViewSet):
     serializer_class = VoteSerializer
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all upvotes from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Vote.objects.filter(
-                type="upvote", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all upvotes from a post
-        elif parentId and not ownerUserId:
-            queryset = Vote.objects.filter(type="upvote", parentId=parentId)
-        # gets all upvotes from a user
-        elif not parentId and ownerUserId:
-            queryset = Vote.objects.filter(type="upvote", ownerUserId=ownerUserId)
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="upvote")
         return queryset
 
 
@@ -167,19 +175,8 @@ class DownvoteViewSet(viewsets.ModelViewSet):
     serializer_class = VoteSerializer
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all downvotes from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Vote.objects.filter(
-                type="downvote", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all downvotes from a post
-        elif parentId and not ownerUserId:
-            queryset = Vote.objects.filter(type="downvote", parentId=parentId)
-        # gets all downvotes from a user
-        elif not parentId and ownerUserId:
-            queryset = Vote.objects.filter(type="downvote", ownerUserId=ownerUserId)
+        # gets all downvotes
+        queryset = Vote.objects.filter(type="downvote")
         return queryset
 
 

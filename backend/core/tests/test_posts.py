@@ -14,7 +14,7 @@ class PostsTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -22,14 +22,14 @@ class PostsTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample post
         self.sample_post = Posts.objects.create(
             type="argument",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
@@ -42,8 +42,8 @@ class PostsTests(TestCase):
             id="2345432",
             parentId="654332",
             type="rebuttal",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample rebuttal content</p>",
             ownerUserId=1,
         )
@@ -55,8 +55,8 @@ class PostsTests(TestCase):
             id="7643424",
             parentId="654332",
             type="comment",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample comment content</p>",
             ownerUserId=1,
         )
@@ -65,24 +65,27 @@ class PostsTests(TestCase):
 
     def test_posts_api(self):
         # Test the posts API endpoint
-        response = self.client.get(reverse("posts-list"))
+        page_size = 5
+        response = self.client.get(reverse("posts-list"), {"page_size": page_size})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)
 
     def test_rebuttals_api(self):
         # Test the rebuttals API endpoint
-        parentId = "654332"
+        page_size = 2
         response = self.client.get(
-            reverse("rebuttals-list", kwargs={"parentId": parentId})
+            reverse("rebuttals-list"),
+            {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_rebuttal.type)
 
     def test_comments_api(self):
         # Test the comments API endpoint
-        parentId = "654332"
+        page_size = 3
         response = self.client.get(
-            reverse("comments-list", kwargs={"parentId": parentId})
+            reverse("comments-list"),
+            {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_comment.type)

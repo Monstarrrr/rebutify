@@ -29,7 +29,7 @@ class Vote(models.Model):
     )
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
 
 class Posts(models.Model):
@@ -48,8 +48,8 @@ class Posts(models.Model):
     downvotes: models.ManyToManyField = models.ManyToManyField(
         Vote, related_name="post_downvotes"
     )
-    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-    updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
 
 class UserProfile(models.Model):
@@ -63,7 +63,7 @@ class UserProfile(models.Model):
     avatar: models.CharField = models.CharField(max_length=AVATAR_MAX_LEN, null=True)
     bio: models.TextField = models.TextField(max_length=BIO_MAX_LEN, null=True)
     reputation: models.IntegerField = models.IntegerField(default=0, null=True)
-    joinDate: models.DateField = models.DateField()
+    created: models.DateField = models.DateField()
     posts: models.ManyToManyField = models.ManyToManyField(Posts, related_name="posts")
     edits: models.ManyToManyField = models.ManyToManyField(Posts, related_name="edits")
 
