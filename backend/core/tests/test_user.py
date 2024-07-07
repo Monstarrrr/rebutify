@@ -41,9 +41,16 @@ class UserTests(TestCase):
             ]
         )
 
-    def test_user_profile_api(self):
-        # Test the user profile API endpoint
-        # print(self.sample_user_profile.saved_posts.filter(ownerUserId=1).first().__dict__)
-        response = self.client.get(reverse("user-profile-list"))
+    def test_user_profiles_api(self):
+        # Test the user profiles API endpoint
+        response = self.client.get(reverse("user-profiles-list"))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.renderer_context.get("view")
+            .get_queryset()
+            .first()
+            .saved_posts.all()
+            .first(),
+            self.sample_post,
+        )
         self.assertContains(response, self.sample_user_profile.username)

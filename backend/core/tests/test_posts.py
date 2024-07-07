@@ -44,8 +44,8 @@ class PostTests(TestCase):
             ownerUserId=1,
         )
 
-    def test_post_api(self):
-        # Test the post API endpoint
+    def test_posts_api(self):
+        # Test the posts API endpoint
         response = self.client.get(reverse("posts-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_post.title)

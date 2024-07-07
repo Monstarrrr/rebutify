@@ -42,7 +42,7 @@ router.register(
     views.CommentViewSet,
     basename="comments",
 )
-router.register(r"user-profile", views.UserProfileViewSet, basename="user-profile")
+router.register(r"user-profiles", views.UserProfileViewSet, basename="user-profiles")
 router.register(
     r"upvotes/(?:/(?P<parentId>\d+))?/(?:/(?P<ownerUserId>\d+))?",
     views.UpvoteViewSet,
