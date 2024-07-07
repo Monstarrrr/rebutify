@@ -26,26 +26,12 @@ class VoteTests(TestCase):
 
     def test_upvote_api(self):
         # Test the upvotes API endpoint
-        parentId = 345432
-        ownerUserId = 1
-        response = self.client.get(
-            reverse(
-                "upvotes-list",
-                kwargs={"parentId": parentId, "ownerUserId": ownerUserId},
-            )
-        )
+        response = self.client.get(reverse("upvotes-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_upvote.type)
 
     def test_downvote_api(self):
         # Test the downvotes API endpoint
-        parentId = 345433
-        ownerUserId = 1
-        response = self.client.get(
-            reverse(
-                "downvotes-list",
-                kwargs={"parentId": parentId, "ownerUserId": ownerUserId},
-            )
-        )
+        response = self.client.get(reverse("downvotes-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_downvote.type)

@@ -72,10 +72,9 @@ class PostsTests(TestCase):
 
     def test_rebuttals_api(self):
         # Test the rebuttals API endpoint
-        parentId = "654332"
         page_size = 2
         response = self.client.get(
-            reverse("rebuttals-list", kwargs={"parentId": parentId}),
+            reverse("rebuttals-list"),
             {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
@@ -83,10 +82,9 @@ class PostsTests(TestCase):
 
     def test_comments_api(self):
         # Test the comments API endpoint
-        parentId = "654332"
         page_size = 3
         response = self.client.get(
-            reverse("comments-list", kwargs={"parentId": parentId}),
+            reverse("comments-list"),
             {"page_size": page_size},
         )
         self.assertEqual(response.status_code, 200)
