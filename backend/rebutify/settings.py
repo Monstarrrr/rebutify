@@ -94,6 +94,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # https://stackoverflow.com/a/47657610/19071246
+    # cursor pagination uses previous or next page links
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.CursorPagination",
+    "PAGE_SIZE": int(os.getenv("PAGE_SIZE", "10") or "10"),
 }
 
 SPECTACULAR_SETTINGS = {

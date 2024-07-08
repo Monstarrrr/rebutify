@@ -34,8 +34,8 @@ class Post(models.Model):
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-    updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
 
 class UserProfile(models.Model):
@@ -49,7 +49,7 @@ class UserProfile(models.Model):
     avatar: models.CharField = models.CharField(max_length=AVATAR_MAX_LEN, null=True)
     bio: models.TextField = models.TextField(max_length=BIO_MAX_LEN, null=True)
     reputation: models.IntegerField = models.IntegerField(default=0, null=True)
-    joinDate: models.DateField = models.DateField()
+    created: models.DateField = models.DateField()
     edits: models.ManyToManyField = models.ManyToManyField(Post, related_name="edits")
 
     # Private
@@ -64,4 +64,4 @@ class Vote(models.Model):
     )
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    createdAt: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
