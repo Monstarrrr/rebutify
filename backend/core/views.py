@@ -11,7 +11,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from .models import Posts, UserProfile, Vote
+from .models import Post, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
@@ -62,7 +62,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         )
 
         # gets all arguments
-        queryset = Posts.objects.filter(type="argument")
+        queryset = Post.objects.filter(type="argument")
         return queryset
 
     def perform_create(self, serializer):
@@ -85,8 +85,8 @@ class RebuttalViewSet(viewsets.ModelViewSet):
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
 
-        # gets all reebuttals
-        queryset = Posts.objects.filter(type="rebuttal")
+        # gets all rebuttals
+        queryset = Post.objects.filter(type="rebuttal")
         return queryset
 
     def perform_create(self, serializer):
@@ -110,7 +110,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         )
 
         # gets all comments
-        queryset = Posts.objects.filter(type="comment")
+        queryset = Post.objects.filter(type="comment")
         return queryset
 
     def perform_create(self, serializer):
@@ -134,7 +134,7 @@ class PostViewSet(viewsets.ModelViewSet):
         )
 
         # gets all posts
-        queryset = Posts.objects.all()
+        queryset = Post.objects.all()
         return queryset
 
     def perform_create(self, serializer):
@@ -181,6 +181,8 @@ class DownvoteViewSet(viewsets.ModelViewSet):
 
 
 class StatusViewSet(viewsets.ViewSet):
+    serializer_class = None
+
     def list(self, request):
         return Response(status=200)
 
@@ -196,6 +198,6 @@ class ActivateUserViewSet(UserViewSet):
 
         return serializer_class(*args, **kwargs)
 
-    def activation(self, request, uid, token, *args, **kwargs):
+    def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")

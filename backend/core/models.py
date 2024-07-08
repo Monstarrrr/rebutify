@@ -10,7 +10,7 @@ BIO_MAX_LEN = 255
 ARGUMENT = "argument"
 REBUTTAL = "rebuttal"
 COMMENT = "comment"
-POSTS_TYPES = [
+POST_TYPES = [
     (ARGUMENT, "argument"),
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
@@ -23,31 +23,17 @@ VOTE_TYPES = [
 ]
 
 
-class Vote(models.Model):
-    type: models.CharField = models.CharField(
-        max_length=10, choices=VOTE_TYPES, default=UPVOTE
-    )
-    ownerUserId: models.IntegerField = models.IntegerField(null=True)
-    parentId: models.IntegerField = models.IntegerField(null=True)
-    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-
-
-class Posts(models.Model):
-    """Posts database model"""
+class Post(models.Model):
+    """Post database model"""
 
     type: models.CharField = models.CharField(
-        max_length=10, choices=POSTS_TYPES, default=ARGUMENT
+        max_length=10, choices=POST_TYPES, default=ARGUMENT
     )
+    isPrivate: models.BooleanField = models.BooleanField(default=False)
     body: models.TextField = models.TextField()  # render as HTML
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    upvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="post_upvotes"
-    )
-    downvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="post_downvotes"
-    )
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
@@ -64,19 +50,18 @@ class UserProfile(models.Model):
     bio: models.TextField = models.TextField(max_length=BIO_MAX_LEN, null=True)
     reputation: models.IntegerField = models.IntegerField(default=0, null=True)
     created: models.DateField = models.DateField()
-    posts: models.ManyToManyField = models.ManyToManyField(Posts, related_name="posts")
-    edits: models.ManyToManyField = models.ManyToManyField(Posts, related_name="edits")
+    edits: models.ManyToManyField = models.ManyToManyField(Post, related_name="edits")
 
     # Private
-    savedPosts: models.ManyToManyField = models.ManyToManyField(
-        Posts, related_name="saved_posts"
+    saved_posts: models.ManyToManyField = models.ManyToManyField(
+        Post, related_name="saved_posts"
     )
-    private_post: models.ManyToManyField = models.ManyToManyField(
-        Posts, related_name="private_post"
+
+
+class Vote(models.Model):
+    type: models.CharField = models.CharField(
+        max_length=10, choices=VOTE_TYPES, default=UPVOTE
     )
-    upvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="user_profile_upvotes"
-    )
-    downvotes: models.ManyToManyField = models.ManyToManyField(
-        Vote, related_name="user_profile_downvotes"
-    )
+    ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
