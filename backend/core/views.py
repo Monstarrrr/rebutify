@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 from djoser.views import UserViewSet
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
@@ -187,14 +188,21 @@ class StatusViewSet(viewsets.ViewSet):
         return Response(status=200)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name="uid", type=str, location=OpenApiParameter.PATH),
+        OpenApiParameter(name="token", type=str, location=OpenApiParameter.PATH),
+    ]
+)
 # Activates user. https://protocolostomy.com/2021/05/06/user-activation-with-django-and-djoser/
 class ActivateUserViewSet(UserViewSet):
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs.setdefault("context", self.get_serializer_context())
 
-        # this line is the only change from the base implementation.
-        kwargs["data"] = {"uid": self.kwargs["uid"], "token": self.kwargs["token"]}
+        if self.kwargs and "uid" in self.kwargs and "token" in self.kwargs:
+            # this line is the only change from the base implementation.
+            kwargs["data"] = {"uid": self.kwargs["uid"], "token": self.kwargs["token"]}
 
         return serializer_class(*args, **kwargs)
 
