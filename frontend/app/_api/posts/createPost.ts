@@ -1,13 +1,18 @@
 import { FormDataObj } from '@/types'
 import api from '@/api/api'
 
-export const createPost = async (formData: FormDataObj) => {
+export const createPost = async (
+  formData: FormDataObj,
+  type: 'argument' | 'rebuttal' | 'comment',
+  parentId?: string,
+) => {
   try {
     const response = await api.post(
       'api/posts',
       {
         ...formData,
-        type: 'argument',
+        type,
+        parentId,
       },
       {
         requiresAuth: true,

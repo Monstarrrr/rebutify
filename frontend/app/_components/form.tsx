@@ -86,41 +86,48 @@ export default function Form(props: FormProps) {
 
   return (
     <form onSubmit={onSubmit}>
-      {inputsState.map((inputField) => (
-        <label key={inputField.id}>
-          {inputField.label || inputField.placeholder}
-          <br />
-          {inputField.type === 'textarea' ? (
-            <textarea
-              disabled={loading}
-              name={inputField.id}
-              placeholder={inputField.placeholder}
-              required={inputField.required || true}
-              onChange={handleChange}
-              value={inputField.value}
-            />
-          ) : (
-            <input
-              disabled={loading}
-              name={inputField.id}
-              placeholder={inputField.placeholder}
-              required={inputField.required || true}
-              onChange={handleChange}
-              value={inputField.value}
-              type={inputField.type || 'text'}
-            />
-          )}
-          {/* Field errors */}
-          {inputField.errors &&
-            Object.values(inputField.errors).map((error) => (
-              <span style={{ color: 'red' }} key={error}>
-                <br />
-                {error}
-              </span>
-            ))}
-          <br />
-        </label>
-      ))}
+      {inputsState.map(
+        ({ id, label, placeholder, type, value, errors, required = true }) => (
+          <label key={id}>
+            <strong>{label || placeholder}</strong>
+            <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+            <br />
+            {type === 'textarea' ? (
+              <textarea
+                disabled={loading}
+                name={id}
+                placeholder={placeholder}
+                required={required || true}
+                onChange={handleChange}
+                value={value}
+                style={{
+                  height: '100px',
+                  width: '500px',
+                }}
+              />
+            ) : (
+              <input
+                disabled={loading}
+                name={id}
+                placeholder={placeholder}
+                required={required || true}
+                onChange={handleChange}
+                value={value}
+                type={type || 'text'}
+              />
+            )}
+            {/* Field errors */}
+            {errors &&
+              Object.values(errors).map((error) => (
+                <span style={{ color: 'red' }} key={error}>
+                  <br />
+                  {error}
+                </span>
+              ))}
+            <br />
+          </label>
+        ),
+      )}
       {/* Global errors */}
       {globalFormErrors &&
         (typeof globalFormErrors === 'string' ? (
@@ -134,7 +141,6 @@ export default function Form(props: FormProps) {
         ))}
       {/* Success message */}
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
-      <br />
       <button disabled={loading} type='submit'>
         {loading ? 'Loading...' : submitButtonLabel}
       </button>

@@ -7,33 +7,18 @@ import { FormEvent, useState } from 'react'
 import { createPost } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 
-// postTypeId: 1,
-// acceptedAnswerId: null,
-// parentId: null,
-// creationDate: null,
-// deletionDate: null,
-// score: 0,
-// viewCount: 0,
-// body: '',
-
 const newArgumentInputs: TextInput[] = [
   {
     id: 'title',
     label: 'Argument title',
-    placeholder: 'Short title for the argument',
+    placeholder: 'Plants are alive too!',
     value: '',
   },
   {
     id: 'body',
     label: 'Argument',
-    placeholder: 'Enter the entire argument here',
-    type: 'textarea',
-    value: '',
-  },
-  {
-    id: 'rebuttal',
-    label: 'Rebuttal',
-    placeholder: 'Enter your rebuttal here (leave blank to add it later)',
+    placeholder:
+      "If vegans don't eat meat, why do they eat plants? They are living beings too!",
     type: 'textarea',
     value: '',
   },
@@ -54,7 +39,7 @@ export default function Home() {
     const formData = formDataToObj(event)
 
     try {
-      await createPost({ ...formData, type: 'argument' })
+      await createPost({ ...formData }, 'argument')
       setLoading(false)
       setSuccess(true)
     } catch (error: any) {
@@ -72,6 +57,12 @@ export default function Home() {
         Rebutify is a platform for sharing rebuttals to common arguments against
         veganism.
       </h1>
+      <br />
+      <h3>
+        Have you heard a common argument against veganism to which you want to
+        provide a rebuttal?
+      </h3>
+      <br />
       <br />
       {isLogged ? (
         <Form

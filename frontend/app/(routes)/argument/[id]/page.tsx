@@ -1,8 +1,9 @@
 'use client'
 
 import api from '@/api/api'
-import { Post } from '@/types'
 import { useEffect, useState } from 'react'
+import { RebuttalSubmition } from '@/components'
+import type { Argument } from '@/types/Post'
 
 type Props = {
   params: {
@@ -12,33 +13,40 @@ type Props = {
 }
 
 export default function Argument(props: Props) {
-  const {
-    params: { id },
-  } = props
+  const argumentId = props.params.id
 
-  const [argument, setArgument] = useState<null | Post>(null)
+  const [argument, setArgument] = useState<null | Argument>(null)
   const [error, setError] = useState(false)
 
   useEffect(() => {
     let fetchApi = async () => {
       try {
-        const { data } = await api.get(`api/posts/${id}`)
+        const { data } = await api.get(`api/posts/${argumentId}`)
         setArgument(data)
       } catch (error) {
         setError(true)
-        console.error(`api/posts/${id}:`, error)
+        console.error(`api/posts/${argumentId}:`, error)
       }
     }
     fetchApi()
-  }, [id])
+  }, [argumentId])
 
   return (
     <div>
       {argument ? (
-        <div>
-          <h1>{argument.title}</h1>
-          <p>{argument.body}</p>
-        </div>
+        <>
+          <div>
+            <h1>{argument.title}</h1>
+            <p>{argument.body}</p>
+          </div>
+
+          <br />
+          <h2>Rebuttals</h2>
+          <br />
+          <br />
+          <hr />
+          <RebuttalSubmition argument={argument} />
+        </>
       ) : error ? (
         <p style={{ color: 'red' }}>Error: No argument found</p>
       ) : (

@@ -1,5 +1,5 @@
-export type Post = {
-  id: number
+type Post = {
+  id: string
   type: 'argument' | 'rebuttal' | 'comment'
   body: string
   title: string
@@ -8,3 +8,7 @@ export type Post = {
   createdAt: string
   updatedAt: string
 }
+
+export type Argument = Post & { type: 'argument' }
+export type Rebuttal = Post & { type: 'rebuttal' }
+export type Comment = Post & { type: 'comment' }
