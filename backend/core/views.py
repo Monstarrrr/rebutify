@@ -1,15 +1,9 @@
 from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
 from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from djoser.views import UserViewSet
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
+from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -18,8 +12,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from .forms import UserRegisterForm
-from .models import Posts, UserProfile, Vote
+from .models import Post, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
@@ -28,7 +21,6 @@ from .serializers import (
     UserProfileSerializer,
     VoteSerializer,
 )
-from .token import account_activation_token
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -50,17 +42,28 @@ def success(request):
     return HttpResponse("", status=200)
 
 
+DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
+
+
+# https://stackoverflow.com/a/47657610/19071246
+# cursor pagination gets previous or next page links
+# you can get such links using pagination_class.get_previous_link or pagination_class.get_next_link
+class CursorPaginationViewSet(CursorPagination):
+    page_size = DEFAULT_PAGE_SIZE
+    page_size_query_param = "page_size"
+
+
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all arguments from a user
-        if ownerUserId:
-            queryset = Posts.objects.filter(type="argument", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
         # gets all arguments
-        else:
-            queryset = Posts.objects.filter(type="argument")
+        queryset = Post.objects.filter(type="argument")
         return queryset
 
     def perform_create(self, serializer):
@@ -76,21 +79,15 @@ class ArgumentViewSet(viewsets.ModelViewSet):
 
 class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all rebuttals from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
-                type="rebuttal", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all rebuttals from a post
-        elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", parentId=parentId)
-        # gets all rebuttals from a user
-        elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="rebuttal", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all rebuttals
+        queryset = Post.objects.filter(type="rebuttal")
         return queryset
 
     def perform_create(self, serializer):
@@ -106,21 +103,15 @@ class RebuttalViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all comments from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Posts.objects.filter(
-                type="comment", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all comments from a post
-        elif parentId and not ownerUserId:
-            queryset = Posts.objects.filter(type="comment", parentId=parentId)
-        # gets all comments from a user
-        elif not parentId and ownerUserId:
-            queryset = Posts.objects.filter(type="comment", ownerUserId=ownerUserId)
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all comments
+        queryset = Post.objects.filter(type="comment")
         return queryset
 
     def perform_create(self, serializer):
@@ -135,8 +126,17 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.all()
     serializer_class = PostSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all posts
+        queryset = Post.objects.all()
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -150,27 +150,25 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        self.pagination_class.page_size = int(
+            self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
+        )
+
+        # gets all user profiles
+        queryset = UserProfile.objects.all()
+        return queryset
 
 
 class UpvoteViewSet(viewsets.ModelViewSet):
     serializer_class = VoteSerializer
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all upvotes from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Vote.objects.filter(
-                type="upvote", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all upvotes from a post
-        elif parentId and not ownerUserId:
-            queryset = Vote.objects.filter(type="upvote", parentId=parentId)
-        # gets all upvotes from a user
-        elif not parentId and ownerUserId:
-            queryset = Vote.objects.filter(type="upvote", ownerUserId=ownerUserId)
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="upvote")
         return queryset
 
 
@@ -178,106 +176,36 @@ class DownvoteViewSet(viewsets.ModelViewSet):
     serializer_class = VoteSerializer
 
     def get_queryset(self):
-        parentId = self.kwargs.get("parentId")
-        ownerUserId = self.kwargs.get("ownerUserId")
-        # gets all downvotes from a post specific to a user
-        if parentId and ownerUserId:
-            queryset = Vote.objects.filter(
-                type="downvote", parentId=parentId, ownerUserId=ownerUserId
-            )
-        # gets all downvotes from a post
-        elif parentId and not ownerUserId:
-            queryset = Vote.objects.filter(type="downvote", parentId=parentId)
-        # gets all downvotes from a user
-        elif not parentId and ownerUserId:
-            queryset = Vote.objects.filter(type="downvote", ownerUserId=ownerUserId)
+        # gets all downvotes
+        queryset = Vote.objects.filter(type="downvote")
         return queryset
 
 
 class StatusViewSet(viewsets.ViewSet):
+    serializer_class = None
+
     def list(self, request):
         return Response(status=200)
 
 
-class RegisterViewSet(viewsets.ViewSet):
-    def create(self, request):
-        form = UserRegisterForm(request.data)
-
-        if not form.is_valid():
-            return Response({"errors": form.errors}, status=400)
-
-        user = form.save(commit=False)
-        user.is_active = False
-        user.save()
-
-        username = form.cleaned_data.get("username")
-        current_site = get_current_site(request)
-        mail_subject = f"Activation link for {username}"
-        message = render_to_string(
-            "user/acc_active_email.html",
-            {
-                "user": user,
-                "domain": current_site.domain,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": account_activation_token.make_token(user),
-            },
-        )
-        to_email = form.cleaned_data.get("email")
-        email = EmailMessage(
-            mail_subject,
-            message,
-            settings.EMAIL_FROM,
-            [to_email],
-        )
-        email.send()
-
-        return Response(
-            {
-                "detail": "Please confirm your email address to complete the registration."
-            },
-            status=200,
-        )
-
-
-class UserLoginViewSet(viewsets.ViewSet):
-    def create(self, request):
-        form = AuthenticationForm(request, data=request.data)
-
-        if not form.is_valid():
-            return Response({"errors": form.errors}, status=400)
-
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password")
-        user = authenticate(request, username=username, password=password)
-
-        if user is None:
-            messages.info(request, "Account does not exist. Please log in.")
-            return Response(
-                {"detail": "Invalid username or password."},
-                status=401,
-            )
-
-        login(request, user)
-        messages.success(request, f"Welcome {username}")
-        return Response({"detail": "Login successful."}, status=200)
-
-
-class LogoutViewSet(viewsets.ViewSet):
-    def create(self, request):
-        return Response({"detail": "Logged out successfully."}, status=200)
-
-
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name="uid", type=str, location=OpenApiParameter.PATH),
+        OpenApiParameter(name="token", type=str, location=OpenApiParameter.PATH),
+    ]
+)
 # Activates user. https://protocolostomy.com/2021/05/06/user-activation-with-django-and-djoser/
-class ActivateUser(UserViewSet):
+class ActivateUserViewSet(UserViewSet):
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs.setdefault("context", self.get_serializer_context())
 
-        # this line is the only change from the base implementation.
-        kwargs["data"] = {"uid": self.kwargs["uid"], "token": self.kwargs["token"]}
+        if self.kwargs and "uid" in self.kwargs and "token" in self.kwargs:
+            # this line is the only change from the base implementation.
+            kwargs["data"] = {"uid": self.kwargs["uid"], "token": self.kwargs["token"]}
 
         return serializer_class(*args, **kwargs)
 
-    def activation(self, request, uid, token, *args, **kwargs):
+    def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")

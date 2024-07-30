@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from core.models import Posts, UserProfile, Vote
+from core.models import Post, UserProfile, Vote
 
 
 class UserTests(TestCase):
@@ -15,7 +15,7 @@ class UserTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -23,13 +23,14 @@ class UserTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=1,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
-        self.sample_post = Posts.objects.create(
+        self.sample_post = Post.objects.create(
             type="argument",
-            createdAt="2024-06-26 02:20:58.689998+00:00",
-            updatedAt="2024-06-26 02:20:58.689998+00:00",
+            isPrivate=False,
+            created="2024-06-26 02:20:58.689998+00:00",
+            updated="2024-06-26 02:20:58.689998+00:00",
             body="<p>Sample post content</p>",
             ownerUserId=1,
             title="Sample Title",
@@ -42,18 +43,30 @@ class UserTests(TestCase):
             avatar="avatar",
             bio="bio",
             reputation=1,
-            joinDate="2024-01-01",
+            created="2024-01-01",
         )
-        # Correctly assign the post to the user profile
-        self.sample_user_profile.posts.set([self.sample_post])
-        self.sample_user_profile.edits.set([self.sample_post])
-        self.sample_user_profile.savedPosts.set([self.sample_post])
-        self.sample_user_profile.private_post.set([self.sample_post])
-        self.sample_user_profile.upvotes.set([self.sample_upvote])
-        self.sample_user_profile.downvotes.set([self.sample_downvote])
+        # Correctly assign the edits to the user profile
+        self.sample_user_profile.saved_posts.set(
+            [
+                self.sample_post,
+            ]
+        )
+        self.sample_user_profile.edits.set(
+            [
+                self.sample_post,
+            ]
+        )
 
-    def test_user_profile_api(self):
-        # Test the user profile API endpoint
-        response = self.client.get(reverse("user-profile-list"))
+    def test_user_profiles_api(self):
+        # Test the user profiles API endpoint
+        response = self.client.get(reverse("user-profiles-list"))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.renderer_context.get("view")
+            .get_queryset()
+            .first()
+            .saved_posts.all()
+            .first(),
+            self.sample_post,
+        )
         self.assertContains(response, self.sample_user_profile.username)

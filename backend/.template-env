@@ -29,6 +29,9 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_HOST=
 
+# Amount of objects per page
+PAGE_SIZE=
+
 # Write emails to a local file
 DEBUG_MAIL=True
 

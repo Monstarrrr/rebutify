@@ -5,8 +5,8 @@ type Post = {
   title: string
   ownerUserId: number
   parentId: number
-  createdAt: string
-  updatedAt: string
+  created: string
+  updated: string
 }
 
 export type Argument = Post & { type: 'argument' }

@@ -13,7 +13,7 @@ class VoteTests(TestCase):
             type="upvote",
             ownerUserId=1,
             parentId=345432,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
         # Create sample downvote
@@ -21,31 +21,17 @@ class VoteTests(TestCase):
             type="downvote",
             ownerUserId=1,
             parentId=345433,
-            createdAt="2024-06-26 02:20:58.689998+00:00",
+            created="2024-06-26 02:20:58.689998+00:00",
         )
 
-    def test_upvote_api(self):
+    def test_upvotes_api(self):
         # Test the upvotes API endpoint
-        parentId = 345432
-        ownerUserId = 1
-        response = self.client.get(
-            reverse(
-                "upvotes-list",
-                kwargs={"parentId": parentId, "ownerUserId": ownerUserId},
-            )
-        )
+        response = self.client.get(reverse("upvotes-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_upvote.type)
 
-    def test_downvote_api(self):
+    def test_downvotes_api(self):
         # Test the downvotes API endpoint
-        parentId = 345433
-        ownerUserId = 1
-        response = self.client.get(
-            reverse(
-                "downvotes-list",
-                kwargs={"parentId": parentId, "ownerUserId": ownerUserId},
-            )
-        )
+        response = self.client.get(reverse("downvotes-list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_downvote.type)
