@@ -80,7 +80,8 @@ MIDDLEWARE = [
 
 # Domains that can access the API
 CORS_ALLOWED_ORIGINS = [
-    "https://www.rebutify.org" "https://rebutify.org",
+    "https://www.rebutify.org",
+    "https://rebutify.org",
     "http://localhost:3000",
     "http://0.0.0.0:3000",
 ]
