@@ -71,4 +71,10 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc-ui",
     ),
+    path(
+        "api/arguments/<int:id>/upvote", views.upvote_argument, name="upvote-argument"
+    ),
+    # path("api/arguments/<int:id>/upvote/undo"),
+    # path("api/arguments/<int:id>/downvote"),
+    # path("api/arguments/<int:id>/downvote/undo"),
 ]
