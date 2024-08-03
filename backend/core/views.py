@@ -223,15 +223,19 @@ class ActivateUserViewSet(UserViewSet):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def upvote_argument(request, id):
-    # TODO: Verify if there is a post corresponding to the given id
+    # TODO: 1. Verify if there is a post corresponding to the given id
 
-    # Get the corresponding post and caller id
+    # 2. Get the corresponding post and caller id
     post = Post.objects.get(id=id)
     user_id = request.user.id
 
-    # TODO: Check if there is already a vote between this user & post
+    # TODO: 3. Check if there is already a vote between this user & post
 
-    # Create Vote object and save
+    # 4. Create Vote object and save
     vote = Vote(ownerUserId=user_id, parentId=post.pk)
     vote.save()
+
+    # 5. Return response
+    return HttpResponse({"success": True})
+
     return HttpResponse({"success": True})
