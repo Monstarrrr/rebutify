@@ -3,6 +3,11 @@ from django.http import HttpResponse
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -10,7 +15,10 @@ from rest_framework.permissions import (
     BasePermission,
     IsAuthenticated,
 )
+
+# from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Post, UserProfile, Vote
 from .serializers import (
@@ -209,3 +217,14 @@ class ActivateUserViewSet(UserViewSet):
     def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def upvote_argument(request, id):
+    post = Post.objects.get(id=id)
+    user_id = request.user.id
+    vote = Vote(ownerUserId=user_id, parentId=post.pk)
+    vote.save()
+    return HttpResponse({"success": True})
