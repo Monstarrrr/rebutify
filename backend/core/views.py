@@ -253,13 +253,20 @@ def upvote_argument(request, id):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def upvote_argument_undo(request, id):
-    # TODO: 1. Verify if there is a post corresponding to the given id
+    # Verify if there is a post corresponding to the given id
+    # Get the corresponding post and caller id
+    post = check_post_exists(id)
+    caller_id = request.user.id
+    parent_id = post.pk
 
-    # 2. Get the corresponding post and caller id
+    # Check that a vote between this user & post exists
+    # Remove the row corresponding to the above vote
+    vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
 
-    # TODO: 3. Check that a vote between this user & post exists
+    # If vote doesn't exist, raise an error
+    if vote.DoesNotExist:
+        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
 
-    # 4. Remove the row corresponding to the above vote
-
-    # 5. Return response
+    # TODO: Delete the vote and return response
+    vote.delete()
     return HttpResponse({"success": True})
