@@ -238,4 +238,18 @@ def upvote_argument(request, id):
     # 5. Return response
     return HttpResponse({"success": True})
 
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def upvote_argument_undo(request, id):
+    # TODO: 1. Verify if there is a post corresponding to the given id
+
+    # 2. Get the corresponding post and caller id
+
+    # TODO: 3. Check that a vote between this user & post exists
+
+    # 4. Remove the row corresponding to the above vote
+
+    # 5. Return response
     return HttpResponse({"success": True})
