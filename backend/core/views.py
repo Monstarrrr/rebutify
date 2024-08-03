@@ -219,6 +219,14 @@ class ActivateUserViewSet(UserViewSet):
         return HttpResponse("Your account has been activated.")
 
 
+def check_post_exists(post_id):
+    post = Post.objects.get(id=post_id)
+    if post.DoesNotExist:
+        # TODO: what error?
+        raise Exception(f"The post with id: {id} doesn't exist")
+    return post
+
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
