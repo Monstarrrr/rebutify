@@ -231,19 +231,21 @@ def check_post_exists(post_id):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def upvote_argument(request, id):
-    # TODO: 1. Verify if there is a post corresponding to the given id
+    # Verify if there is a post corresponding to the given id
+    # If yes, get the corresponding post and caller id
+    post = check_post_exists(id)
+    caller_id = request.user.id
+    parent_id = post.pk
 
-    # 2. Get the corresponding post and caller id
-    post = Post.objects.get(id=id)
-    user_id = request.user.id
+    # Check if there is already a vote between this user & post
+    # Create Vote object if it doesn't already exists
+    _, created = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
 
-    # TODO: 3. Check if there is already a vote between this user & post
+    # If vote already exists, raise an error
+    if not created:
+        raise Exception(f"A vote between user: {id} & post: {parent_id} already exists")
 
-    # 4. Create Vote object and save
-    vote = Vote(ownerUserId=user_id, parentId=post.pk)
-    vote.save()
-
-    # 5. Return response
+    # TODO: Return response
     return HttpResponse({"success": True})
 
 
