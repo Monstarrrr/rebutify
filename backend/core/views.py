@@ -249,13 +249,11 @@ def upvote_argument(request, id):
     caller_id = request.user.id
     parent_id = post.pk
 
-    # Check if there is already a vote between this user & post
-    # Create Vote object if it doesn't already exists
-    _, created = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
-
-    # If vote already exists, raise an error
-    if not created:
-        raise Exception(f"A vote between user: {id} & post: {parent_id} already exists")
+    # Get the corresponding vote object (create if it doesn't exist)
+    # & upvote and save it
+    vote, _ = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
+    vote.upvote()
+    vote.save()
 
     # TODO: Return response
     return HttpResponse({"success": True})
