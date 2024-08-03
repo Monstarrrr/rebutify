@@ -65,3 +65,15 @@ class Vote(models.Model):
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+
+    def upvote(self):
+        self.type = UPVOTE
+
+    def downvote(self):
+        self.type = DOWNVOTE
+
+    def is_upvoted(self):
+        return self.type == UPVOTE
+
+    def is_downvoted(self):
+        return self.type == DOWNVOTE
