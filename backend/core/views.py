@@ -269,8 +269,7 @@ def upvote_argument_undo(request, id):
     caller_id = request.user.id
     parent_id = post.pk
 
-    # Check that a vote between this user & post exists
-    # Remove the row corresponding to the above vote
+    # Get the vote corresponding to the user and the post
     vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
 
     # If vote doesn't exist, raise an error
