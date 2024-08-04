@@ -251,10 +251,17 @@ def upvote_argument(request, id):
     parent_id = post.pk
 
     # Get the corresponding vote object (create if it doesn't exist)
-    # & upvote and save it
-    vote, _ = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
-    vote.upvote()
-    vote.save()
+    # If it is just created, then we don't have to do anything as default
+    # is upvote when a vote is created
+    vote, created = Vote.objects.get_or_create(
+        ownerUserId=caller_id, parentId=parent_id
+    )
+
+    # If it is not created, we try to upvote and save
+    # If the existing vote is an upvote, an exception will be raised
+    if not created:
+        vote.upvote()
+        vote.save()
 
     # TODO: Return response
     return HttpResponse({"success": True})
