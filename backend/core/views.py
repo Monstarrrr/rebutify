@@ -278,12 +278,16 @@ def upvote_argument_undo(request, id):
     parent_id = post.pk
 
     # Get the vote corresponding to the user and the post
-    vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
-
-    # If vote doesn't exist, raise an error
-    if vote.DoesNotExist:
+    try:
+        vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
+    except Vote.DoesNotExist:
+        # If vote doesn't exist, raise an error
         raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
 
-    # TODO: Delete the vote and return response
+    # If the existing vote is a downvote, raise an error as it can't be undoed
+    if vote.is_downvoted():
+        raise Exception(f"User: {id} downvoted post: {parent_id}. Cannot undo upvote.")
+
+    # TODO: Delete` the vote and return response
     vote.delete()
     return HttpResponse({"success": True})
