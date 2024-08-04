@@ -288,6 +288,57 @@ def upvote_argument_undo(request, id):
     if vote.is_downvoted():
         raise Exception(f"User: {id} downvoted post: {parent_id}. Cannot undo upvote.")
 
-    # TODO: Delete` the vote and return response
+    # If the existing vote is an upvote
+    # TODO: Delete the vote and return response
+    vote.delete()
+    return HttpResponse({"success": True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def downvote_argument(request, id):
+    # Verify if there is a post corresponding to the given id
+    # If yes, get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the corresponding vote object (create if it doesn't exist)
+    vote, _ = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
+
+    # If it is just created, or if it is not created
+    # then we try to downvote and save
+    # If the existing vote is an upvote, an exception will be raised
+    vote.downvote()
+    vote.save()
+
+    # TODO: Return response
+    return HttpResponse({"success": True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def downvote_argument_undo(request, id):
+    # Verify if there is a post corresponding to the given id
+    # Get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the vote corresponding to the user and the post
+    try:
+        vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
+    except Vote.DoesNotExist:
+        # If vote doesn't exist, raise an error
+        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
+
+    # If the existing vote is a downvote, raise an error as it can't be undoed
+    if vote.is_upvoted():
+        raise Exception(f"User: {id} upvoted post: {parent_id}. Cannot undo downvote.")
+
+    # If the existing vote is a downvote
+    # TODO: Delete the vote and return response
     vote.delete()
     return HttpResponse({"success": True})
