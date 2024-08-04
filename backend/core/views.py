@@ -232,8 +232,9 @@ def get_post(post_id):
     Raises:
         Exception: If the post with the given post_id does not exist.
     """
-    post = Post.objects.get(id=post_id)
-    if post.DoesNotExist:
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
         # TODO: what error?
         raise Exception(f"The post with id: {id} doesn't exist")
     return post
