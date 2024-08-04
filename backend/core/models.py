@@ -67,9 +67,39 @@ class Vote(models.Model):
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
     def upvote(self):
+        """
+        Changes vote to upvote.
+
+        Raises:
+            Exception: If an upvote from the user (identified by `self.ownerUserId`)
+                    for the post (identified by `self.parent_id`) is already an upvote.
+        """
+
+        # If vote already is upvoted, raise an error
+        if self.is_upvoted():
+            raise Exception(
+                f"An upvote between user: {self.ownerUserId} & post: {self.parent_id} already exists"
+            )
+
+        # Upvote
         self.type = UPVOTE
 
     def downvote(self):
+        """
+        Changes vote to downvote.
+
+        Raises:
+            Exception: If an downvote from the user (identified by `self.ownerUserId`)
+                    for the post (identified by `self.parent_id`) is already an downvote.
+        """
+
+        # If vote already is downvoted, raise an error
+        if self.is_downvoted():
+            raise Exception(
+                f"An downvote between user: {self.ownerUserId} & post: {self.parent_id} already exists"
+            )
+
+        # Downvote
         self.type = DOWNVOTE
 
     def is_upvoted(self):
