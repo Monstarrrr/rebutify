@@ -79,6 +79,14 @@ urlpatterns = [
         views.upvote_argument_undo,
         name="upvote-argument-undo",
     ),
-    # path("api/arguments/<int:id>/downvote"),
-    # path("api/arguments/<int:id>/downvote/undo"),
+    path(
+        "api/arguments/<int:id>/downvote",
+        views.downvote_argument,
+        name="downvote-argument",
+    ),
+    path(
+        "api/arguments/<int:id>/downvote/undo",
+        views.downvote_argument_undo,
+        name="downvote-argument-undo",
+    ),
 ]
