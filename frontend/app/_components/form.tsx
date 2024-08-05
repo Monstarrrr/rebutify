@@ -141,6 +141,7 @@ export default function Form(props: FormProps) {
         ))}
       {/* Success message */}
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
+      <br />
       <button disabled={loading} type='submit'>
         {loading ? 'Loading...' : submitButtonLabel}
       </button>

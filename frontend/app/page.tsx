@@ -1,7 +1,7 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, ArgumentCard } from '@/components'
+import { Form, ArgumentCards } from '@/components'
 import type { TextInput } from '@/types'
 import { FormEvent, useState } from 'react'
 import { createPost } from '@/api/posts'
@@ -85,7 +85,7 @@ export default function Home() {
       <hr />
       <h2>All arguments</h2>
       <hr />
-      <ArgumentCard />
+      <ArgumentCards />
     </>
   )
 }

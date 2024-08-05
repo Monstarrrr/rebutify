@@ -2,7 +2,7 @@
 
 import api from '@/api/api'
 import { useEffect, useState } from 'react'
-import { RebuttalSubmition } from '@/components'
+import { RebuttalSubmition, RebuttalCards } from '@/components'
 import type { Argument } from '@/types/Post'
 
 type Props = {
@@ -42,6 +42,7 @@ export default function Argument(props: Props) {
 
           <br />
           <h2>Rebuttals</h2>
+          <RebuttalCards />
           <br />
           <br />
           <hr />

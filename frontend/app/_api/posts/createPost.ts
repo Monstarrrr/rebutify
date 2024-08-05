@@ -7,9 +7,11 @@ export const createPost = async (
   parentId?: string,
 ) => {
   try {
+    const title = type === 'argument' ? formData.title : 'Some title' // temp fix
     const response = await api.post(
       'api/posts',
       {
+        title, // temp fix
         ...formData,
         type,
         parentId,
