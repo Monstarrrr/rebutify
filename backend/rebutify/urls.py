@@ -30,7 +30,6 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r"status/alive", views.StatusViewSet, basename="alive")
 router.register(r"posts", views.PostViewSet, basename="posts")
-router.register(r"arguments", views.ArgumentViewSet, basename="arguments")
 router.register(
     r"rebuttals",
     views.RebuttalViewSet,
@@ -70,5 +69,30 @@ urlpatterns = [
         "api/schema/redoc-ui/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc-ui",
+    ),
+    path(
+        "api/arguments",
+        views.ArgumentViewSet.as_view({"get": "list"}),
+        name="arguments",
+    ),
+    path(
+        "api/arguments/<int:id>",
+        views.ArgumentViewSet.as_view({"get": "list"}),
+        name="arguments",
+    ),
+    path(
+        "api/arguments/add",
+        views.ArgumentViewSet.as_view({"post": "create"}),
+        name="arguments",
+    ),
+    path(
+        "api/arguments/<int:id>/edit",
+        views.ArgumentViewSet.as_view({"put": "edit"}),
+        name="arguments",
+    ),
+    path(
+        "api/arguments/<int:id>/delete",
+        views.ArgumentViewSet.as_view({"delete": "delete"}),
+        name="arguments",
     ),
 ]
