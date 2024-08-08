@@ -87,12 +87,12 @@ urlpatterns = [
     ),
     path(
         "api/arguments/<int:id>/edit",
-        views.ArgumentViewSet.as_view({"put": "edit"}),
+        views.ArgumentViewSet.as_view({"put": "update"}),
         name="arguments",
     ),
     path(
         "api/arguments/<int:id>/delete",
-        views.ArgumentViewSet.as_view({"delete": "delete"}),
+        views.ArgumentViewSet.as_view({"delete": "destroy"}),
         name="arguments",
     ),
 ]
