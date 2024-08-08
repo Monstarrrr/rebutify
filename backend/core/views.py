@@ -87,8 +87,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         # put your code here
         print("test")
 
-    @action(detail=True, methods=["post"])
-    def unfollow(self):
+    @action(detail=True, url_path="follow/undo", methods=["post"])
+    def undo_follow(self):
         # put your code here
         print("test")
 
