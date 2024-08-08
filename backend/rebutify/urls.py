@@ -77,7 +77,7 @@ urlpatterns = [
     ),
     path(
         "api/arguments/<int:id>",
-        views.ArgumentViewSet.as_view({"get": "list"}),
+        views.ArgumentViewSet.as_view({"get": "retrieve"}),
         name="arguments",
     ),
     path(
