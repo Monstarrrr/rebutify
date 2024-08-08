@@ -3,6 +3,11 @@ from django.http import HttpResponse
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -10,7 +15,10 @@ from rest_framework.permissions import (
     BasePermission,
     IsAuthenticated,
 )
+
+# from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Post, UserProfile, Vote
 from .serializers import (
@@ -209,3 +217,128 @@ class ActivateUserViewSet(UserViewSet):
     def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")
+
+
+def get_post(post_id):
+    """
+    Gets the post corresponding to the given post_id if exists.
+
+    Args:
+        post_id (int): The ID of the post to check.
+
+    Returns:
+        Post: The post object if it exists.
+
+    Raises:
+        Exception: If the post with the given post_id does not exist.
+    """
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        # TODO: what error?
+        raise Exception(f"The post with id: {id} doesn't exist")
+    return post
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def upvote_argument(request, id):
+    # Verify if there is a post corresponding to the given id
+    # If yes, get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the corresponding vote object (create if it doesn't exist)
+    # If it is just created, then we don't have to do anything as default
+    # is upvote when a vote is created
+    vote, created = Vote.objects.get_or_create(
+        ownerUserId=caller_id, parentId=parent_id
+    )
+
+    # If it is not created, we try to upvote and save
+    # If the existing vote is an upvote, an exception will be raised
+    if not created:
+        vote.upvote()
+        vote.save()
+
+    # TODO: Return response
+    return HttpResponse({"success": True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def upvote_argument_undo(request, id):
+    # Verify if there is a post corresponding to the given id
+    # Get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the vote corresponding to the user and the post
+    try:
+        vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
+    except Vote.DoesNotExist:
+        # If vote doesn't exist, raise an error
+        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
+
+    # If the existing vote is a downvote, raise an error as it can't be undoed
+    if vote.is_downvoted():
+        raise Exception(f"User: {id} downvoted post: {parent_id}. Cannot undo upvote.")
+
+    # If the existing vote is an upvote
+    # TODO: Delete the vote and return response
+    vote.delete()
+    return HttpResponse({"success": True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def downvote_argument(request, id):
+    # Verify if there is a post corresponding to the given id
+    # If yes, get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the corresponding vote object (create if it doesn't exist)
+    vote, _ = Vote.objects.get_or_create(ownerUserId=caller_id, parentId=parent_id)
+
+    # If it is just created, or if it is not created
+    # then we try to downvote and save
+    # If the existing vote is an upvote, an exception will be raised
+    vote.downvote()
+    vote.save()
+
+    # TODO: Return response
+    return HttpResponse({"success": True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def downvote_argument_undo(request, id):
+    # Verify if there is a post corresponding to the given id
+    # Get the corresponding post and caller id
+    post = get_post(id)
+    caller_id = request.user.id
+    parent_id = post.pk
+
+    # Get the vote corresponding to the user and the post
+    try:
+        vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
+    except Vote.DoesNotExist:
+        # If vote doesn't exist, raise an error
+        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
+
+    # If the existing vote is a downvote, raise an error as it can't be undoed
+    if vote.is_upvoted():
+        raise Exception(f"User: {id} upvoted post: {parent_id}. Cannot undo downvote.")
+
+    # If the existing vote is a downvote
+    # TODO: Delete the vote and return response
+    vote.delete()
+    return HttpResponse({"success": True})
