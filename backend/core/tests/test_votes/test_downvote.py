@@ -1,5 +1,5 @@
 from core.models import Vote
-from core.tests.test_vote import VoteTests
+from core.tests.test_votes.test_vote import VoteTests
 
 
 class DownvoteTests(VoteTests):
