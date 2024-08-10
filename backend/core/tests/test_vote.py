@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
+from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from core.models import Post, Vote
 
 
 class VoteTests(TestCase):
@@ -14,46 +17,78 @@ class VoteTests(TestCase):
         }
 
     def setUp(self):
-        self.client = Client()
+        # User 1
         self.username1 = "testuser1"
         self.password1 = "topsekret1"
+        self.user1 = User.objects.create_user(
+            username=self.username1,
+            password=self.password1,
+        )
+        self.jwt1 = self.get_tokens_for_user(self.user1)["access"]
+
+        # User 2
         self.username2 = "testuser2"
         self.password2 = "topsekret2"
-
-        # Reference: https://stackoverflow.com/a/33294746
-        # Create users
-        user1 = User.objects.create_superuser(
-            username=self.username1, password=self.password1
+        self.user2 = User.objects.create_user(
+            username=self.username2,
+            password=self.password2,
         )
-        user2 = User.objects.create_superuser(
-            username=self.username2, password=self.password2
+
+        # Create client (logged in as user1)
+        self.client = Client(headers={"Authorization": f"Bearer {self.jwt1}"})
+
+        # Create arguments
+        # argument 1 created by user1
+        self.argument1 = Post.objects.create(
+            body="Body 1", title="Title 1", ownerUserId=self.user1.pk
         )
-        print(user1, user2)
+        # argument 2 created by user2
+        self.argument2 = Post.objects.create(
+            body="Body 2", title="Title 2", ownerUserId=self.user2.pk
+        )
 
-        # Login user 1
-        self.client.login(username=self.username1, password=self.password1)
-
-        # TODO: Create arguments
-        self.arguments = [
-            # TODO: argument 1 created by user1
-            # TODO: argument 2 created by user2
-        ]
+    def upvote(self, argument_id):
+        url = reverse("upvote-argument", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
 
     def test_upvotes_api(self):
-        # TODO: Upvote own argument
-        # response = self.client.post(reverse("upvote-argument", kwargs={"id": 1}))
-        # print(response.json())
-        # self.assertEqual(response.status_code, 200)
-        # self.assertContains(response, self.sample_upvote.type)
+        # 1. Ensure no votes between user1 and argument1
+        votes = Vote.objects.filter(
+            parentId=self.argument1.pk, ownerUserId=self.user1.pk
+        )
+        self.assertEqual(len(votes), 0)
 
-        # TODO: Upvote another person's argument
+        # Upvote argument1 from user1
+        response = self.upvote(1)
+        self.assertEqual(response.status_code, 200)
 
-        # TODO: Upvote already upvoted argument (error)
+        # Ensure there exists upvote between user1 and argument1
+        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_upvoted())
 
-        # TODO: Upvote downvoted argument
+        # Upvote already upvoted argument (error)
+        response = self.upvote(1)
+        self.assertEqual(response.status_code, 400)
 
-        # TODO: Upvote previously not voted argument
-        pass
+        # Ensure there exists upvote between user1 and argument1
+        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_upvoted())
+
+        # Upvote downvoted argument
+        # Downvote argument1 from user1
+        v.downvote()
+        v.save()
+        # Upvote argument1 from user1
+        response = self.upvote(1)
+        self.assertEqual(response.status_code, 200)
+
+        # Upvote argument2 from user1
+        response = self.upvote(2)
+
+        # Ensure there exists upvote between user1 and argument2
+        v = Vote.objects.get(parentId=self.argument2.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_upvoted())
 
     # This function assumes that the upvote api is working
     def test_upvotes_undo_api(self):
