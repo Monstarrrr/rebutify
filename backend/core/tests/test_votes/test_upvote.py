@@ -13,7 +13,7 @@ class UpvoteTests(VoteTests):
     # Test upvoting argument1 (created by user1) from user1
     def test_upvote_owned_argument(self):
         # Upvote argument1 from user1
-        response = self.call_upvote_api(1)
+        response = self.call_upvote_api(self.argument1.pk)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument1
@@ -23,8 +23,8 @@ class UpvoteTests(VoteTests):
     # Test upvoting already upvoted argument (error)
     def test_upvote_twice(self):
         # Upvote argument twice
-        self.call_upvote_api(1)
-        response = self.call_upvote_api(1)
+        self.call_upvote_api(self.argument1.pk)
+        response = self.call_upvote_api(self.argument1.pk)
         self.assertEqual(response.status_code, 400)
 
         # Ensure there exists upvote between user1 and argument1
@@ -34,19 +34,19 @@ class UpvoteTests(VoteTests):
     # Test downvoted argument
     def test_upvote_downvoted_argument(self):
         # Upvote argument and downvote manually
-        self.call_upvote_api(1)
+        self.call_upvote_api(self.argument1.pk)
         v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
         v.downvote()
         v.save()
 
         # Test upvoting downvoted argument
-        response = self.call_upvote_api(1)
+        response = self.call_upvote_api(self.argument1.pk)
         self.assertEqual(response.status_code, 200)
 
     # Test upvoting argument created by some other user
     def test_upvote_non_owned_argument(self):
         # Upvote argument2 from user1
-        response = self.call_upvote_api(2)
+        response = self.call_upvote_api(self.argument2.pk)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument2
