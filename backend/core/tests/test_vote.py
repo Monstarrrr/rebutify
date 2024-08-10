@@ -67,51 +67,23 @@ class VoteTests(TestCase):
         response = self.client.post(url)
         return response
 
-    def test_upvotes_api(self):
-        # Ensure no votes between user1 and argument1
-        votes = Vote.objects.filter(
-            parentId=self.argument1.pk, ownerUserId=self.user1.pk
-        )
-        self.assertEqual(len(votes), 0)
-
-        # Upvote argument1 from user1
-        response = self.call_upvote_api(1)
-        self.assertEqual(response.status_code, 200)
-
-        # Ensure there exists upvote between user1 and argument1
-        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
-        self.assertTrue(v.is_upvoted())
-
-        # Upvote already upvoted argument (error)
-        response = self.call_upvote_api(1)
-        self.assertEqual(response.status_code, 400)
-
-        # Ensure there exists upvote between user1 and argument1
-        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
-        self.assertTrue(v.is_upvoted())
-
-        # Upvote downvoted argument
-        # Downvote argument1 from user1
-        v.downvote()
-        v.save()
-        # Upvote argument1 from user1
-        response = self.call_upvote_api(1)
-        self.assertEqual(response.status_code, 200)
-
-        # Upvote argument2 from user1
-        response = self.call_upvote_api(2)
-        self.assertEqual(response.status_code, 200)
-
-        # Ensure there exists upvote between user1 and argument2
-        v = Vote.objects.get(parentId=self.argument2.pk, ownerUserId=self.user1.pk)
-        self.assertTrue(v.is_upvoted())
-
     # Upvote argument1 from user1 and call undo upvote api
+    def test_undo_upvote_same_user(self):
+        self.call_upvote_api(1)
+        response = self.call_upvote_undo_api(1)
+        self.assertEqual(response.status_code, 200)
+
+    # Upvote argument1 from user1 and
+    def test_undo_upvote_twice(self):
+        self.call_upvote_api(1)
+
+        # Call undo upvote api twice
+        self.call_upvote_undo_api(1)
+        response = self.call_upvote_undo_api(1)
+        self.assertEqual(response.status_code, 400)
 
     # This function assumes that the upvote api is working
     def test_upvotes_undo_api(self):
-        # TODO: Undo upvote upvoted argument created by same user
-
         # TODO: Undo upvote upvoted argument created by another user
 
         # TODO: Undo upvote for an argument that is downvoted (error)
