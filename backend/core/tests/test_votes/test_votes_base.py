@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from core.models import Post
+from core.models import Post, Vote
 
 
 # This is the base class that the following classes inherit from:
@@ -51,3 +51,11 @@ class VoteTests(TestCase):
         self.argument2 = Post.objects.create(
             body="Body 2", title="Title 2", ownerUserId=self.user2.pk
         )
+
+    def create_upvote(self, ownerUserId, parentId):
+        Vote.objects.create(ownerUserId=ownerUserId, parentId=parentId)
+
+    def create_downvote(self, ownerUserId, parentId):
+        v = Vote(ownerUserId=ownerUserId, parentId=parentId)
+        v.downvote()
+        v.save()
