@@ -41,7 +41,6 @@ class UpvoteUndoTests(VoteTests):
         v.save()
 
         # Call undo upvote (error)
-        self.call_upvote_undo_api(self.argument1.pk)
         response = self.call_upvote_undo_api(self.argument1.pk)
         self.assertEqual(response.status_code, 400)
 
