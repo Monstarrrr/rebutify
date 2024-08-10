@@ -1,27 +1,72 @@
+from core.models import Vote
 from core.tests.test_votes.test_vote import VoteTests
 
 
 class UpvoteUndoTests(VoteTests):
     # Upvote argument1 from user1 and call undo upvote api
     def test_undo_upvote_same_user(self):
-        self.call_upvote_api(1)
-        response = self.call_upvote_undo_api(1)
+        # Create upvote between user1 and argument1
+        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        response = self.call_upvote_undo_api(self.argument1.pk)
         self.assertEqual(response.status_code, 200)
 
-    # Upvote argument1 from user1 and
-    def test_undo_upvote_twice(self):
-        self.call_upvote_api(1)
+        # Check no upvote exists between user1 and argument1
+        votes = Vote.objects.filter(
+            ownerUserId=self.user1.pk, parentId=self.argument1.pk
+        )
+        self.assertEqual(len(votes), 0)
 
-        # Call undo upvote api twice
-        self.call_upvote_undo_api(1)
-        response = self.call_upvote_undo_api(1)
+    # Undo upvote twice (error)
+    def test_undo_upvote_twice(self):
+        # Create upvote between user1 and argument1
+        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+
+        # Call undo upvote api twice (error)
+        response = self.call_upvote_undo_api(self.argument1.pk)
+        self.assertEqual(response.status_code, 200)
+        response = self.call_upvote_undo_api(self.argument1.pk)
         self.assertEqual(response.status_code, 400)
 
-    # This function assumes that the upvote api is working
-    def test_upvotes_undo_api(self):
-        # TODO: Undo upvote upvoted argument created by another user
+        # Check no upvote exists between user1 and argument1
+        votes = Vote.objects.filter(
+            ownerUserId=self.user1.pk, parentId=self.argument1.pk
+        )
+        self.assertEqual(len(votes), 0)
 
-        # TODO: Undo upvote for an argument that is downvoted (error)
+    # Undo upvote for a downvoted argument (error)
+    def test_undo_upvote_downvoted_argument(self):
+        # Create downvote between user1 and argument1
+        v = Vote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        v.downvote()
+        v.save()
 
-        # TODO: Undo upvote for an argument that the user didn't vote (error)
-        pass
+        # Call undo upvote (error)
+        self.call_upvote_undo_api(self.argument1.pk)
+        response = self.call_upvote_undo_api(self.argument1.pk)
+        self.assertEqual(response.status_code, 400)
+
+        # Check downvote exists between user1 and argument1
+        v = Vote.objects.get(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        self.assertTrue(v.is_downvoted())
+
+    # Undo upvote for an argument that the user didn't vote (error)
+    def test_undo_upvote_for_no_upvote(self):
+        # Call undo upvote (error)
+        self.call_upvote_undo_api(self.argument1.pk)
+        response = self.call_upvote_undo_api(self.argument1.pk)
+        self.assertEqual(response.status_code, 400)
+
+    # Undo upvote upvoted argument created by another user
+    def test_undo_upvote_non_owned_argument(self):
+        # Create upvote between user1 and argument2 (created by user2)
+        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument2.pk)
+
+        # Call undo upvote api
+        response = self.call_upvote_undo_api(self.argument2.pk)
+        self.assertEqual(response.status_code, 200)
+
+        # Check no upvote exists between user1 and argument1
+        votes = Vote.objects.filter(
+            ownerUserId=self.user1.pk, parentId=self.argument1.pk
+        )
+        self.assertEqual(len(votes), 0)
