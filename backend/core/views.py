@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -247,7 +247,7 @@ def upvote_argument(request, id):
         return HttpResponseBadRequest(e)
 
     # TODO: Return response
-    return HttpResponse({"success": True})
+    return JsonResponse({"success": True})
 
 
 @api_view(["POST"])
@@ -279,7 +279,7 @@ def upvote_argument_undo(request, id):
     # If the existing vote is an upvote
     # TODO: Delete the vote and return response
     vote.delete()
-    return HttpResponse({"success": True})
+    return JsonResponse({"success": True})
 
 
 @api_view(["POST"])
@@ -305,7 +305,7 @@ def downvote_argument(request, id):
         return HttpResponseBadRequest(e)
 
     # TODO: Return response
-    return HttpResponse({"success": True})
+    return JsonResponse({"success": True})
 
 
 @api_view(["POST"])
@@ -336,4 +336,4 @@ def downvote_argument_undo(request, id):
     # If the existing vote is a downvote
     # TODO: Delete the vote and return response
     vote.delete()
-    return HttpResponse({"success": True})
+    return JsonResponse({"success": True})
