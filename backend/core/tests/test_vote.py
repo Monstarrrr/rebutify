@@ -107,20 +107,43 @@ class VoteTests(TestCase):
         pass
 
     def test_downvotes_api(self):
-        # TODO: Downvote own argument
-        # response = self.client.post(reverse("downvote-argument", kwargs={"id": 1}))
-        # print(response.json())
-        # self.assertEqual(response.status_code, 200)
-        # self.assertContains(response, self.sample_downvote.type)
+        # Ensure no votes between user1 and argument1
+        votes = Vote.objects.filter(
+            parentId=self.argument1.pk, ownerUserId=self.user1.pk
+        )
+        self.assertEqual(len(votes), 0)
 
-        # TODO: Downvote another person's argument
+        # Downvote argument1 from user1
+        response = self.downvote(1)
+        self.assertEqual(response.status_code, 200)
 
-        # TODO: Downvote already downvoted argument (error)
+        # Ensure there exists upvote between user1 and argument1
+        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_downvoted())
 
-        # TODO: Downvote upvoted argument
+        # Downvote already downvoted argument (error)
+        response = self.downvote(1)
+        self.assertEqual(response.status_code, 400)
 
-        # TODO: Downvote previously not voted argument
-        pass
+        # Ensure there exists downvote between user1 and argument1
+        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_downvoted())
+
+        # Downvote upvoted argument
+        # Upvote argument1 from user1
+        v.upvote()
+        v.save()
+        # Downvote argument1 from user1
+        response = self.downvote(1)
+        self.assertEqual(response.status_code, 200)
+
+        # Downvote argument2 from user1
+        response = self.downvote(2)
+        self.assertEqual(response.status_code, 200)
+
+        # Ensure there exists downvote between user1 and argument2
+        v = Vote.objects.get(parentId=self.argument2.pk, ownerUserId=self.user1.pk)
+        self.assertTrue(v.is_downvoted())
 
     # This function assumes that the downvote api is working
     def test_downvotes_undo_api(self):
