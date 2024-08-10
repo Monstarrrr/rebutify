@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -239,9 +239,12 @@ def upvote_argument(request, id):
 
     # If it is not created, we try to upvote and save
     # If the existing vote is an upvote, an exception will be raised
-    if not created:
-        vote.upvote()
-        vote.save()
+    try:
+        if not created:
+            vote.upvote()
+            vote.save()
+    except Exception as e:
+        return HttpResponseBadRequest(e)
 
     # TODO: Return response
     return HttpResponse({"success": True})
@@ -262,11 +265,16 @@ def upvote_argument_undo(request, id):
         vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
     except Vote.DoesNotExist:
         # If vote doesn't exist, raise an error
-        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
+
+        raise HttpResponseBadRequest(
+            f"A vote between user: {id} & post: {parent_id} does not exist"
+        )
 
     # If the existing vote is a downvote, raise an error as it can't be undoed
     if vote.is_downvoted():
-        raise Exception(f"User: {id} downvoted post: {parent_id}. Cannot undo upvote.")
+        raise HttpResponseBadRequest(
+            f"User: {id} downvoted post: {parent_id}. Cannot undo upvote."
+        )
 
     # If the existing vote is an upvote
     # TODO: Delete the vote and return response
@@ -290,8 +298,11 @@ def downvote_argument(request, id):
     # If it is just created, or if it is not created
     # then we try to downvote and save
     # If the existing vote is an upvote, an exception will be raised
-    vote.downvote()
-    vote.save()
+    try:
+        vote.downvote()
+        vote.save()
+    except Exception as e:
+        return HttpResponseBadRequest(e)
 
     # TODO: Return response
     return HttpResponse({"success": True})
@@ -312,11 +323,15 @@ def downvote_argument_undo(request, id):
         vote = Vote.objects.get(ownerUserId=caller_id, parentId=parent_id)
     except Vote.DoesNotExist:
         # If vote doesn't exist, raise an error
-        raise Exception(f"A vote between user: {id} & post: {parent_id} does not exist")
+        raise HttpResponseBadRequest(
+            f"A vote between user: {id} & post: {parent_id} does not exist"
+        )
 
     # If the existing vote is a downvote, raise an error as it can't be undoed
     if vote.is_upvoted():
-        raise Exception(f"User: {id} upvoted post: {parent_id}. Cannot undo downvote.")
+        raise HttpResponseBadRequest(
+            f"User: {id} upvoted post: {parent_id}. Cannot undo downvote."
+        )
 
     # If the existing vote is a downvote
     # TODO: Delete the vote and return response
