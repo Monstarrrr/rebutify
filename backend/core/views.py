@@ -220,6 +220,7 @@ class ActivateUserViewSet(UserViewSet):
         return HttpResponse("Your account has been activated.")
 
 
+# TODO: Lot of repetitive code in the vote and undo vote functions
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
