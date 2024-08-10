@@ -47,12 +47,12 @@ class VoteTests(TestCase):
             body="Body 2", title="Title 2", ownerUserId=self.user2.pk
         )
 
-    def upvote(self, argument_id):
+    def call_upvote_api(self, argument_id):
         url = reverse("upvote-argument", kwargs={"id": argument_id})
         response = self.client.post(url)
         return response
 
-    def downvote(self, argument_id):
+    def call_downvote_api(self, argument_id):
         url = reverse("downvote-argument", kwargs={"id": argument_id})
         response = self.client.post(url)
         return response
@@ -65,7 +65,7 @@ class VoteTests(TestCase):
         self.assertEqual(len(votes), 0)
 
         # Upvote argument1 from user1
-        response = self.upvote(1)
+        response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument1
@@ -73,7 +73,7 @@ class VoteTests(TestCase):
         self.assertTrue(v.is_upvoted())
 
         # Upvote already upvoted argument (error)
-        response = self.upvote(1)
+        response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 400)
 
         # Ensure there exists upvote between user1 and argument1
@@ -85,11 +85,11 @@ class VoteTests(TestCase):
         v.downvote()
         v.save()
         # Upvote argument1 from user1
-        response = self.upvote(1)
+        response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 200)
 
         # Upvote argument2 from user1
-        response = self.upvote(2)
+        response = self.call_upvote_api(2)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument2
@@ -115,7 +115,7 @@ class VoteTests(TestCase):
         self.assertEqual(len(votes), 0)
 
         # Downvote argument1 from user1
-        response = self.downvote(1)
+        response = self.call_downvote_api(1)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument1
@@ -123,7 +123,7 @@ class VoteTests(TestCase):
         self.assertTrue(v.is_downvoted())
 
         # Downvote already downvoted argument (error)
-        response = self.downvote(1)
+        response = self.call_downvote_api(1)
         self.assertEqual(response.status_code, 400)
 
         # Ensure there exists downvote between user1 and argument1
@@ -135,11 +135,11 @@ class VoteTests(TestCase):
         v.upvote()
         v.save()
         # Downvote argument1 from user1
-        response = self.downvote(1)
+        response = self.call_downvote_api(1)
         self.assertEqual(response.status_code, 200)
 
         # Downvote argument2 from user1
-        response = self.downvote(2)
+        response = self.call_downvote_api(2)
         self.assertEqual(response.status_code, 200)
 
         # Ensure there exists downvote between user1 and argument2
