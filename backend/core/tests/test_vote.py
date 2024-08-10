@@ -53,7 +53,7 @@ class VoteTests(TestCase):
         return response
 
     def test_upvotes_api(self):
-        # 1. Ensure no votes between user1 and argument1
+        # Ensure no votes between user1 and argument1
         votes = Vote.objects.filter(
             parentId=self.argument1.pk, ownerUserId=self.user1.pk
         )
