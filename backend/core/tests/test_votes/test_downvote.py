@@ -29,8 +29,10 @@ class DownvoteTests(VoteTests):
 
     # Test downvoting already downvoted argument (error)
     def test_downvote_twice(self):
-        # Downvote argument twice
-        self.call_downvote_api(self.argument1.pk)
+        # Create downvote between user1 and argument1
+        self.create_downvote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+
+        # Downvote argument
         response = self.call_downvote_api(self.argument1.pk)
         self.assertEqual(response.status_code, 400)
 
@@ -40,11 +42,8 @@ class DownvoteTests(VoteTests):
 
     # Test upvoted argument
     def test_downvote_upvoted_argument(self):
-        # Downvote argument and upvote manually
-        self.call_downvote_api(self.argument1.pk)
-        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
-        v.upvote()
-        v.save()
+        # Create upvote between user1 and argument1
+        self.create_upvote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
 
         # Test downvoting upvoted argument
         response = self.call_downvote_api(self.argument1.pk)
