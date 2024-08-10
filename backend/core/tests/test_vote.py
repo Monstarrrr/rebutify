@@ -90,6 +90,7 @@ class VoteTests(TestCase):
 
         # Upvote argument2 from user1
         response = self.upvote(2)
+        self.assertEqual(response.status_code, 200)
 
         # Ensure there exists upvote between user1 and argument2
         v = Vote.objects.get(parentId=self.argument2.pk, ownerUserId=self.user1.pk)
