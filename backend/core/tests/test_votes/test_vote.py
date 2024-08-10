@@ -66,14 +66,3 @@ class VoteTests(TestCase):
         url = reverse("downvote-argument-undo", kwargs={"id": argument_id})
         response = self.client.post(url)
         return response
-
-    # This function assumes that the downvote api is working
-    def test_downvotes_undo_api(self):
-        # TODO: Undo downvote downvoted argument created by same user
-
-        # TODO: Undo downvote downvoted argument created by another user
-
-        # TODO: Undo downvote for an argument that is downvoted (error)
-
-        # TODO: Undo downvote for an argument that the user didn't vote (error)
-        pass
