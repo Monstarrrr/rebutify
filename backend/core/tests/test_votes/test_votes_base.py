@@ -6,6 +6,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from core.models import Post
 
 
+# This is the base class that the following classes inherit from:
+# 1. UpvoteTests
+# 2. UpvoteUndoTests
+# 3. DownvoteTests
+# 4. DownvoteUndoTests
+# We do that as they all have the same setup and utility functions
 class VoteTests(TestCase):
     # Reference: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/creating_tokens_manually.html
     def get_tokens_for_user(self, user):
