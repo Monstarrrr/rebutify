@@ -52,8 +52,18 @@ class VoteTests(TestCase):
         response = self.client.post(url)
         return response
 
+    def call_upvote_undo_api(self, argument_id):
+        url = reverse("upvote-argument-undo", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
+
     def call_downvote_api(self, argument_id):
         url = reverse("downvote-argument", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
+
+    def call_downvote_undo_api(self, argument_id):
+        url = reverse("downvote-argument-undo", kwargs={"id": argument_id})
         response = self.client.post(url)
         return response
 
@@ -96,15 +106,7 @@ class VoteTests(TestCase):
         v = Vote.objects.get(parentId=self.argument2.pk, ownerUserId=self.user1.pk)
         self.assertTrue(v.is_upvoted())
 
-    def call_upvote_undo_api(self, argument_id):
-        url = reverse("upvote-argument-undo", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
-
-    def call_downvote_undo_api(self, argument_id):
-        url = reverse("downvote-argument-undo", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
+    # Upvote argument1 from user1 and call undo upvote api
 
     # This function assumes that the upvote api is working
     def test_upvotes_undo_api(self):
