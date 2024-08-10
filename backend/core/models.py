@@ -78,7 +78,7 @@ class Vote(models.Model):
         # If vote already is upvoted, raise an error
         if self.is_upvoted():
             raise Exception(
-                f"An upvote between user: {self.ownerUserId} & post: {self.parent_id} already exists"
+                f"An upvote between user: {self.ownerUserId} & post: {self.parentId} already exists"
             )
 
         # Upvote
@@ -90,7 +90,7 @@ class Vote(models.Model):
 
         Raises:
             Exception: If an downvote from the user (identified by `self.ownerUserId`)
-                    for the post (identified by `self.parent_id`) is already an downvote.
+                    for the post (identified by `self.parentId`) is already an downvote.
         """
 
         # If vote already is downvoted, raise an error
