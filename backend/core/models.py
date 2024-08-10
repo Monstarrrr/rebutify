@@ -37,6 +37,16 @@ class Post(models.Model):
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        output = "Post {"
+        output += f"\n    Type: {self.type}"
+        output += f"\n    Title: {self.title}"
+        output += f"\n    Body: {self.body}"
+        output += f"\n    Owner ID: {self.ownerUserId}"
+        output += "\n}"
+
+        return output
+
 
 class UserProfile(models.Model):
     # Public
