@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
@@ -219,34 +220,13 @@ class ActivateUserViewSet(UserViewSet):
         return HttpResponse("Your account has been activated.")
 
 
-def get_post(post_id):
-    """
-    Gets the post corresponding to the given post_id if exists.
-
-    Args:
-        post_id (int): The ID of the post to check.
-
-    Returns:
-        Post: The post object if it exists.
-
-    Raises:
-        Exception: If the post with the given post_id does not exist.
-    """
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        # TODO: what error?
-        raise Exception(f"The post with id: {id} doesn't exist")
-    return post
-
-
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def upvote_argument(request, id):
     # Verify if there is a post corresponding to the given id
     # If yes, get the corresponding post and caller id
-    post = get_post(id)
+    post = get_object_or_404(Post, pk=id)
     caller_id = request.user.id
     parent_id = post.pk
 
@@ -273,7 +253,7 @@ def upvote_argument(request, id):
 def upvote_argument_undo(request, id):
     # Verify if there is a post corresponding to the given id
     # Get the corresponding post and caller id
-    post = get_post(id)
+    post = get_object_or_404(Post, pk=id)
     caller_id = request.user.id
     parent_id = post.pk
 
@@ -300,7 +280,7 @@ def upvote_argument_undo(request, id):
 def downvote_argument(request, id):
     # Verify if there is a post corresponding to the given id
     # If yes, get the corresponding post and caller id
-    post = get_post(id)
+    post = get_object_or_404(Post, pk=id)
     caller_id = request.user.id
     parent_id = post.pk
 
@@ -323,7 +303,7 @@ def downvote_argument(request, id):
 def downvote_argument_undo(request, id):
     # Verify if there is a post corresponding to the given id
     # Get the corresponding post and caller id
-    post = get_post(id)
+    post = get_object_or_404(Post, pk=id)
     caller_id = request.user.id
     parent_id = post.pk
 
