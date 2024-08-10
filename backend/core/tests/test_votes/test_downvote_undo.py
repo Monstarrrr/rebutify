@@ -13,7 +13,7 @@ class DownvoteUndoTests(VoteTests):
     # Downvote argument1 from user1 and call undo downvote api
     def test_undo_downvote_same_user(self):
         # Create downvote between user1 and argument1
-        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        self.create_downvote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
         response = self.call_downvote_undo_api(self.argument1.pk)
         self.assertEqual(response.status_code, 200)
 
@@ -26,7 +26,7 @@ class DownvoteUndoTests(VoteTests):
     # Undo downvote twice (error)
     def test_undo_downvote_twice(self):
         # Create downvote between user1 and argument1
-        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        self.create_downvote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
 
         # Call undo downvote api twice (error)
         response = self.call_downvote_undo_api(self.argument1.pk)
@@ -43,7 +43,7 @@ class DownvoteUndoTests(VoteTests):
     # Undo downvote for a upvoted argument (error)
     def test_undo_downvote_upvoted_argument(self):
         # Create upvote between user1 and argument1
-        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
+        self.create_upvote(ownerUserId=self.user1.pk, parentId=self.argument1.pk)
 
         # Call undo downvote (error)
         response = self.call_downvote_undo_api(self.argument1.pk)
@@ -63,7 +63,7 @@ class DownvoteUndoTests(VoteTests):
     # Undo downvote downvoted argument created by another user
     def test_undo_downvote_non_owned_argument(self):
         # Create downvote between user1 and argument2 (created by user2)
-        Vote.objects.create(ownerUserId=self.user1.pk, parentId=self.argument2.pk)
+        self.create_downvote(ownerUserId=self.user1.pk, parentId=self.argument2.pk)
 
         # Call undo downvote api
         response = self.call_downvote_undo_api(self.argument2.pk)
