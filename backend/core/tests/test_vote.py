@@ -52,6 +52,11 @@ class VoteTests(TestCase):
         response = self.client.post(url)
         return response
 
+    def downvote(self, argument_id):
+        url = reverse("downvote-argument", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
+
     def test_upvotes_api(self):
         # Ensure no votes between user1 and argument1
         votes = Vote.objects.filter(
