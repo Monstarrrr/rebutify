@@ -1,8 +1,15 @@
+from django.urls import reverse
+
 from core.models import Vote
 from core.tests.test_votes.test_votes_base import VoteTests
 
 
 class DownvoteUndoTests(VoteTests):
+    def call_downvote_undo_api(self, argument_id):
+        url = reverse("downvote-argument-undo", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
+
     # Downvote argument1 from user1 and call undo downvote api
     def test_undo_downvote_same_user(self):
         # Create downvote between user1 and argument1

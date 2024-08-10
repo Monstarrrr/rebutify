@@ -1,8 +1,15 @@
+from django.urls import reverse
+
 from core.models import Vote
 from core.tests.test_votes.test_votes_base import VoteTests
 
 
 class DownvoteTests(VoteTests):
+    def call_downvote_api(self, argument_id):
+        url = reverse("downvote-argument", kwargs={"id": argument_id})
+        response = self.client.post(url)
+        return response
+
     # Ensure no votes between user1 and argument1
     def test_no_votes_initially(self):
         votes = Vote.objects.filter(

@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
-from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import Post
@@ -52,23 +51,3 @@ class VoteTests(TestCase):
         self.argument2 = Post.objects.create(
             body="Body 2", title="Title 2", ownerUserId=self.user2.pk
         )
-
-    def call_upvote_api(self, argument_id):
-        url = reverse("upvote-argument", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
-
-    def call_upvote_undo_api(self, argument_id):
-        url = reverse("upvote-argument-undo", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
-
-    def call_downvote_api(self, argument_id):
-        url = reverse("downvote-argument", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
-
-    def call_downvote_undo_api(self, argument_id):
-        url = reverse("downvote-argument-undo", kwargs={"id": argument_id})
-        response = self.client.post(url)
-        return response
