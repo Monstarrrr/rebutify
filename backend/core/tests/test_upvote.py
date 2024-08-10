@@ -3,13 +3,15 @@ from core.tests.test_vote import VoteTests
 
 
 class UpvoteTests(VoteTests):
-    def test_upvotes_api(self):
-        # Ensure no votes between user1 and argument1
+    # Ensure no votes between user1 and argument1
+    def test_no_votes_initially(self):
         votes = Vote.objects.filter(
             parentId=self.argument1.pk, ownerUserId=self.user1.pk
         )
         self.assertEqual(len(votes), 0)
 
+    # Test upvoting argument1 (created by user1) from user1
+    def test_upvote_owned_argument(self):
         # Upvote argument1 from user1
         response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 200)
@@ -18,7 +20,10 @@ class UpvoteTests(VoteTests):
         v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
         self.assertTrue(v.is_upvoted())
 
-        # Upvote already upvoted argument (error)
+    # Test upvoting already upvoted argument (error)
+    def test_upvote_twice(self):
+        # Upvote argument twice
+        self.call_upvote_api(1)
         response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 400)
 
@@ -26,14 +31,20 @@ class UpvoteTests(VoteTests):
         v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
         self.assertTrue(v.is_upvoted())
 
-        # Upvote downvoted argument
-        # Downvote argument1 from user1
+    # Test downvoted argument
+    def test_upvote_downvoted_argument(self):
+        # Upvote argument and downvote manually
+        self.call_upvote_api(1)
+        v = Vote.objects.get(parentId=self.argument1.pk, ownerUserId=self.user1.pk)
         v.downvote()
         v.save()
-        # Upvote argument1 from user1
+
+        # Test upvoting downvoted argument
         response = self.call_upvote_api(1)
         self.assertEqual(response.status_code, 200)
 
+    # Test upvoting argument created by some other user
+    def test_upvote_non_owned_argument(self):
         # Upvote argument2 from user1
         response = self.call_upvote_api(2)
         self.assertEqual(response.status_code, 200)
