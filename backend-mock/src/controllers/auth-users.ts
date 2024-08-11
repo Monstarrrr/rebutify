@@ -33,5 +33,3 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
   //     console.log('file written')
   //     return res.status(201).json({ message: 'User created' })
 }
-
-export default { registerUser }
