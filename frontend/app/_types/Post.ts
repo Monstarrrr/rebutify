@@ -1,4 +1,4 @@
-type Post = {
+export type Post = {
   id: string
   type: 'argument' | 'rebuttal' | 'comment'
   body: string
