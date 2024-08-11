@@ -1,7 +1,6 @@
-import { JWT_SECRET } from './config'
 import { MockApiError } from './errors'
 import * as express from 'express'
-import * as jwt from 'jsonwebtoken'
+import logger from './logger'
 
 export const authenticator = (
   req: express.Request,
@@ -13,10 +12,11 @@ export const authenticator = (
   if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
     throw new MockApiError(401, 'missing token')
   }
+  console.log(`request authenticated: ${authorization}`)
 
   // Verify token
-  const token = authorization.substring(7)
-  jwt.verify(token, JWT_SECRET)
+  //   const token = authorization.substring(7)
+  //   jwt.verify(token, JWT_SECRET)
 
   // Add id of caller to the req object
   // req.userId = userId;
@@ -39,4 +39,19 @@ export const errorHandler = (
     return res.status(error.status).json({ error: error.message })
 
   return next(error)
+}
+
+export const notFoundRoute = (
+  _req: express.Request,
+  _res: express.Response,
+) => {
+  throw new MockApiError(404, 'Not found')
+}
+
+export const requestLogger = (req, _res, next) => {
+  logger.info('Method:', req.method)
+  logger.info('Path:  ', req.path)
+  logger.info('Body:  ', req.body)
+  logger.info('---')
+  next()
 }
