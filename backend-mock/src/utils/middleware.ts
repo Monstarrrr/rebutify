@@ -10,9 +10,8 @@ export const authenticator = (
   // Check if bearer token exists
   const authorization = req.get('authorization')
   if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
-    throw new MockApiError(401, 'missing token')
+    throw new MockApiError(401, 'not authenticated')
   }
-  console.log(`request authenticated: ${authorization}`)
 
   // Verify token
   //   const token = authorization.substring(7)
