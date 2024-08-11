@@ -1,13 +1,11 @@
 import * as express from 'express'
-import postsRouter from './routes/posts'
-import authJwtRouter from './routes/auth-jwt'
-import authUsersRouter from './routes/auth-users'
+import routes from './routes'
 
 const mockApi = express()
 
 // Routes
-mockApi.use('/api/posts', postsRouter)
-mockApi.use('/auth/users', authUsersRouter)
-mockApi.use('/auth/jwt', authJwtRouter)
+mockApi.use('/api/posts', routes.postsRouter)
+mockApi.use('/auth/users', routes.authUsersRouter)
+mockApi.use('/auth/jwt', routes.authJwtRouter)
 
 export default mockApi
