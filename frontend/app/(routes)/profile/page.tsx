@@ -12,7 +12,7 @@ export default function Profile() {
   const user = useAppSelector((state) => state.user)
   const [password, setPassword] = useState('')
   const router = useRouter()
-  const [posts, setPosts] = useState<Post[] | null>(null)
+  const [argumentsList, setArgumentsList] = useState<Post[] | null>(null)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -49,10 +49,10 @@ export default function Profile() {
   useEffect(() => {
     let fetchApi = async () => {
       try {
-        let response = await getPosts()
+        let response = await getPosts('argument')
         response = response.filter((post: Post) => post.ownerUserId === user.id)
         console.log(`# response :`, response)
-        setPosts(response)
+        setArgumentsList(response)
       } catch (error: any) {
         console.error('# Error fetching posts: ', error.response.data)
       }
@@ -89,10 +89,10 @@ export default function Profile() {
       <hr style={{ border: 'none', borderTop: '1px dotted black' }} />
       <br />
       <ul>
-        {posts &&
-          posts.map((post) => (
-            <Link href={`/argument/${post.id}`} key={post.id}>
-              {post.title}
+        {argumentsList &&
+          argumentsList.map((argument) => (
+            <Link href={`/argument/${argument.id}`} key={argument.id}>
+              {argument.title}
               <br />
             </Link>
           ))}
