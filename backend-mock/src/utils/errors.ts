@@ -1,4 +1,4 @@
-class MockApiError {
+export class MockApiError {
   status: number
   message: string
 
@@ -7,5 +7,3 @@ class MockApiError {
     this.message = message
   }
 }
-
-export default { MockApiError }

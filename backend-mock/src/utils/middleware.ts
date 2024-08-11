@@ -1,9 +1,9 @@
-import config from './config'
-import errors from './errors'
+import { JWT_SECRET } from './config'
+import { MockApiError } from './errors'
 import * as express from 'express'
 import * as jwt from 'jsonwebtoken'
 
-const userExtractor = (
+export const userExtractor = (
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction,
@@ -11,12 +11,12 @@ const userExtractor = (
   // Check if bearer token exists
   const authorization = req.get('authorization')
   if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
-    throw new errors.MockApiError(401, 'missing token')
+    throw new MockApiError(401, 'missing token')
   }
 
   // Verify token
   const token = authorization.substring(7)
-  jwt.verify(token, config.JWT_SECRET)
+  jwt.verify(token, JWT_SECRET)
 
   // Add id of caller to the req object
   // req.userId = userId;
@@ -24,7 +24,7 @@ const userExtractor = (
   next()
 }
 
-const errorHandler = (
+export const errorHandler = (
   error: unknown,
   _req: express.Request,
   res: express.Response,
@@ -35,10 +35,8 @@ const errorHandler = (
     return res.status(401).json({ error: 'invalid token' })
 
   // Internal app error
-  if (error instanceof errors.MockApiError)
+  if (error instanceof MockApiError)
     return res.status(error.status).json({ error: error.message })
 
   return next(error)
 }
-
-export default { userExtractor, errorHandler }
