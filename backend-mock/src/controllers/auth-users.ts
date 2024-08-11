@@ -1,7 +1,7 @@
 import * as express from 'express'
 
 export const registerUser = (_req: express.Request, res: express.Response) => {
-  return res.send('POST /api/posts')
+  return res.send('POST /auth/users')
   //     console.log('Received request to create a new user')
   //   const { username, email, password } = req.body
   //   try {
