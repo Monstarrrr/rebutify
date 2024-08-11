@@ -20,7 +20,7 @@ Official repository of [rebutify.org](https://rebutify.org)
 **Create** a `.env` file at the root of the project based on [`.template-env`](.template-env)'s content.
 
 ```bash
-cp .env-template .env
+cp .template-env .env
 ```
 
 > :warning: Put your `DJANGO_SECRET_KEY` in your `.env` file.  
