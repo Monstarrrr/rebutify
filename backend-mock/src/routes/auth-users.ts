@@ -1,5 +1,6 @@
 import * as express from 'express'
 import mw from '../utils/middleware'
+import { registerUser } from '../controllers/auth-users'
 
 const authUsersRouter = express.Router()
 authUsersRouter
@@ -7,6 +8,6 @@ authUsersRouter
   .route('/me')
   .get((_req, res) => res.send('GET /auth/users/me'))
   .delete((_req, res) => res.send('DELETE /auth/users/me'))
-authUsersRouter.route('/').post((_req, res) => res.send('POST /auth/users'))
+authUsersRouter.route('/').post(registerUser)
 
 export default authUsersRouter
