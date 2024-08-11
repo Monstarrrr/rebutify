@@ -1,19 +1,8 @@
 import * as express from 'express'
+import { createJwt, refreshJwt } from '../controllers/auth-jwt'
 
 const authJwtRouter = express.Router()
-authJwtRouter.route('/create').post((_req, res) =>
-  res.json({
-    route: 'POST /auth/jwt/create',
-    refresh: 'refresh-token',
-    access: 'access-token',
-  }),
-)
-authJwtRouter.route('/refresh').post((_req, res) =>
-  res.json({
-    route: 'POST /auth/jwt/refresh',
-    refresh: 'refresh-token',
-    access: 'access-token',
-  }),
-)
+authJwtRouter.route('/create').post(createJwt)
+authJwtRouter.route('/refresh').post(refreshJwt)
 
 export default authJwtRouter
