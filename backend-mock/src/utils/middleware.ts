@@ -3,7 +3,7 @@ import { MockApiError } from './errors'
 import * as express from 'express'
 import * as jwt from 'jsonwebtoken'
 
-export const userExtractor = (
+export const authenticator = (
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction,

@@ -1,10 +1,10 @@
 import * as express from 'express'
-import { userExtractor } from '../utils/middleware'
+import { authenticator } from '../utils/middleware'
 import { registerUser } from '../controllers/auth-users'
 
 const authUsersRouter = express.Router()
 authUsersRouter
-  .use(userExtractor)
+  .use(authenticator)
   .route('/me')
   .get((_req, res) => res.send('GET /auth/users/me'))
   .delete((_req, res) => res.send('DELETE /auth/users/me'))
