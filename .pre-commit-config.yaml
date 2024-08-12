@@ -101,6 +101,9 @@ repos:
         # files: 'frontend/.*'
         args:
           [
+            # ⚠️ If you modify any of these values
+            # make sure to update the .prettierrc file as well
+            # to keep the configuration consistent ⚠️
             '--use-tabs',
             '--tab-width',
             '2',

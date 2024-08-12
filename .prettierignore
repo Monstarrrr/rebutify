@@ -1,3 +1,2 @@
-# Backend is ignored by prettier as we use ruff for formatting & linting the backend code 
-/backend
+# Yaml files are ignored because prettier errors on them are :poop:
 *.yaml
