@@ -9,7 +9,7 @@ export const authenticator = (
 ) => {
 	// Check if bearer token exists
 	const authorization = req.get('authorization')
-	if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
+	if (!authorization || !authorization.toLowerCase().startsWith('Bearer ')) {
 		throw new MockApiError(401, 'not authenticated')
 	}
 
