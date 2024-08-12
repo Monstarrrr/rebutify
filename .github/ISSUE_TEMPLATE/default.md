@@ -4,7 +4,6 @@ about: Add a default Issue
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 ## Problem

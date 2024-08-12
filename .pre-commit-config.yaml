@@ -98,9 +98,10 @@ repos:
         "
         stages: [pre-commit]
         # Apply to all files in the frontend directory
-        files: 'frontend/.*'
+        # files: 'frontend/.*'
         args:
           [
+            '--use-tabs',
             '--tab-width',
             '2',
             '--single-quote',
@@ -108,4 +109,14 @@ repos:
             '--jsx-single-quote',
             '--print-width',
             '82',
+            '--arrow-parens',
+            'always',
+            '--bracket-spacing',
+            'true',
+            '--end-of-line',
+            'lf',
+            '--bracket-same-line',
+            'false',
+            '--quote-props',
+            'consistent',
           ]

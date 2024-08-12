@@ -1,11 +1,11 @@
 ---
 name: Decision
-about: To open a discussion and documentation for a key decision about the project's
+about:
+  To open a discussion and documentation for a key decision about the project's
   repository.
 title: Decide on <TOPIC>
 labels: decision
 assignees: ''
-
 ---
 
 - **Impact**:
