@@ -10,10 +10,12 @@ BIO_MAX_LEN = 255
 ARGUMENT = "argument"
 REBUTTAL = "rebuttal"
 COMMENT = "comment"
+SUGGESTION = "suggestion"
 POST_TYPES = [
     (ARGUMENT, "argument"),
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
+    (SUGGESTION, "suggestion"),
 ]
 UPVOTE = "upvote"
 DOWNVOTE = "downvote"
@@ -36,6 +38,13 @@ class Post(models.Model):
     parentId: models.IntegerField = models.IntegerField(null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
+
+
+class Report(models.Model):
+    ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
+    body: models.TextField = models.TextField()
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
 
 class UserProfile(models.Model):

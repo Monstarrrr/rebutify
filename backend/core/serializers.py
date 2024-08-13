@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Post, UserProfile, Vote
+from .models import Post, Report, UserProfile, Vote
 
 
 class ArgumentSerializer(serializers.ModelSerializer):
@@ -38,6 +38,24 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = "__all__"
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = "__all__"
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
+class SuggestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"

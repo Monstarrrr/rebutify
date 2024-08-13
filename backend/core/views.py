@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -18,6 +19,8 @@ from .serializers import (
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
+    ReportSerializer,
+    SuggestionSerializer,
     UserProfileSerializer,
     VoteSerializer,
 )
@@ -75,6 +78,21 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    @action(detail=True, url_path="reports/add", methods=["post"])
+    def add_reports(self):
+        # put your code here
+        print("test")
+
+    @action(detail=True, url_path="reports/options", methods=["get"])
+    def reports_options(self):
+        # put your code here
+        print("test")
+
+    @action(detail=True, url_path="suggest-edit", methods=["post"])
+    def suggest_edit(self):
+        # put your code here
+        print("test")
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
@@ -147,6 +165,26 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+
+class ReportViewSet(viewsets.ModelViewSet):
+    serializer_class = ReportSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="report")
+        return queryset
+
+
+class SuggestionViewSet(viewsets.ModelViewSet):
+    serializer_class = SuggestionSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="suggestion")
+        return queryset
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
