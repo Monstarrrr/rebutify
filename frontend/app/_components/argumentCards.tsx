@@ -4,14 +4,14 @@ import { getPosts } from '@/api/posts'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-export default function ArgumentCard() {
-  const [posts, setPosts] = useState<Post[]>([])
+export default function ArgumentCards() {
+  const [argumentsList, setArgumentsList] = useState<Post[]>([])
 
   useEffect(() => {
     let fetchApi = async () => {
       try {
-        const response = await getPosts()
-        setPosts(response)
+        const response = await getPosts('argument')
+        setArgumentsList(response)
       } catch (error: any) {
         console.error('# Error fetching posts: ', error.response.data)
       }
@@ -21,13 +21,13 @@ export default function ArgumentCard() {
 
   return (
     <div>
-      {posts.map((post) => (
-        <div key={post.id}>
+      {argumentsList.map((argument) => (
+        <div key={argument.id}>
           <br />
-          <Link style={{ fontSize: '24px' }} href={`/argument/${post.id}`}>
-            {post.title}
+          <Link style={{ fontSize: '24px' }} href={`/argument/${argument.id}`}>
+            {argument.title}
           </Link>
-          <p>{post.body}</p>
+          <p>{argument.body}</p>
           <br />
         </div>
       ))}

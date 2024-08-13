@@ -18,7 +18,6 @@ api.interceptors.request.use(
       req.url += '/'
     }
     if (req.requiresAuth) {
-      // temp
       const accessToken = localStorage.getItem('access_token')
       const refreshToken = localStorage.getItem('refresh_token')
       if (
@@ -28,6 +27,7 @@ api.interceptors.request.use(
         !isTokenExpired(accessToken)
       ) {
         console.log(`# accessToken is not expired.`)
+        // Add the access token to the request headers
         req.headers['authorization'] = `Bearer ${accessToken}`
         return req
       }
