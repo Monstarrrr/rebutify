@@ -1,7 +1,6 @@
 import * as express from 'express'
 import routes from './routes'
 import { errorHandler, notFoundRoute, requestLogger } from './utils/middleware'
-import cors = require('cors')
 import { corsHeaders } from './utils/config'
 
 const mockApi = express()
