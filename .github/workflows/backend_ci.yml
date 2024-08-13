@@ -1,5 +1,5 @@
 name: Backend CI
-on: 
+on:
   push:
     branches: ['main']
     paths: ['backend/**']
@@ -11,59 +11,59 @@ jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
-        run:
-          working-directory: ./backend
+      run:
+        working-directory: ./backend
 
     strategy:
       fail-fast: false
       matrix:
         python-version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
+          - '3.10'
+          - '3.11'
+          - '3.12'
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
-    
-    - name: Write dummy .env
-      run: |
-        cp .template-env .env
-        sed -i 's/^DJANGO_SECRET_KEY=$/DJANGO_SECRET_KEY=abc123/' .env
-        sed -i 's/^EMAIL_PORT=$/EMAIL_PORT=587/' .env
-        sed -i 's/^DJANGO_SECURE_HSTS_SECONDS=$/DJANGO_SECURE_HSTS_SECONDS=60/' .env
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
 
-    - name: Run ruff
-      run: |
-        ruff check .
+      - name: Write dummy .env
+        run: |
+          cp .template-env .env
+          sed -i 's/^DJANGO_SECRET_KEY=$/DJANGO_SECRET_KEY=abc123/' .env
+          sed -i 's/^EMAIL_PORT=$/EMAIL_PORT=587/' .env
+          sed -i 's/^DJANGO_SECURE_HSTS_SECONDS=$/DJANGO_SECURE_HSTS_SECONDS=60/' .env
 
-    - name: Run tests
-      run: pytest --junit-xml report.xml
+      - name: Run ruff
+        run: |
+          ruff check .
 
-    - name: Generate OpenAPI
-      run: python manage.py spectacular --file schema.yml
+      - name: Run tests
+        run: pytest --junit-xml report.xml
 
-    - name: Upload OpenAPI Schema
-      if: ${{ matrix.python-version == '3.11' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: schema
-        path: backend/schema.yml
-        if-no-files-found: error
-    
-    - name: Upload Backend Test Results
-      if: ${{ matrix.python-version == '3.11' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: report
-        path: backend/report.xml
-        if-no-files-found: error
+      - name: Generate OpenAPI
+        run: python manage.py spectacular --file schema.yml
+
+      - name: Upload OpenAPI Schema
+        if: ${{ matrix.python-version == '3.11' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema
+          path: backend/schema.yml
+          if-no-files-found: error
+
+      - name: Upload Backend Test Results
+        if: ${{ matrix.python-version == '3.11' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: backend/report.xml
+          if-no-files-found: error
