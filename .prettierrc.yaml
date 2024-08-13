@@ -1,0 +1,14 @@
+---
+# ⚠️ If you modify any of these values make sure to
+# update the prettier hook config in .pre-commit-config.yaml as well
+# to keep the configuration consistent ⚠️
+tabWidth: 2
+singleQuote: true
+semi: false
+jsxSingleQuote: true
+printWidth: 82
+arrowParens: always
+bracketSpacing: true
+endOfLine: lf
+bracketSameLine: false
+quoteProps: consistent

@@ -1,6 +1,6 @@
 # No package should be installed in the root directory
-package-lock.json
-package.json
+./package-lock.json
+./package.json
 
 # Python
 .venv
