@@ -2,7 +2,6 @@
 # ⚠️ If you modify any of these values make sure to
 # update the prettier hook config in .pre-commit-config.yaml as well
 # to keep the configuration consistent ⚠️
-useTabs: false
 tabWidth: 2
 singleQuote: true
 semi: false
