@@ -1,5 +1,7 @@
 export { default as Activate } from '@/components/activate'
 export { default as Form } from '@/components/form'
 export { default as Header } from '@/components/header'
-export { default as ArgumentCard } from '@/components/argumentCard'
+export { default as ArgumentCards } from '@/components/argumentCards'
+export { default as RebuttalCards } from '@/components/rebuttalCards'
+export { default as RebuttalSubmition } from '@/components/rebuttalSubmition'
 export { default as ClientInitializer } from '@/components/clientInitializer'

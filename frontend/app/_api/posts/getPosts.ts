@@ -1,8 +1,19 @@
 import api from '@/api/api'
 
-export const getPosts = async () => {
+export const getPosts = async (
+  type: 'argument' | 'rebuttal' | 'comment',
+  parentId?: string,
+) => {
   try {
-    const response = await api.get('api/posts/')
+    if (type !== 'argument' && parentId === undefined) {
+      console.error(`parentId is required for getting ${type}s`)
+    }
+    const response = await api.get(`api/posts/`, {
+      params: {
+        parentId,
+        type,
+      },
+    })
     return response.data.results
   } catch (error: any) {
     console.error(

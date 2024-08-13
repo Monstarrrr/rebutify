@@ -93,6 +93,7 @@ python backend/manage.py runserver
 We use [drf-spectacular](https://github.com/tfranzel/drf-spectacular) to autogenerate our OpenAPI spec.
 
 Access the OpenAPI spec in three ways while running the django server:
+
 - Download the spec from `/api/schema/`
 - Use Swagger UI at `/api/schema/swagger-ui/`
 - Use Redoc UI at `/api/schema/redoc-ui/`
@@ -108,4 +109,4 @@ We use camelCase for our database tables and column names defined in `models.py`
 Current issues that affect development are listed here for transparency.
 
 - `DELETE -> /auth/users/me` not properly documented
-    - Send `{"current_password":"<pass>"}` in the request body. Since OpenAPI doesn't support request bodies for `DELETE` methods, the swagger/redoc pages won't pick up on this.
+  - Send `{"current_password":"<pass>"}` in the request body. Since OpenAPI doesn't support request bodies for `DELETE` methods, the swagger/redoc pages won't pick up on this.
