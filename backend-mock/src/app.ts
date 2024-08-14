@@ -8,6 +8,7 @@ const mockApi = express()
 // Middleware
 mockApi.use(express.json())
 mockApi.use(requestLogger)
+
 // Enable CORS based on the corsOptions configuration
 mockApi.use('*', (_, res, next) => {
   corsHeaders.forEach((option) => {
@@ -15,6 +16,14 @@ mockApi.use('*', (_, res, next) => {
     res.setHeader(key, option[key])
   })
   next()
+})
+// For preflight request
+mockApi.options('*', (_, res) => {
+  corsHeaders.forEach((option) => {
+    const key = Object.keys(option)[0]
+    res.setHeader(key, option[key])
+  })
+  res.sendStatus(200)
 })
 
 // Routes
