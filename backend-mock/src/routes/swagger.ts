@@ -1,9 +1,11 @@
-import { Express, Request, Response } from 'express'
+import * as express from 'express'
 import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
 import { version } from '../../package.json'
-import logger from './logger'
+import logger from '../utils/logger'
 import { log } from 'console'
+
+const swaggerRouter = express.Router()
 
 // Swagger options
 const options: swaggerJsdoc.Options = {
@@ -24,11 +26,11 @@ const options: swaggerJsdoc.Options = {
         },
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    // security: [
+    //   {
+    //     bearerAuth: [],
+    //   },
+    // ],
   },
   // Where the OpenAPI specs are located
   apis: ['src/routes/*.ts', 'src/schema/*.ts'],
@@ -37,20 +39,7 @@ const options: swaggerJsdoc.Options = {
 // Initialize swagger-jsdoc with the options
 const swaggerSpec = swaggerJsdoc(options)
 
-// Export the swaggerDocs function
-function swaggerDocs(mockApi: Express, port: number): void {
-  // Swagger page
-  mockApi.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+// Serve the Swagger UI
+swaggerRouter.get('/docs', swaggerUi.setup(swaggerSpec))
 
-  // Docs in JSON format
-  mockApi.get('docs.json', (_: Request, res: Response) => {
-    res.setHeader('Content-Type', 'application/json')
-    res.send(swaggerSpec)
-  })
-
-  logger.info(
-    `Swagger documentation is available at http://localhost:${port}/docs`,
-  )
-}
-
-export default swaggerDocs
+export default swaggerRouter

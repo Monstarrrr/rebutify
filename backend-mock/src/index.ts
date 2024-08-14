@@ -2,7 +2,7 @@ import { AppDataSource } from './data-source'
 import { User } from './entity/User'
 import { PORT } from './utils/config'
 import mockApi from './app'
-import swaggerDocs from '@/utils/swagger'
+import swaggerDocs from 'routes/swagger'
 
 // Load data
 AppDataSource.initialize()
@@ -16,5 +16,4 @@ AppDataSource.initialize()
 // Start the server
 mockApi.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`)
-  swaggerDocs(mockApi, PORT)
 })
