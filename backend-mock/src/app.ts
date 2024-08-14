@@ -10,11 +10,11 @@ mockApi.use(express.json())
 mockApi.use(requestLogger)
 // Enable CORS based on the corsOptions configuration
 mockApi.use('*', (_, res, next) => {
-	corsHeaders.forEach((option) => {
-		const key = Object.keys(option)[0]
-		res.setHeader(key, option[key])
-	})
-	next()
+  corsHeaders.forEach((option) => {
+    const key = Object.keys(option)[0]
+    res.setHeader(key, option[key])
+  })
+  next()
 })
 
 // Routes
