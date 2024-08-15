@@ -3,7 +3,6 @@ import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
 import { version } from '../../package.json'
 import logger from '../utils/logger'
-import { log } from 'console'
 
 const swaggerRouter = express.Router()
 
