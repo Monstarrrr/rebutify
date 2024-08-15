@@ -39,44 +39,6 @@ import * as express from 'express'
  *         description: Internal server error.
  */
 export const registerUser = (_req: express.Request, res: express.Response) => {
-  /**
-   * @openapi
-   * /auth/users:
-   *   post:
-   *     summary: Register a new user
-   *     description: Create a new user in the system. This includes hashing the password and saving the user information.
-   *     tags: [Users]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - username
-   *               - email
-   *               - password
-   *             properties:
-   *               username:
-   *                 type: string
-   *                 description: The user's username.
-   *                 example: johndoe
-   *               email:
-   *                 type: string
-   *                 description: The user's email address.
-   *                 example: johndoe@example.com
-   *               password:
-   *                 type: string
-   *                 description: The user's password.
-   *                 example: Passw0rd!
-   *     responses:
-   *       201:
-   *         description: User created successfully.
-   *       400:
-   *         description: User already exists.
-   *       500:
-   *         description: Internal server error.
-   */
   return res.send({ route: 'POST /auth/users' })
 
   // Uncomment and complete the logic as needed
