@@ -25,6 +25,7 @@
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
     "swagger-jsdoc": "^6.2.8",
+    "swagger-themes": "^1.4.3",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "0.3.20"
   },
