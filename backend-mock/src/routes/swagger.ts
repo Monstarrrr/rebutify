@@ -1,7 +1,6 @@
 import * as express from 'express'
 import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
-import path = require('path')
 import { version } from '../../package.json'
 
 const swaggerRouter = express.Router()
