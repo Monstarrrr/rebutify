@@ -109,3 +109,11 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
   //   return res.status(500).json({ message: 'Internal server error' });
   // }
 }
+
+export const getUser = (_req: express.Request, res: express.Response) => {
+  return res.json({ route: 'GET /auth/users/me' })
+}
+
+export const deleteUser = (_req: express.Request, res: express.Response) => {
+  return res.json({ route: 'DELETE /auth/users/me' })
+}
