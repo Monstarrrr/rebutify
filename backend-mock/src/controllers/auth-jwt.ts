@@ -16,7 +16,7 @@ export const createJwt = (_req: express.Request, res: express.Response) => {
    *            $ref: '#/components/schemas/User'
    *     responses:
    *       201:
-   *         $ref: '#/components/responses/Ok'
+   *         $ref: '#/components/responses/Created'
    *       400:
    *         $ref: '#/components/responses/BadRequest'
    *       401:
