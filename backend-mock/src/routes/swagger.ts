@@ -1,11 +1,11 @@
 import * as express from 'express'
 import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
-import path = require('path');
+import path = require('path')
 import { version } from '../../package.json'
 
 const swaggerRouter = express.Router()
-console.log('here')
+
 // Swagger options
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -25,11 +25,11 @@ const options: swaggerJsdoc.Options = {
         },
       },
     },
-    // security: [
-    //   {
-    //     bearerAuth: [],
-    //   },
-    // ],
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   // Where the OpenAPI specs are located
   apis: ['src/routes/*.ts', 'src/schema/*.ts', 'src/controllers/*.ts'],
@@ -39,5 +39,5 @@ const options: swaggerJsdoc.Options = {
 const swaggerSpec = swaggerJsdoc(options)
 
 // Serve the Swagger UI
-swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 export default swaggerRouter
