@@ -1,4 +1,4 @@
-import * as express from 'express';
+import * as express from 'express'
 
 export const registerUser = (_req: express.Request, res: express.Response) => {
   /**
@@ -7,7 +7,7 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
    *   post:
    *     summary: Register a new user
    *     description: Create a new user in the system. This includes hashing the password and saving the user information.
-   *     tags: [Users]
+   *     tags: [Auth]
    *     requestBody:
    *       required: true
    *       content:
@@ -39,7 +39,7 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
    *       500:
    *         description: Internal server error.
    */
-  return res.send({ route: 'POST /auth/users' });
+  return res.send({ route: 'POST /auth/users' })
 
   // Uncomment and complete the logic as needed
   // console.log('Received request to create a new user');
@@ -70,4 +70,4 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
   // } catch (error) {
   //   return res.status(500).json({ message: 'Internal server error' });
   // }
-};
+}
