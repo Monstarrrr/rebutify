@@ -39,6 +39,6 @@ const options: swaggerJsdoc.Options = {
 const swaggerSpec = swaggerJsdoc(options)
 
 // Serve the Swagger UI
-swaggerRouter.get('/docs', swaggerUi.setup(swaggerSpec))
+swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 export default swaggerRouter
