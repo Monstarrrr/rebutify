@@ -32,7 +32,7 @@ const options: swaggerJsdoc.Options = {
     // ],
   },
   // Where the OpenAPI specs are located
-  apis: ['src/routes/*.ts', 'src/schema/*.ts'],
+  apis: ['src/controllers/*.ts'],
 }
 
 // Initialize swagger-jsdoc with the options
