@@ -5,7 +5,7 @@ import { corsHeaders } from './utils/config'
 
 const mockApi = express()
 
-// Middleware
+// Middlewares
 mockApi.use(express.json())
 mockApi.use(requestLogger)
 
