@@ -1,0 +1,1 @@
+http://localhost:3001/auth/activation?uid=15&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTcyMzgzMzg1OCwiZXhwIjoxNzIzODM3NDU4fQ.7eWCore9bXZg6zJZ6w50sauyKNWfSco1styr17lkG3w
