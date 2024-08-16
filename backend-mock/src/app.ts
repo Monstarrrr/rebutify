@@ -8,14 +8,20 @@ const mockApi = express()
 // Middleware
 mockApi.use(express.json())
 mockApi.use(requestLogger)
+
 // Enable CORS based on the corsOptions configuration
-mockApi.use('*', (_, res, next) => {
-	corsHeaders.forEach((option) => {
-		const key = Object.keys(option)[0]
-		res.setHeader(key, option[key])
-	})
-	next()
+mockApi.use('*', (req, res, next) => {
+  corsHeaders.forEach((option) => {
+    const key = Object.keys(option)[0]
+    res.setHeader(key, option[key])
+  })
+  // Handle preflight requests so that the browser doesn't block the request
+  if (req.method == 'OPTIONS') res.send(200)
+  next()
 })
+
+// Swagger documentation
+mockApi.use('/docs', routes.swaggerDocs)
 
 // Routes
 mockApi.use('/api/posts', routes.postsRouter)
