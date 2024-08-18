@@ -45,7 +45,7 @@ class Post(models.Model):
 class Report(models.Model):
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
-    body: models.CharField = models.CharField(max_length=REPORT_BODY_MAX_LEN, null=True)
+    body: models.TextField = models.TextField(max_length=REPORT_BODY_MAX_LEN, null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     options: models.CharField = models.CharField(max_length=OPTIONS_MAX_LEN, null=True)
 

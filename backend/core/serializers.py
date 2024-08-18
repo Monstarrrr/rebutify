@@ -37,6 +37,15 @@ class CommentSerializer(serializers.ModelSerializer):
         ]
 
 
+class SuggestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ["id", "parentId", "body", "ownerUserId", "created", "updated"]
+        read_only_fields = [
+            "ownerUserId",
+        ]
+
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
@@ -49,15 +58,6 @@ class PostSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = "__all__"
-        read_only_fields = [
-            "ownerUserId",
-        ]
-
-
-class SuggestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
         fields = "__all__"
         read_only_fields = [
             "ownerUserId",
