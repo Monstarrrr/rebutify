@@ -16,34 +16,34 @@ export const createDefaultEntities = async (db: EntityManager) => {
         parentId: null,
       })
       await db.save(post)
-      console.log('Default post created')
+      console.log('✅ Default posts created.')
     } catch (error) {
-      console.log('Error creating default posts', error)
+      console.log('✖️ Error creating default posts.', error)
     }
   }
   createDefaultPosts(db)
 
   const createDefaultUsers = async (db: EntityManager) => {
     try {
-      const admin = new User()
-      Object.assign(admin, {
+      const adminUser = new User()
+      Object.assign(adminUser, {
         username: 'MockAdmin',
         email: 'admin@email.com',
         password: 'Password123!',
       })
-      await db.save(admin)
+      await db.save(adminUser)
 
-      const user = new User()
-      Object.assign(user, {
+      const regularUser = new User()
+      Object.assign(regularUser, {
         username: 'JohnDoe',
         email: 'johndoe@email.com',
         password: 'Password123!',
       })
-      await db.save(user)
+      await db.save(regularUser)
 
-      console.log('Default users created')
+      console.log('✅ Default users created.')
     } catch (error) {
-      console.log('Error creating default users', error)
+      console.log('✖️ Error creating default users.', error)
     }
   }
   createDefaultUsers(db)

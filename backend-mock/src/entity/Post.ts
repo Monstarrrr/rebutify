@@ -8,7 +8,7 @@ import {
 
 const TITLE_MAX_LEN = 255
 
-@Entity()
+@Entity('Post')
 export class Post {
   @PrimaryGeneratedColumn()
   id: number

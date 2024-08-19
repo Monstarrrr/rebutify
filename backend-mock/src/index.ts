@@ -1,31 +1,28 @@
 import mockApi from './app'
 import { AppDataSource } from './data-source'
 import { MOCK_SERVER_PORT } from '@/utils/config'
-import { allEntities } from '@/utils/allEntities'
+import { allEntities } from 'entity/allEntities'
 import { createDefaultEntities } from './utils/createDefaultEntities'
 
 // Load data
 AppDataSource.initialize()
   .then(async () => {
-    console.log('Reset database...')
-    allEntities.forEach(async (entity) => {
-      await AppDataSource.manager.clear(entity.name)
-    })
+    let databaseError = false
+    console.log('⏳ Reseting database...')
+    for (const entity of allEntities) {
+      await AppDataSource.getRepository(entity).clear()
 
-    let isCleared = true
-    allEntities.forEach(async (entity) => {
+      // Check if data was cleared
       const count = await AppDataSource.getRepository(entity).count()
       if (count > 0) {
-        isCleared = false
-        console.error(`/!\\ Failed to clear data from entity: ${entity.name}`)
+        databaseError = true
+        console.error(`/!\\ Failed to clear data from entity: ${entity.name}.`)
       }
-    })
-
-    if (isCleared) {
-      console.log('Creating default data...')
+    }
+    if (!databaseError) {
+      console.log('✅ Database successfully cleared.')
+      console.log('⏳ Creating default data...')
       await createDefaultEntities(AppDataSource.manager)
-    } else {
-      console.error('Default data not created')
     }
   })
   .catch((error) => console.log(error))

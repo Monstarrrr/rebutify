@@ -1,6 +1,6 @@
 import * as express from 'express'
 
-export const createJwt = (_req: express.Request, res: express.Response) => {
+export const createJwt = (req: express.Request, res: express.Response) => {
   /**
    * @openapi
    * /auth/jwt/create:
@@ -25,9 +25,7 @@ export const createJwt = (_req: express.Request, res: express.Response) => {
    *         $ref: '#/components/responses/InternalServerError'
    */
   return res.json({
-    route: 'POST /auth/jwt/create',
-    refresh: 'refresh-token',
-    access: 'access-token',
+    req,
   })
 }
 
