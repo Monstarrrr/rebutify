@@ -29,10 +29,8 @@ export const createJwt = (req: express.Request, res: express.Response) => {
   })
 }
 
-export const refreshJwt = (_req: express.Request, res: express.Response) => {
+export const refreshJwt = (req: express.Request, res: express.Response) => {
   return res.json({
-    route: 'POST /auth/jwt/refresh',
-    refresh: 'refresh-token',
-    access: 'access-token',
+    req,
   })
 }

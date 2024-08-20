@@ -6,6 +6,7 @@ import * as jwt from 'jsonwebtoken'
 import { JWT_EXPIRES_IN, JWT_SECRET, MOCK_SERVER_PORT } from '@/utils/config'
 import fs = require('fs')
 import path = require('path')
+import e = require('express')
 
 export const registerUser = async (
   req: express.Request,
@@ -50,29 +51,42 @@ export const registerUser = async (
    *         description: Internal server error, please try again later or contact support.
    */
 
-  const successResponse = {
-    code: 201,
-    message: 'Your account has been created successfully.',
-  }
-  const errorResponse = {
-    code: 400,
-    message: 'A user with the same username or email already exists.',
-  }
-  const internalServerError = {
-    code: 500,
-    message: 'Internal server error, please try again later or contact support.',
-  }
+  const successResponse =
+    'Your account has been created. Please check your email to activate it.'
+  const usernameError = 'This username is already taken.'
+  const emailError =
+    'This email is already being used. Please login or reset your password.'
+  const internalServerError =
+    'An error has occured on our end, please try again later or contact support.'
 
   console.log('Received request to create a new user')
   const { username, email, password } = req.body
   try {
-    // Check if the user already exists
-    const existingUser = await AppDataSource.manager.findOne(User, {
-      where: [{ username }, { email }, { password }],
+    // Check if the username or email already exists
+    let usernameErrors = []
+    let emailErrors = []
+    const existingUsername = await AppDataSource.manager.findOne(User, {
+      where: [{ username }],
     })
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' })
+    const existingEmail = await AppDataSource.manager.findOne(User, {
+      where: [{ email }],
+    })
+    if (existingUsername || existingEmail) {
+      existingUsername && usernameErrors.push(usernameError)
+      existingEmail && emailErrors.push(emailError)
+      return res.status(400).json({
+        username: usernameErrors,
+        email: emailErrors,
+      })
     }
+
+    // Check if the password is strong enough (simulated by checking for the word 'password')
+    if (password.toLowerCase().includes('password')) {
+      return res.status(400).json({
+        password: ['Password not strong enough.'],
+      })
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10)
     // Create the user
@@ -97,9 +111,6 @@ export const registerUser = async (
     return res.status(201).json(successResponse)
   } catch (error) {
     console.log(`# error from /auth/users :`, error)
-    if (error.statusCode === 400) {
-      return res.status(400).json(errorResponse)
-    }
-    return res.status(500).json({ message: 'Internal server error' })
+    return res.status(500).json(internalServerError)
   }
 }

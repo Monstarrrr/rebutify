@@ -1,7 +1,7 @@
 import * as express from 'express'
 import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
-import { swaggerOptions } from '@/utils/config'
+import { swaggerOptions } from '@/utils/swaggerOptions'
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
 // Define the Swagger router
