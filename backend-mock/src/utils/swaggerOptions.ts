@@ -131,25 +131,37 @@ export const swaggerOptions: swaggerJSDoc.Options = {
           },
         },
         BadFormRequest: {
-          description: 'Bad request error',
+          description:
+            'Bad request for form data. The response will contain an object with the fields that have errors.',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
-                  // code: {
-                  //   type: 'number',
-                  //   description: 'The error code',
-                  //   example: 400,
-                  // },
-                  // message: {
-                  //   type: 'string',
-                  //   description: 'The error message',
-                  //   example: 'Bad request',
-                  // },
-                  email: ['Email is invalid'],
-                  password: ['Password is too weak'],
-                  username: ['Username already exists'],
+                  email: {
+                    type: 'array',
+                    items: {
+                      type: 'string',
+                    },
+                    example: ['Email is already in use'],
+                  },
+                  password: {
+                    type: 'array',
+                    items: {
+                      type: 'string',
+                    },
+                    example: [
+                      'Password is too weak',
+                      'Password must contain a number',
+                    ],
+                  },
+                  username: {
+                    type: 'array',
+                    items: {
+                      type: 'string',
+                    },
+                    example: ['Username already exists'],
+                  },
                 },
               },
             },
