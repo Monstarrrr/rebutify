@@ -25,17 +25,14 @@ export const swaggerOptions: swaggerJSDoc.Options = {
           properties: {
             username: {
               type: 'string',
-              description: "The user's username",
               example: 'johndoe',
             },
             email: {
               type: 'email',
-              description: "The user's email address",
               example: 'john.doe@email.com',
             },
             password: {
               type: 'password',
-              description: "The user's password",
               example: 'Passw0rd!',
             },
           },
@@ -51,12 +48,10 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                 properties: {
                   code: {
                     type: 'number',
-                    description: 'The success code',
                     example: 200,
                   },
                   message: {
                     type: 'string',
-                    description: 'The success message',
                     example: 'Success!',
                   },
                 },
@@ -65,7 +60,8 @@ export const swaggerOptions: swaggerJSDoc.Options = {
           },
         },
         Created: {
-          description: 'Resource created response',
+          description:
+            'Resource created response, which returns the created resource',
           content: {
             'application/json': {
               schema: {
@@ -73,35 +69,20 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                 properties: {
                   code: {
                     type: 'number',
-                    description: 'The success code',
                     example: 201,
                   },
                   message: {
                     type: 'string',
-                    description: 'The success message',
-                    example: 'Resource created',
+                    example: 'Resource created.',
                   },
-                },
-              },
-            },
-          },
-        },
-        Unauthorized: {
-          description: 'Unauthorized error',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  code: {
-                    type: 'number',
-                    description: 'The error code',
-                    example: 401,
-                  },
-                  message: {
-                    type: 'string',
-                    description: 'The error message',
-                    example: 'Unauthorized',
+                  resource: {
+                    type: 'object',
+                    description: 'Returning the created resource.',
+                    example: {
+                      id: 1,
+                      username: 'johndoe',
+                      email: 'johndoe@email.com',
+                    },
                   },
                 },
               },
@@ -117,13 +98,31 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                 properties: {
                   code: {
                     type: 'number',
-                    description: 'The error code',
                     example: 400,
                   },
                   message: {
                     type: 'string',
-                    description: 'The error message',
-                    example: 'Bad request',
+                    example: 'Information is missing or invalid.',
+                  },
+                },
+              },
+            },
+          },
+        },
+        Unauthorized: {
+          description: 'Unauthorized error',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  code: {
+                    type: 'number',
+                    example: 401,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'You are not authorized to perform this action.',
                   },
                 },
               },

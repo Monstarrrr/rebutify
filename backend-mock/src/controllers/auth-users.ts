@@ -3,7 +3,6 @@ import { User } from 'entity/User'
 import * as express from 'express'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { CLIENT_PORT, JWT_EXPIRES_IN, JWT_SECRET } from '@/utils/config'
 import fs = require('fs')
 import path = require('path')
 
@@ -103,13 +102,23 @@ export const registerUser = async (
     // Save the user
     await AppDataSource.manager.save(user)
     // Create a JWT token for account activation
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-    })
+    const expiresIn = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
+    console.log(
+      '# Access token set to expire in ',
+      Math.floor(expiresIn / 60),
+      ` minutes.`,
+    )
+    const accessToken = jwt.sign(
+      { id: user.id },
+      process.env.MOCK_JWT_ACCESS_SECRET,
+      {
+        expiresIn,
+      },
+    )
     // Save the token to the user
-    await AppDataSource.manager.update(User, user.id, { token })
+    await AppDataSource.manager.update(User, user.id, { accessToken })
     // Create an activation link with the UID and token
-    const activationLink = `http://localhost:${CLIENT_PORT}/activate?uid=${user.id}&token=${token}`
+    const activationLink = `http://localhost:${process.env.CLIENT_PORT}/activate?uid=${user.id}&token=${accessToken}`
     // Delete any previous activation links
     fs.readdirSync('./emails').forEach((file) => {
       if (file.includes('activation-email_')) {

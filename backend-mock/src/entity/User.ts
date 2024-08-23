@@ -6,7 +6,13 @@ export class User {
   id: number
 
   @Column({ nullable: true })
-  token: string
+  refreshToken: string | null
+
+  @Column({ nullable: true })
+  accessToken: string | null
+
+  @Column({ nullable: true })
+  verified: boolean = false
 
   @Column()
   username: string
