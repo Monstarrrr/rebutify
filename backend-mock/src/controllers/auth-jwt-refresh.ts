@@ -33,10 +33,11 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
 
   const { token } = req.body
 
-  const successResponse = (token: string) => ({
+  const successResponse = (accessToken: string, refreshToken: string) => ({
     code: 201,
     message: 'Succesfully logged in automatically.',
-    token,
+    access: accessToken,
+    refresh: refreshToken,
   })
   const tokenError = {
     code: 400,
@@ -49,27 +50,30 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
 
   // Get the user repository
   const users = AppDataSource.getRepository(User)
-  const refreshToken = token
   try {
-    const user = await users.findOne({ where: { refreshToken } })
+    const user = await users.findOne({ where: { refreshToken: token } })
     if (!user || user.refreshToken !== token) {
       return res.status(401).json(tokenError)
     }
     // Create a new JWT
-    const expiresIn = parseInt(process.env.MOCK_JWT_REFRESH_EXPIRES_IN)
-    const jwtToken = jwt.sign(
-      user.id.toString(),
-      process.env.JWT_REFRESH_SECRET,
+    // Create a new refresh and access JWT
+    const accessTokenExpiry = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
+    const accessToken = jwt.sign(
+      { id: user.id.toString() },
+      process.env.MOCK_JWT_ACCESS_SECRET,
       {
-        expiresIn,
+        expiresIn: accessTokenExpiry,
       },
     )
-    console.log(
-      '# Refresh token set to expire in ',
-      Math.floor(expiresIn / 60),
-      ` minutes.`,
+    const refreshTokenExpiry = parseInt(process.env.MOCK_JWT_REFRESH_EXPIRES_IN)
+    const refreshToken = jwt.sign(
+      { id: user.id.toString() },
+      process.env.MOCK_JWT_REFRESH_SECRET,
+      {
+        expiresIn: refreshTokenExpiry,
+      },
     )
-    res.json(successResponse(jwtToken))
+    res.json(successResponse(accessToken, refreshToken))
   } catch (error) {
     res.status(500).json(internalServerError)
   }

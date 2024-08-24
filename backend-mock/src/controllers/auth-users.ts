@@ -103,11 +103,6 @@ export const registerUser = async (
     await AppDataSource.manager.save(user)
     // Create a JWT token for account activation
     const expiresIn = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
-    console.log(
-      '# Access token set to expire in ',
-      Math.floor(expiresIn / 60),
-      ` minutes.`,
-    )
     const accessToken = jwt.sign(
       { id: user.id },
       process.env.MOCK_JWT_ACCESS_SECRET,
@@ -127,7 +122,6 @@ export const registerUser = async (
     })
     // Current date and time for the file name
     const date = new Date().toLocaleString().replace(/[/:, ]/g, '-')
-    console.log(`# date :`, date)
     // Create a file with the activation link to simulate sending an email
     fs.writeFileSync(
       path.join('./emails', `activation-email_${user.username}_${date}.txt`),

@@ -78,11 +78,6 @@ export const activateAccount = async (
     const refreshToken = jwt.sign({ id }, process.env.MOCK_JWT_REFRESH_SECRET, {
       expiresIn,
     })
-    console.log(
-      '# Refresh token set to expire in ',
-      Math.floor(expiresIn / 60),
-      ` minutes.`,
-    )
     // Add refresh token to user
     await users.update(id, { refreshToken })
     console.log('✅ Account activated.')

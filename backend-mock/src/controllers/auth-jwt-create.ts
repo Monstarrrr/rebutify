@@ -3,8 +3,9 @@ import { User } from 'entity/User'
 import * as express from 'express'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
+import { access } from 'fs'
 
-export const createJwt = (req: express.Request, res: express.Response) => {
+export const createJwt = async (req: express.Request, res: express.Response) => {
   /**
    * @openapi
    * /auth/jwt/create:
@@ -22,7 +23,7 @@ export const createJwt = (req: express.Request, res: express.Response) => {
    *       201:
    *         $ref: '#/components/responses/Created'
    *       400:
-   *         $ref: '#/components/responses/BadRequest'
+   *         $ref: '#/components/responses/BadFormRequest'
    *       401:
    *         $ref: '#/components/responses/Unauthorized'
    *       500:
@@ -30,21 +31,62 @@ export const createJwt = (req: express.Request, res: express.Response) => {
    */
 
   // 200
-  const successResponse = (token: string) => ({
+  const successResponse = (accessToken: string, refreshToken: string) => ({
     code: 200,
     message: 'Login successful.',
-    token,
+    access: accessToken,
+    refresh: refreshToken,
   })
   // 400
   const credentialsError = {
     message: 'Invalid username or password.',
+  }
+  // 401
+  const unauthorizedError = {
+    message: `Your account isn't available yet. Please check your email to activate it.`,
   }
   // 500
   const internalServerError = {
     message: 'Internal server error.',
   }
 
-  return res.json({
-    req,
-  })
+  // Get the user repository
+  const users = AppDataSource.getRepository(User)
+  const { username, password } = req.body
+  try {
+    // look for user where email and verified is true
+    const user = await users.findOne({ where: { username } })
+    if (user.verified === false) {
+      return res.status(401).json(unauthorizedError)
+    }
+    console.log(`# password :`, password)
+    console.log(`# user.password :`, user.password)
+    console.log(`# user :`, user)
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json(credentialsError)
+    }
+    // Create a new refresh and access JWT
+    const accessTokenExpiry = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
+    const accessToken = jwt.sign(
+      { id: user.id.toString() },
+      process.env.MOCK_JWT_ACCESS_SECRET,
+      {
+        expiresIn: accessTokenExpiry,
+      },
+    )
+    const refreshTokenExpiry = parseInt(process.env.MOCK_JWT_REFRESH_EXPIRES_IN)
+    const refreshToken = jwt.sign(
+      { id: user.id.toString() },
+      process.env.MOCK_JWT_REFRESH_SECRET,
+      {
+        expiresIn: refreshTokenExpiry,
+      },
+    )
+    console.log('✅ User logged in.')
+    // Return the tokens to client
+    return res.status(201).json(successResponse(accessToken, refreshToken))
+  } catch (error) {
+    console.error('❌ Error from /auth/jwt/create : ', error)
+    return res.status(500).json(internalServerError)
+  }
 }
