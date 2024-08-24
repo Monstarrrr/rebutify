@@ -1,6 +1,7 @@
 import { User } from 'entity/User'
 import type { EntityManager } from 'typeorm'
 import * as bcrypt from 'bcrypt'
+import { Post } from 'entity/Post'
 
 export const createDefaultEntities = async (db: EntityManager) => {
   const createDefaultUsers = async (db: EntityManager) => {

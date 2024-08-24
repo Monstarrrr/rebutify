@@ -53,7 +53,6 @@ export const activateAccount = async (
   const internalServerError =
     'An error has occured on our end, please try again later or contact support.'
 
-  console.log('📩 Received request to activate an account...')
   const { uid, token } = req.body
   const id = parseInt(uid)
   try {
@@ -61,7 +60,9 @@ export const activateAccount = async (
     const users = AppDataSource.getRepository(User)
     // Find the user by id
     const user = await users.findOne({ where: { id } })
-    console.log(`# user :`, user)
+
+    console.log('📩 Received request to activate account:', user.username, '...')
+
     if (!user) {
       console.log('✖️ User not found.')
       return res.status(400).json(linkError)

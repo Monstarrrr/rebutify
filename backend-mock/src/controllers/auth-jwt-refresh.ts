@@ -31,13 +31,12 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
    *         $ref: '#/components/responses/InternalServerError'
    */
 
-  const { token } = req.body
+  const { refresh } = req.body
 
-  const successResponse = (accessToken: string, refreshToken: string) => ({
+  const successResponse = (accessToken: string) => ({
     code: 201,
     message: 'Succesfully logged in automatically.',
     access: accessToken,
-    refresh: refreshToken,
   })
   const tokenError = {
     code: 400,
@@ -51,12 +50,10 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
   // Get the user repository
   const users = AppDataSource.getRepository(User)
   try {
-    const user = await users.findOne({ where: { refreshToken: token } })
-    if (!user || user.refreshToken !== token) {
-      return res.status(401).json(tokenError)
-    }
-    // Create a new JWT
-    // Create a new refresh and access JWT
+    const user = await users.findOne({ where: { refreshToken: refresh } })
+    console.log('📩 Received request to refresh token...')
+
+    // Create a new access token
     const accessTokenExpiry = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
     const accessToken = jwt.sign(
       { id: user.id.toString() },
@@ -65,15 +62,9 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
         expiresIn: accessTokenExpiry,
       },
     )
-    const refreshTokenExpiry = parseInt(process.env.MOCK_JWT_REFRESH_EXPIRES_IN)
-    const refreshToken = jwt.sign(
-      { id: user.id.toString() },
-      process.env.MOCK_JWT_REFRESH_SECRET,
-      {
-        expiresIn: refreshTokenExpiry,
-      },
-    )
-    res.json(successResponse(accessToken, refreshToken))
+    await users.update(user.id, { accessToken })
+    console.log('✅ Token refreshed.')
+    res.json(successResponse(accessToken))
   } catch (error) {
     res.status(500).json(internalServerError)
   }

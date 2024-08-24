@@ -56,6 +56,7 @@ export const createJwt = async (req: express.Request, res: express.Response) => 
   try {
     // look for user where email and verified is true
     const user = await users.findOne({ where: { username } })
+    const userId = user.id.toString()
     if (user.verified === false) {
       return res.status(401).json(unauthorizedError)
     }
@@ -65,23 +66,30 @@ export const createJwt = async (req: express.Request, res: express.Response) => 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json(credentialsError)
     }
-    // Create a new refresh and access JWT
+
+    // Create a new access token
     const accessTokenExpiry = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
     const accessToken = jwt.sign(
-      { id: user.id.toString() },
+      { id: userId },
       process.env.MOCK_JWT_ACCESS_SECRET,
       {
         expiresIn: accessTokenExpiry,
       },
     )
+    // Add the access token to the user
+    await users.update(userId, { accessToken })
+
+    // Create a new refresh token
     const refreshTokenExpiry = parseInt(process.env.MOCK_JWT_REFRESH_EXPIRES_IN)
     const refreshToken = jwt.sign(
-      { id: user.id.toString() },
+      { id: userId },
       process.env.MOCK_JWT_REFRESH_SECRET,
       {
         expiresIn: refreshTokenExpiry,
       },
     )
+    // Add the refresh token to the user
+    await users.update(userId, { refreshToken })
     console.log('✅ User logged in.')
     // Return the tokens to client
     return res.status(201).json(successResponse(accessToken, refreshToken))

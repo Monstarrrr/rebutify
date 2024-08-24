@@ -18,7 +18,7 @@ export class Post {
     length: 10,
     default: 'ARGUMENT',
   })
-  type: string
+  type: 'ARGUMENT' | 'REBUTTAL' | 'COMMENT'
 
   @Column({ type: 'boolean', default: false })
   isPrivate: boolean
