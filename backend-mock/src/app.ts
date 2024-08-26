@@ -16,7 +16,7 @@ mockApi.use('*', (req, res, next) => {
     res.setHeader(key, option[key])
   })
   // Handle preflight requests so that the browser doesn't block the request
-  if (req.method == 'OPTIONS') res.send(200)
+  if (req.method == 'OPTIONS') res.sendStatus(200)
   next()
 })
 
