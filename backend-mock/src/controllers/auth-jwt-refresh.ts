@@ -53,6 +53,8 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
     const user = await users.findOne({ where: { refreshToken: refresh } })
     console.log('📩 Received request to refresh token...')
 
+    if (!user) return res.status(400).json(tokenError)
+
     // Create a new access token
     const accessTokenExpiry = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
     const accessToken = jwt.sign(

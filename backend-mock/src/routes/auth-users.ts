@@ -14,7 +14,7 @@ authUsersRouter.route('/activation').post(activateAccount)
 authUsersRouter
   .use(authenticator)
   .route('/me')
-  .get((_req, res) => res.json({ route: 'GET /auth/users/me' }))
+  .get((_req, res) => res.json(res.locals.user))
   .delete((_req, res) => res.json({ route: 'DELETE /auth/users/me' }))
 
 export default authUsersRouter

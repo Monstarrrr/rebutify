@@ -5,22 +5,32 @@ import * as jwt from 'jsonwebtoken'
 import { AppDataSource } from 'data-source'
 import { User } from 'entity/User'
 
-export const authenticator = (
+export const authenticator = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  // Check if bearer token exists
-  const authorization = req.get('authorization')
-  if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
-    throw new MockApiError(401, 'Authentication required.')
-  }
+  try {
+    // Check if bearer token exists
+    const authorization = req.get('authorization')
+    if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
+      throw new MockApiError(401, 'Authentication required.')
+    }
 
-  const addUserToResponse = async (decoded: Object) => {
+    // Decrypt token to get user id
+    const token = authorization.split(' ')[1]
+
+    // Try to decrypt the token with access and refresh secrets
+    console.log(`# token from Authorization header:`, token)
+    const decodedAccessToken = jwt.verify(
+      token,
+      process.env.MOCK_JWT_ACCESS_SECRET,
+    )
+    console.log(`# decodedAccessToken :`, decodedAccessToken)
+    const decodedToken = decodedAccessToken
     // Make sure the decrypted token is an object
     const tokenObject =
-      typeof decoded === 'string' ? JSON.parse(decoded) : decoded
-    console.log(`# tokenObject :`, tokenObject)
+      typeof decodedToken === 'string' ? JSON.parse(decodedToken) : decodedToken
     // Get the user id from the token
     const userId = tokenObject.id
     // Get the user repository
@@ -28,27 +38,12 @@ export const authenticator = (
     // Get the user
     const user = await users.findOne({ where: { id: userId } })
     // Attach user to response object
+    console.log('Adding user to res.locals')
     res.locals.user = user
-    console.log(`# res.locals :`, res.locals)
-    next() // Move to the next middleware or route handler
+    next()
+  } catch (error) {
+    next(error)
   }
-  // Decrypt token to get user id
-  const token = authorization.split(' ')[1]
-
-  // Try to decrypt the token with access and refresh secrets
-  try {
-    console.log(`# token from Authorization header:`, token)
-    const decoded = jwt.verify(token, process.env.MOCK_JWT_ACCESS_SECRET)
-    addUserToResponse(decoded)
-  } catch (err) {
-    try {
-      const decoded = jwt.verify(token, process.env.MOCK_JWT_REFRESH_SECRET)
-      addUserToResponse(decoded)
-    } catch (err) {
-      throw new MockApiError(401, 'Session expired. Please log in again.')
-    }
-  }
-  next()
 }
 
 export const errorHandler = (
