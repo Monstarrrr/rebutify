@@ -2,7 +2,7 @@ import mockApi from './app'
 import { AppDataSource } from './data-source'
 import { MOCK_SERVER_PORT } from '@/utils/config'
 import { allEntities } from 'entity/allEntities'
-import { createDefaultEntities } from './utils/createDefaultEntities'
+import { createDefaultUsers } from './utils/createDefaultUsers'
 
 // Load data
 AppDataSource.initialize()
@@ -22,12 +22,12 @@ AppDataSource.initialize()
     if (!databaseError) {
       console.log('✅ Database successfully cleared.')
       console.log('⏳ Creating default data...')
-      await createDefaultEntities(AppDataSource.manager)
+      await createDefaultUsers(AppDataSource.manager)
     }
   })
   .catch((error) => console.log(error))
 
 // Start the server
 mockApi.listen(MOCK_SERVER_PORT, () => {
-  console.log(`Server is running on ${MOCK_SERVER_PORT}`)
+  console.log(`🏁 Server is running on ${MOCK_SERVER_PORT}`)
 })

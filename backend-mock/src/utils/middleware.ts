@@ -21,12 +21,10 @@ export const authenticator = async (
     const token = authorization.split(' ')[1]
 
     // Try to decrypt the token with access and refresh secrets
-    console.log(`# token from Authorization header:`, token)
     const decodedAccessToken = jwt.verify(
       token,
       process.env.MOCK_JWT_ACCESS_SECRET,
     )
-    console.log(`# decodedAccessToken :`, decodedAccessToken)
     const decodedToken = decodedAccessToken
     // Make sure the decrypted token is an object
     const tokenObject =
@@ -38,7 +36,6 @@ export const authenticator = async (
     // Get the user
     const user = await users.findOne({ where: { id: userId } })
     // Attach user to response object
-    console.log('Adding user to res.locals')
     res.locals.user = user
     next()
   } catch (error) {

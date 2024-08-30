@@ -40,7 +40,8 @@ export const swaggerOptions: swaggerJSDoc.Options = {
       },
       responses: {
         Ok: {
-          description: 'Ok response',
+          description:
+            'Response used for successful operations with no returned resource.',
           content: {
             'application/json': {
               schema: {
@@ -61,7 +62,7 @@ export const swaggerOptions: swaggerJSDoc.Options = {
         },
         Created: {
           description:
-            'Resource created response, which returns the created resource',
+            'Response used for successful operations that return a resource.',
           content: {
             'application/json': {
               schema: {
@@ -90,7 +91,7 @@ export const swaggerOptions: swaggerJSDoc.Options = {
           },
         },
         BadRequest: {
-          description: 'Bad request error',
+          description: 'Response used for requests with missing or invalid data.',
           content: {
             'application/json': {
               schema: {
@@ -109,26 +110,6 @@ export const swaggerOptions: swaggerJSDoc.Options = {
             },
           },
         },
-        Unauthorized: {
-          description: 'Unauthorized error',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  code: {
-                    type: 'number',
-                    example: 401,
-                  },
-                  message: {
-                    type: 'string',
-                    example: 'You are not authorized to perform this action.',
-                  },
-                },
-              },
-            },
-          },
-        },
         BadFormRequest: {
           description:
             'Bad request for form data. The response will contain an object with the fields that have errors.',
@@ -137,6 +118,17 @@ export const swaggerOptions: swaggerJSDoc.Options = {
               schema: {
                 type: 'object',
                 properties: {
+                  // code: {
+                  //   type: 'number',
+                  //   example: 422,
+                  // },
+                  // message: {
+                  //   type: 'string',
+                  //   example: 'Form data is invalid.',
+                  // },
+                  // resource: {
+
+                  // },
                   email: {
                     type: 'array',
                     items: {
@@ -160,6 +152,26 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                       type: 'string',
                     },
                     example: ['Username already exists'],
+                  },
+                },
+              },
+            },
+          },
+        },
+        Unauthorized: {
+          description: 'Unauthorized error',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  code: {
+                    type: 'number',
+                    example: 401,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'You are not authorized to perform this action.',
                   },
                 },
               },
