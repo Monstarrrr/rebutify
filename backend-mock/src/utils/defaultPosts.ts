@@ -14,7 +14,7 @@ export const defaultPosts = async () => {
       ownerUserId: monstar?.id || 1,
       parentId: null,
       title: 'Plants feel pain.',
-      type: 'ARGUMENT',
+      type: 'argument',
       updated: new Date(),
     },
     {
@@ -24,7 +24,7 @@ export const defaultPosts = async () => {
       ownerUserId: johnDoe?.id || 2,
       parentId: null,
       title: `We've been doing it for thousands of years.`,
-      type: 'ARGUMENT',
+      type: 'argument',
       updated: new Date(),
     },
     {
@@ -34,7 +34,7 @@ export const defaultPosts = async () => {
       ownerUserId: 1,
       parentId: 1,
       title: `I'm a vegan and I'm not dead yet.`,
-      type: 'REBUTTAL',
+      type: 'rebuttal',
       updated: new Date(),
     },
   ]

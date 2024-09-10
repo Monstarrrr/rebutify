@@ -14,9 +14,17 @@ export const getPost = async (req: express.Request, res: express.Response) => {
 }
 
 // For the route "/api/posts"
-export const getPosts = async (_req: express.Request, res: express.Response) => {
-  const results = await defaultPosts()
-  return res.json({ results })
+export const getPosts = async (req: express.Request, res: express.Response) => {
+  const allPosts = await defaultPosts()
+  if (
+    req.query.type === 'argument' ||
+    req.query.type === 'rebuttal' ||
+    req.query.type === 'comment'
+  ) {
+    const posts = allPosts.filter((post) => post.type === req.query.type)
+    return res.json({ results: posts })
+  }
+  return res.json({ results: allPosts })
 }
 
 // For the route "/api/posts"
