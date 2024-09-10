@@ -1,1 +1,0 @@
-http://localhost:3000/activate?uid=381&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgxLCJpYXQiOjE3MjUwNDUyMzgsImV4cCI6MTcyNTA0NTI0M30.E44EKGNMbT6-fn8ux72myO7vOeM0pQR_8tLxj1yZuTI
