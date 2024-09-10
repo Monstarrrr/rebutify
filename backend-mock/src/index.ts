@@ -1,19 +1,33 @@
-import { AppDataSource } from './data-source'
-import { User } from './entity/User'
-import { PORT } from './utils/config'
 import mockApi from './app'
-import swaggerDocs from 'routes/swagger'
+import { AppDataSource } from './data-source'
+import { MOCK_SERVER_PORT } from '@/utils/config'
+import { allEntities } from 'entity/allEntities'
+import { createDefaultUsers } from './utils/createDefaultUsers'
 
 // Load data
 AppDataSource.initialize()
   .then(async () => {
-    console.log('Loading users from the database...')
-    const users = await AppDataSource.manager.find(User)
-    console.log(users)
+    let databaseError = false
+    console.log('⏳ Reseting database...')
+    for (const entity of allEntities) {
+      await AppDataSource.getRepository(entity).clear()
+
+      // Check if data was cleared
+      const count = await AppDataSource.getRepository(entity).count()
+      if (count > 0) {
+        databaseError = true
+        console.error(`/!\\ Failed to clear data from entity: ${entity.name}.`)
+      }
+    }
+    if (!databaseError) {
+      console.log('✅ Database successfully cleared.')
+      console.log('⏳ Creating default data...')
+      await createDefaultUsers(AppDataSource.manager)
+    }
   })
   .catch((error) => console.log(error))
 
 // Start the server
-mockApi.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`)
+mockApi.listen(MOCK_SERVER_PORT, () => {
+  console.log(`🏁 Server is running on ${MOCK_SERVER_PORT}`)
 })

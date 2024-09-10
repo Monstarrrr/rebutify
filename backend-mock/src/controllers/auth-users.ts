@@ -1,13 +1,22 @@
-import * as express from 'express';
+import { AppDataSource } from 'data-source'
+import { User } from 'entity/User'
+import * as express from 'express'
+import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
+import fs = require('fs')
+import path = require('path')
 
-export const registerUser = (_req: express.Request, res: express.Response) => {
+export const registerUser = async (
+  req: express.Request,
+  res: express.Response,
+) => {
   /**
    * @openapi
    * /auth/users:
    *   post:
    *     summary: Register a new user
    *     description: Create a new user in the system. This includes hashing the password and saving the user information.
-   *     tags: [Users]
+   *     tags: [Auth]
    *     requestBody:
    *       required: true
    *       content:
@@ -33,41 +42,95 @@ export const registerUser = (_req: express.Request, res: express.Response) => {
    *                 example: Passw0rd!
    *     responses:
    *       201:
-   *         description: User created successfully.
+   *         $ref: '#/components/responses/Created'
    *       400:
-   *         description: User already exists.
+   *         $ref: '#/components/responses/BadFormRequest'
+   *       401:
+   *         $ref: '#/components/responses/Unauthorized'
    *       500:
-   *         description: Internal server error.
+   *         $ref: '#/components/responses/InternalServerError'
    */
-  return res.send({ route: 'POST /auth/users' });
 
-  // Uncomment and complete the logic as needed
-  // console.log('Received request to create a new user');
-  // const { username, email, password } = req.body;
-  // try {
-  //   const existingUser = await AppDataSource.manager.findOne(User, {
-  //     where: [{ username }, { email }, { password }],
-  //   });
-  //   if (existingUser) {
-  //     return res.status(400).json({ message: 'User already exists' });
-  //   }
-  //   const hashedPassword = await bcrypt.hash(password, 10);
-  //   const user = AppDataSource.manager.create(User, {
-  //     username,
-  //     email,
-  //     password: hashedPassword,
-  //   });
-  //   await AppDataSource.manager.save(user);
-  //   const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-  //     expiresIn: JWT_EXPIRES_IN,
-  //   });
-  //   const activationLink = `${BASE_URL}/auth/activation?uid=${user.id}&token=${token}`;
-  //   fs.writeFileSync(
-  //     path.join(__dirname, `activation_${user.username}.txt`),
-  //     activationLink,
-  //   );
-  //   return res.status(201).json({ message: 'User created' });
-  // } catch (error) {
-  //   return res.status(500).json({ message: 'Internal server error' });
-  // }
-};
+  const successResponse = {
+    code: 201,
+    message:
+      'Your account has been created. Please check your email to activate it.',
+  }
+  const usernameError = 'This username is already taken.'
+  const emailError =
+    'This email is already being used. Please login or reset your password.'
+  const internalServerError =
+    'An error has occured on our end, please try again later or contact support.'
+
+  console.log('📩 Received request to create a new user')
+  const { username, email, password } = req.body
+  try {
+    // Check if the username or email already exists
+    let usernameErrors = []
+    let emailErrors = []
+    const existingUsername = await AppDataSource.manager.findOne(User, {
+      where: [{ username }],
+    })
+    const existingEmail = await AppDataSource.manager.findOne(User, {
+      where: [{ email }],
+    })
+    if (existingUsername || existingEmail) {
+      existingUsername && usernameErrors.push(usernameError)
+      existingEmail && emailErrors.push(emailError)
+      return res.status(400).json({
+        username: usernameErrors,
+        email: emailErrors,
+      })
+    }
+
+    // Check if the password is strong enough (simulated by checking for the word 'password')
+    if (password.toLowerCase().includes('password')) {
+      console.log('✖️ Password not strong enough.')
+      return res.status(400).json({
+        password: ['Password not strong enough.'],
+      })
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10)
+    // Create the user
+    const user = AppDataSource.manager.create(User, {
+      username,
+      email,
+      password: hashedPassword,
+    })
+    // Save the user
+    await AppDataSource.manager.save(user)
+    // Create a JWT token for account activation
+    const expiresIn = parseInt(process.env.MOCK_JWT_ACCESS_EXPIRES_IN)
+    const accessToken = jwt.sign(
+      { id: user.id },
+      process.env.MOCK_JWT_ACCESS_SECRET,
+      {
+        expiresIn,
+      },
+    )
+    // Save the token to the user
+    await AppDataSource.manager.update(User, user.id, { accessToken })
+    // Create an activation link with the UID and token
+    const activationLink = `http://localhost:${process.env.CLIENT_PORT}/activate?uid=${user.id}&token=${accessToken}`
+    // Delete any previous activation links
+    fs.readdirSync('./emails').forEach((file) => {
+      if (file.includes('activation-email_')) {
+        fs.unlinkSync(path.join('./emails', file))
+      }
+    })
+    // Current date and time for the file name
+    const date = new Date().toLocaleString().replace(/[/:, ]/g, '-')
+    // Create a file with the activation link to simulate sending an email
+    fs.writeFileSync(
+      path.join('./emails', `activation-email_${user.username}_${date}.txt`),
+      activationLink,
+    )
+    console.log('✅ Account created.')
+    return res.status(201).json(successResponse)
+  } catch (error) {
+    console.log(`❌ InternalServerError from /auth/users :`, error)
+    return res.status(500).json(internalServerError)
+  }
+}

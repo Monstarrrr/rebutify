@@ -1,26 +1,46 @@
 import { MockApiError } from './errors'
 import * as express from 'express'
 import logger from './logger'
+import * as jwt from 'jsonwebtoken'
+import { AppDataSource } from 'data-source'
+import { User } from 'entity/User'
 
-export const authenticator = (
+export const authenticator = async (
   req: express.Request,
-  _res: express.Response,
+  res: express.Response,
   next: express.NextFunction,
 ) => {
-  // Check if bearer token exists
-  const authorization = req.get('authorization')
-  if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
-    throw new MockApiError(401, 'not authenticated')
+  try {
+    // Check if bearer token exists
+    const authorization = req.get('authorization')
+    if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
+      throw new MockApiError(401, 'Authentication required.')
+    }
+
+    // Decrypt token to get user id
+    const token = authorization.split(' ')[1]
+
+    // Try to decrypt the token with access and refresh secrets
+    const decodedAccessToken = jwt.verify(
+      token,
+      process.env.MOCK_JWT_ACCESS_SECRET,
+    )
+    const decodedToken = decodedAccessToken
+    // Make sure the decrypted token is an object
+    const tokenObject =
+      typeof decodedToken === 'string' ? JSON.parse(decodedToken) : decodedToken
+    // Get the user id from the token
+    const userId = tokenObject.id
+    // Get the user repository
+    const users = AppDataSource.getRepository(User)
+    // Get the user
+    const user = await users.findOne({ where: { id: userId } })
+    // Attach user to response object
+    res.locals.user = user
+    next()
+  } catch (error) {
+    next(error)
   }
-
-  // Verify token
-  //   const token = authorization.substring(7)
-  //   jwt.verify(token, JWT_SECRET)
-
-  // Add id of caller to the req object
-  // req.userId = userId;
-
-  next()
 }
 
 export const errorHandler = (
