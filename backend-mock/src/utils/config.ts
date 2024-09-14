@@ -9,3 +9,5 @@ export const corsHeaders = [
   { 'Access-Control-Allow-Methods': '*' },
   { 'Access-Control-Allow-Headers': '*' },
 ]
+// We set the default posts to know how many posts to attribute ownership to Monstar and JohnDoe ids (their id change in each run)
+export const defaultPostsAmount = 10

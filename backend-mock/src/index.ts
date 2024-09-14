@@ -3,6 +3,7 @@ import { AppDataSource } from './data-source'
 import { MOCK_SERVER_PORT } from '@/utils/config'
 import { allEntities } from 'entity/allEntities'
 import { createDefaultUsers } from './utils/createDefaultUsers'
+import { setDefaultPosts } from './utils/setDefaultPosts'
 
 // Load data
 AppDataSource.initialize()
@@ -23,6 +24,7 @@ AppDataSource.initialize()
       console.log('✅ Database successfully cleared.')
       console.log('⏳ Creating default data...')
       await createDefaultUsers(AppDataSource.manager)
+      await setDefaultPosts()
     }
   })
   .catch((error) => console.log(error))

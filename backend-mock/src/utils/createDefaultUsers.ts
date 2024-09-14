@@ -12,12 +12,12 @@ export const createDefaultUsers = async (db: EntityManager) => {
       accessToken: null,
       bio: 'I am an admin',
       created: new Date(),
-      email: 'monstar@email.com',
+      email: 'admin@email.com',
       password: await bcrypt.hash('Passw0rd!', 10),
       reputation: 100,
       refreshToken: null,
       savedPosts: [{ id: 1 }],
-      username: 'MonstarAdmin',
+      username: 'JohnAdmin',
       verified: true,
     })
     await db.save(adminUser)
@@ -42,12 +42,12 @@ export const createDefaultUsers = async (db: EntityManager) => {
     // Create an unverified user
     const unverifiedUser = new User()
     Object.assign(unverifiedUser, {
-      username: 'JohnSmith',
+      username: 'JohnSock',
       bio: 'I am unverified',
       avatar: 'https://example.com/avatar.png',
       reputation: 100,
       created: new Date(),
-      email: 'johnsmith@email.com',
+      email: 'johnsock@email.com',
       password: await bcrypt.hash('Passw0rd123!', 10),
       savedPosts: [{ id: 1 }],
       verified: false,
