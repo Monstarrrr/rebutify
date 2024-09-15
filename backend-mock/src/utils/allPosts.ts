@@ -1,4 +1,6 @@
-export let allPosts = [
+import { Post } from 'types/Post'
+
+export let allPosts: Post[] = [
   // Arguments
   {
     body: 'This is my argument, plants feel pain, trust me I read it somewhere.',

@@ -3,14 +3,13 @@ import { User } from 'entity/User'
 import * as express from 'express'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { access } from 'fs'
 
 export const createJwt = async (req: express.Request, res: express.Response) => {
   /**
    * @openapi
    * /auth/jwt/create:
    *   post:
-   *     summary: Login a user by creating a JWT
+   *     summary: Login
    *     description: Create a new JWT for a user.
    *     tags: [Auth]
    *     requestBody:
@@ -23,7 +22,7 @@ export const createJwt = async (req: express.Request, res: express.Response) => 
    *       201:
    *         $ref: '#/components/responses/Created'
    *       400:
-   *         $ref: '#/components/responses/BadFormRequest'
+   *         $ref: '#/components/responses/BadRequest'
    *       401:
    *         $ref: '#/components/responses/Unauthorized'
    *       500:
@@ -60,11 +59,8 @@ export const createJwt = async (req: express.Request, res: express.Response) => 
     if (user.verified === false) {
       return res.status(401).json(unauthorizedError)
     }
-    console.log(`# password :`, password)
-    console.log(`# user.password :`, user.password)
-    console.log(`# user :`, user)
     if (!user || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json(credentialsError)
+      return res.status(400).json(credentialsError)
     }
 
     // Create a new access token
