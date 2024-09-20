@@ -23,7 +23,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-async-errors": "^3.1.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
