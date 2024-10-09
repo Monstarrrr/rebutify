@@ -24,7 +24,8 @@ mockApi.use('*', (req, res, next) => {
 mockApi.use('/docs', routes.swaggerDocs)
 
 // Routes
-mockApi.use('/api/posts', routes.postsRouter)
+mockApi.use('/api/posts', routes.postsRouter) // temporary (to match existing non-mock routes)
+mockApi.use('/arguments', routes.argumentsRouter)
 mockApi.use('/auth/users', routes.authUsersRouter)
 mockApi.use('/auth/jwt', routes.authJwtRouter)
 

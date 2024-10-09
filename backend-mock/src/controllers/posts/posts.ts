@@ -2,33 +2,34 @@ import * as express from 'express'
 import { allPosts } from '@/utils/allPosts'
 import * as jwt from 'jsonwebtoken'
 
-/**
- * @openapi
- * /api/posts/{id}:
- *   get:
- *     summary: Get a post by id
- *     description: Get a post by its id.
- *     tags: [Posts]
- *     parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       schema:
- *         type: string
- *       description: The post id.
- *     responses:
- *       200:
- *         $ref: '#/components/responses/Retrieved'
- *       400:
- *         $ref: '#/components/responses/BadRequest'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- *
- */
-const postError = { message: 'Post not found.' }
 export const getPost = async (req: express.Request, res: express.Response) => {
+  /**
+   * @openapi
+   * /api/posts/{id}:
+   *   get:
+   *     summary: Get a post by id
+   *     description: Get a post by its id.
+   *     tags: [Posts]
+   *     parameters:
+   *     - in: path
+   *       name: id
+   *       required: true
+   *       schema:
+   *         type: string
+   *       description: The post id.
+   *     responses:
+   *       200:
+   *         $ref: '#/components/responses/Retrieved'
+   *       400:
+   *         $ref: '#/components/responses/BadRequest'
+   *       401:
+   *         $ref: '#/components/responses/Unauthorized'
+   *       500:
+   *         $ref: '#/components/responses/InternalServerError'
+   *
+   */
+  const postError = { message: 'Post not found.' }
+
   const { id } = req.params
   const post = allPosts.find((post) => post.id.toString() === id)
   if (!post || !id) {

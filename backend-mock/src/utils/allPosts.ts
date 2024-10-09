@@ -11,6 +11,8 @@ export let allPosts: Post[] = [
     title: 'Plants feel pain.',
     type: 'argument',
     updated: new Date(),
+    upvotes: 12,
+    downvotes: 3,
   },
   {
     body: `We've eaten meat for thousands of years, it's natural.`,
@@ -21,6 +23,8 @@ export let allPosts: Post[] = [
     title: `We've been doing it for thousands of years.`,
     type: 'argument',
     updated: new Date(),
+    upvotes: 1,
+    downvotes: 4,
   },
   // Rebuttals
   {
@@ -32,6 +36,8 @@ export let allPosts: Post[] = [
     title: `I'm a vegan and I'm not dead yet.`,
     type: 'rebuttal',
     updated: new Date(),
+    upvotes: 0,
+    downvotes: 0,
   },
   // Comments
 ]
