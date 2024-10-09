@@ -290,5 +290,5 @@ export const swaggerOptions: swaggerJSDoc.Options = {
     ],
   },
   // Where the OpenAPI specs are located
-  apis: ['src/routes/*.ts', 'src/schema/*.ts', 'src/controllers/*.ts'],
+  apis: ['src/**/*.ts'],
 }
