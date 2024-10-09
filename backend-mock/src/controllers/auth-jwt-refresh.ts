@@ -8,6 +8,7 @@ export const refreshJwt = async (req: express.Request, res: express.Response) =>
    * @openapi
    * /auth/jwt/refresh:
    *   post:
+   *     summary: Refresh user session
    *     description: Refresh a JWT token by providing a valid refresh token
    *     tags: [Auth]
    *     requestBody:

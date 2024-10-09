@@ -37,6 +37,25 @@ export const swaggerOptions: swaggerJSDoc.Options = {
             },
           },
         },
+        Post: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              enum: ['argument', 'rebuttal', 'comment'],
+              example: 'argument',
+            },
+            title: {
+              type: 'string',
+              example: 'Veganism is unatural',
+            },
+            body: {
+              type: 'string',
+              example:
+                'Veganism is unatural because humans are omnivores, I read it in a book.',
+            },
+          },
+        },
       },
       responses: {
         Ok: {
@@ -60,9 +79,42 @@ export const swaggerOptions: swaggerJSDoc.Options = {
             },
           },
         },
+        Retrieved: {
+          description: 'Response used for successful GET operations.',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  code: {
+                    type: 'number',
+                    example: 200,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Resource retrieved.',
+                  },
+                  resource: {
+                    type: 'object',
+                    description: 'Returning the retrieved resource.',
+                    example: {
+                      id: 1,
+                      type: 'argument',
+                      ownerUserId: 123456,
+                      title: 'Veganism is unatural',
+                      body: 'Veganism is unatural because humans are omnivores, I read it in a book.',
+                      created: '2024-01-01T00:00:00.000Z',
+                      updated: '2024-01-01T00:00:00.000Z',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         Created: {
           description:
-            'Response used for successful operations that return a resource.',
+            'Response used for successful POST operations that return the resource.',
           content: {
             'application/json': {
               schema: {

@@ -14,7 +14,7 @@ export const registerUser = async (
    * @openapi
    * /auth/users:
    *   post:
-   *     summary: Register a new user
+   *     summary: Register
    *     description: Create a new user in the system. This includes hashing the password and saving the user information.
    *     tags: [Auth]
    *     requestBody:
@@ -43,10 +43,10 @@ export const registerUser = async (
    *     responses:
    *       201:
    *         $ref: '#/components/responses/Created'
-   *       400:
-   *         $ref: '#/components/responses/BadFormRequest'
    *       401:
    *         $ref: '#/components/responses/Unauthorized'
+   *       422:
+   *         $ref: '#/components/responses/BadFormRequest'
    *       500:
    *         $ref: '#/components/responses/InternalServerError'
    */
@@ -56,10 +56,10 @@ export const registerUser = async (
     message:
       'Your account has been created. Please check your email to activate it.',
   }
-  const usernameError = 'This username is already taken.'
-  const emailError =
+  const usernameErrorResponse = 'This username is already taken.'
+  const emailErrorResponse =
     'This email is already being used. Please login or reset your password.'
-  const internalServerError =
+  const internalServerErrorResponse =
     'An error has occured on our end, please try again later or contact support.'
 
   console.log('📩 Received request to create a new user')
@@ -75,9 +75,9 @@ export const registerUser = async (
       where: [{ email }],
     })
     if (existingUsername || existingEmail) {
-      existingUsername && usernameErrors.push(usernameError)
-      existingEmail && emailErrors.push(emailError)
-      return res.status(400).json({
+      existingUsername && usernameErrors.push(usernameErrorResponse)
+      existingEmail && emailErrors.push(emailErrorResponse)
+      return res.status(422).json({
         username: usernameErrors,
         email: emailErrors,
       })
@@ -86,7 +86,7 @@ export const registerUser = async (
     // Check if the password is strong enough (simulated by checking for the word 'password')
     if (password.toLowerCase().includes('password')) {
       console.log('✖️ Password not strong enough.')
-      return res.status(400).json({
+      return res.status(422).json({
         password: ['Password not strong enough.'],
       })
     }
@@ -131,6 +131,6 @@ export const registerUser = async (
     return res.status(201).json(successResponse)
   } catch (error) {
     console.log(`❌ InternalServerError from /auth/users :`, error)
-    return res.status(500).json(internalServerError)
+    return res.status(500).json(internalServerErrorResponse)
   }
 }
