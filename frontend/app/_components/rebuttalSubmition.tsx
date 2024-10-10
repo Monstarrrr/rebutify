@@ -1,3 +1,5 @@
+// rebuttalSubmition.tsx displays a form to submit a rebuttal
+
 'use client'
 import { Argument } from '@/types/Post'
 import { TextInput } from '@/types'

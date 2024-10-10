@@ -1,10 +1,10 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, PostsList } from '@/components'
-import type { TextInput } from '@/types'
-import { FormEvent, useState } from 'react'
-import { createPost } from '@/api/posts'
+import { Form, List, PostCard } from '@/components'
+import type { Post, TextInput } from '@/types'
+import { FormEvent, useEffect, useState } from 'react'
+import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 
 const newArgumentInputs: TextInput[] = [
@@ -32,7 +32,22 @@ export default function Home() {
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState(false)
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [allPosts, setAllPosts] = useState<Post[]>([])
+
+  // Fetch all 'arguments' posts
+  useEffect(() => {
+    let fetchApi = async () => {
+      try {
+        const response = await getPosts('argument')
+        setAllPosts(response)
+      } catch (error: any) {
+        console.error('# Error fetching posts: ', error.response.data)
+      }
+    }
+    fetchApi()
+  }, [])
+
+  async function handleSubmitArgument(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     setApiErrors(null)
@@ -70,7 +85,7 @@ export default function Home() {
           id='new-argument'
           inputsErrors={apiErrors}
           inputsFields={newArgumentInputs}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitArgument}
           loading={loading}
           successMessage={success ? successMessage : null}
         />
@@ -85,7 +100,7 @@ export default function Home() {
       <hr />
       <h2>All arguments</h2>
       <hr />
-      <PostsList type={'argument'} />
+      <List items={allPosts} Layout={PostCard} />
     </>
   )
 }

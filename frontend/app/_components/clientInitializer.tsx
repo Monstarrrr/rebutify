@@ -1,3 +1,5 @@
+// clientInitializer fetches the user info and updates the store
+
 'use client'
 import { fetchUserInfo } from '@/api/auth'
 import { useAppDispatch } from '@/store/hooks'

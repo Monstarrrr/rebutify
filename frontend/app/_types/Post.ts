@@ -1,4 +1,4 @@
-import { PostType } from '@/types/PostType'
+import { PostType } from '@/types'
 
 export type Post = {
   id: string
