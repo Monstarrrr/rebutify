@@ -13,7 +13,7 @@ const PostCard: React.FC<{ item: Post }> = ({ item }) => {
       </div>
       <Link href={`/${type}/${id}`}>
         <div style={{ maxWidth: 'max-content' }}>
-          <h1>{title}</h1>
+          <h3>{title}</h3>
         </div>
       </Link>
       <br />

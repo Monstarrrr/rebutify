@@ -9,10 +9,10 @@ export default function List<T extends type.Identifiable>({
   Layout,
 }: type.ListProps<T>) {
   return (
-    <div>
+    <ul>
       {items.map((item) => (
         <Layout key={item.id} item={item} />
       ))}
-    </div>
+    </ul>
   )
 }

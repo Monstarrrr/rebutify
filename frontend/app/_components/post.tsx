@@ -11,9 +11,9 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       )}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
-          <button>Upvote</button>
+          <button>+</button>
           {upvotes - downvotes}
-          <button>Downvote</button>
+          <button>-</button>
         </div>
         <div>
           <p>{body}</p>

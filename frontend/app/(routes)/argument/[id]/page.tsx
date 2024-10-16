@@ -40,10 +40,7 @@ export default function Argument(props: Props) {
     <div>
       {argument ? (
         <>
-          <div>
-            <h1>{argument.title}</h1>
-            <p>{argument.body}</p>
-          </div>
+          <Post item={argument} />
 
           <br />
           <h2>Rebuttals</h2>
