@@ -1,6 +1,6 @@
 import { MockApiError } from './errors'
 import * as express from 'express'
-import logger from './logger'
+import logger from '@/utils/logger'
 import * as jwt from 'jsonwebtoken'
 import { AppDataSource } from 'data-source'
 import { User } from 'entity/User'

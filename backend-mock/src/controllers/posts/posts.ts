@@ -1,6 +1,7 @@
 import * as express from 'express'
 import { allPosts } from '@/utils/allPosts'
 import * as jwt from 'jsonwebtoken'
+import { getUserIdFromReq } from '@/utils/getUserIdFromReq'
 
 export const getPost = async (req: express.Request, res: express.Response) => {
   /**
@@ -132,11 +133,7 @@ export const createPost = (req: express.Request, res: express.Response) => {
   const id = Math.floor(Math.random() * 999999)
 
   // Set user id from token as ownerUserId
-  const token = req.headers.authorization.split(' ')[1]
-  const decodedToken = jwt.decode(token)
-  const user =
-    typeof decodedToken === 'string' ? JSON.parse(decodedToken) : decodedToken
-  const ownerUserId = user.id
+  const ownerUserId = getUserIdFromReq(req)
 
   // Validate title and body
   req.body.title.length > titleCharacterLimit && titleErrors.push(titleError)

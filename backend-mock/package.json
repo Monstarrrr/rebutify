@@ -4,7 +4,7 @@
   "description": "Awesome project developed with TypeORM.",
   "type": "commonjs",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node --type-check src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "dev": "ts-node-dev src/index.ts"
   },

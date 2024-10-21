@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@/utils/*": ["./utils/*"]
+      "@/utils/*": ["./utils/*"],
+      "@/utils": ["./utils"]
     }
   }
 }
