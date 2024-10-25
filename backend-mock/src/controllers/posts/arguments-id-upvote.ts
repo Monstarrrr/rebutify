@@ -43,13 +43,9 @@ export const upvoteArgument = async (
 
     // Get user from database
     const users = AppDataSource.getRepository(User)
-    console.log(`# userIdFromReq :`, userIdFromReq)
     const user = await users.findOne({ where: { id: parseInt(userIdFromReq) } })
 
-    console.log(`# user :`, user)
-    console.log(`# user.upvotedPosts :`, user.upvotedPosts)
-    console.log(`# typeof user.upvotedPosts :`, typeof user.upvotedPosts)
-    // Convert user's upvotedPosts & downvotedPosts [string -> array]
+    // upvotedPosts & downvotedPosts [string -> array]
     let upvotedPosts = user.upvotedPosts.split(' ')
     upvotedPosts = upvotedPosts.filter((post) => post !== '')
     let downvotedPosts = user.downvotedPosts.split(' ')
@@ -57,7 +53,6 @@ export const upvoteArgument = async (
 
     // Already upvoted ?
     if (upvotedPosts.includes(argumentId)) {
-      console.log(`# User upvoted posts :`, user.upvotedPosts)
       return res
         .status(400)
         .json({ message: '❌ Bad request: Argument was already upvoted' })
@@ -66,12 +61,15 @@ export const upvoteArgument = async (
 
     // Removing downvote if exists
     if (downvotedPosts.includes(argumentId)) {
-      console.log('⏳ Removing downvote...')
+      console.log("⏳ Removing downvote (from user's upvotedPosts)...")
       downvotedPosts.splice(downvotedPosts.indexOf(argumentId, 1))
       const updatedDownvotedPosts = downvotedPosts.join(' ')
       await users.update(userIdFromReq, {
         downvotedPosts: updatedDownvotedPosts,
       })
+      console.log('⏳ Removing downvote (from post)...')
+      const post = allPosts.find((post) => post.id === Number(argumentId))
+      post.downvotes -= 1
       console.log(`✅ Downvote removed.`)
     }
 
@@ -81,14 +79,11 @@ export const upvoteArgument = async (
     await users.update(userIdFromReq, {
       upvotedPosts: updatedUpvotedPosts,
     })
-    console.log(`# user :`, user)
     console.log(`✅ Upvote added to user's upvotedPosts.`)
 
     // Add upvote to post
     const post = allPosts.find((post) => post.id == Number(argumentId))
-    console.log(`# post prior to upvote :`, post)
     post.upvotes += 1
-    console.log(`# post after upvote :`, post)
     console.log(`✅ Upvote added to post.`)
 
     return res.status(200).json({ message: '✅ Upvoted post' })

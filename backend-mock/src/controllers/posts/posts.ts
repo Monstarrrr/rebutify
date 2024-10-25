@@ -149,6 +149,8 @@ export const createPost = (req: express.Request, res: express.Response) => {
     ...req.body,
     ownerUserId,
     id,
+    upvotes: 0,
+    downvotes: 0,
     created: new Date(),
     updated: new Date(),
   })

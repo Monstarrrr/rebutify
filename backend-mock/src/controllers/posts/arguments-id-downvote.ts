@@ -45,11 +45,11 @@ export const downvoteArgument = async (
     const users = AppDataSource.getRepository(User)
     const user = await users.findOne({ where: { id: Number(userIdFromReq) } })
 
-    // Convert user's upvotedPosts & downvotedPosts [string -> array]
-    const upvotedPosts = user.upvotedPosts.split(' ')
-    const downvotedPosts = user.downvotedPosts.split(' ')
-    upvotedPosts.splice(upvotedPosts.indexOf(argumentId))
-    downvotedPosts.splice(downvotedPosts.indexOf(argumentId))
+    // upvotedPosts & downvotedPosts [string -> array]
+    let upvotedPosts = user.upvotedPosts.split(' ')
+    upvotedPosts = upvotedPosts.filter((post) => post !== '')
+    let downvotedPosts = user.downvotedPosts.split(' ')
+    downvotedPosts = downvotedPosts.filter((post) => post !== '')
 
     // Already downvoted ?
     if (downvotedPosts.includes(argumentId)) {
@@ -61,25 +61,30 @@ export const downvoteArgument = async (
 
     // Removing upvote if exists
     if (upvotedPosts.includes(argumentId)) {
-      console.log('⏳ Removing upvote...')
+      console.log("⏳ Removing upvote (from user's upvotedPosts)...")
       upvotedPosts.splice(upvotedPosts.indexOf(argumentId))
       const updatedUpvotedPosts = upvotedPosts.join(' ')
-      await users.update(userIdFromReq, { upvotedPosts: updatedUpvotedPosts })
+      await users.update(userIdFromReq, {
+        upvotedPosts: updatedUpvotedPosts,
+      })
+      console.log('⏳ Removing upvote (from post)...')
+      const post = allPosts.find((post) => post.id === Number(argumentId))
+      post.upvotes -= 1
+
       console.log(`✅ Upvote removed.`)
     }
 
     // Add post to user's downvotedPosts list
     downvotedPosts.push(argumentId)
     const updatedDownvotedPosts = downvotedPosts.join(' ')
-    await users.update(userIdFromReq, { downvotedPosts: updatedDownvotedPosts })
-    await users.save(user)
+    await users.update(userIdFromReq, {
+      downvotedPosts: updatedDownvotedPosts,
+    })
     console.log(`✅ Downvote added to user's downvotedPosts.`)
 
     // Add downvote to post
-    const post = allPosts.find((post) => post.id.toString() === argumentId)
-    console.log(`# post prior to downvote :`, post)
+    const post = allPosts.find((post) => post.id === Number(argumentId))
     post.downvotes += 1
-    console.log(`# post after downvote :`, post)
     console.log(`✅ Downvote added to post.`)
 
     return res.status(200).json({ message: '✅ Downvoted post' })

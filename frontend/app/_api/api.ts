@@ -49,7 +49,7 @@ api.interceptors.request.use(
       req.headers['authorization'] = `Bearer ${newAccessToken}`
     }
 
-    console.log('# Intercepted request:', req)
+    console.log(`# [${req.url}] request:`, req)
     return req
   },
   (error) => {
@@ -78,7 +78,7 @@ api.interceptors.response.use(
       )
     }
 
-    console.log('# Intercepted response:', res)
+    console.log(`# [${res.config.url}] response:`, res)
     return res
   },
   (error: any) => {

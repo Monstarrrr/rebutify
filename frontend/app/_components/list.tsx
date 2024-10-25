@@ -1,4 +1,5 @@
 // list.tsx displays a list of any items of type T
+// The list with include an infinite scroll or pagination
 
 'use client'
 // We import * as types to address naming conflicts with components

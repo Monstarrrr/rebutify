@@ -1,7 +1,15 @@
+import { vote } from '@/api/vote'
 import * as type from '@/types'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
-  const { title, body, upvotes, downvotes } = item
+  const { title, body, upvotes, downvotes, id } = item
+
+  const handleVote = (direction: 'up' | 'down') => () => {
+    if (direction === 'up') {
+      vote('argument', id, 'up')
+    }
+  }
+
   return (
     <div>
       {title && (
@@ -11,7 +19,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       )}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
-          <button>+</button>
+          <button onClick={handleVote('up')}>+</button>
           {upvotes - downvotes}
           <button>-</button>
         </div>
