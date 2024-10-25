@@ -9,11 +9,17 @@ export const vote = async (
   try {
     if (!type || !postId || !direction) {
       throw new Error(
-        `Missing required parameters: id = ${postId}, type = ${type}, direction = ${direction}`,
+        `Missing required parameter(s): id = ${postId}, type = ${type}, direction = ${direction}`,
       )
     }
     const directionName = direction === 'up' ? 'upvote' : 'downvote'
-    const response = await api.post(`/${type}/${postId}/${directionName}`)
+    const response = await api.post(
+      `/${type}s/${postId}/${directionName}`,
+      {},
+      {
+        requiresAuth: true,
+      },
+    )
     return response.data
   } catch (error: any) {
     console.error('# Vote request failed: ', error.response.data ?? error)

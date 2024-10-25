@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getPosts } from '@/api/posts'
-import { updateUser } from '@/store/slices/user'
+import { removeUser } from '@/store/slices/user'
 import { List, PostCard } from '@/components'
 
 export default function Profile() {
@@ -27,15 +27,7 @@ export default function Profile() {
   const handleDelete = async () => {
     try {
       password && (await deleteSelfAccount(password))
-      dispatch(
-        updateUser({
-          access: '',
-          email: '',
-          id: null,
-          refresh: '',
-          username: '',
-        }),
-      )
+      dispatch(removeUser())
       router.push('/')
     } catch (error: any) {
       console.error(

@@ -20,6 +20,7 @@ api.interceptors.request.use(
     if (req.requiresAuth) {
       const accessToken = localStorage.getItem('access_token')
       const refreshToken = localStorage.getItem('refresh_token')
+      console.log(`# accessToken :`, accessToken)
       if (
         accessToken &&
         accessToken !== 'null' &&
@@ -49,7 +50,7 @@ api.interceptors.request.use(
       req.headers['authorization'] = `Bearer ${newAccessToken}`
     }
 
-    console.log(`# [${req.url}] request:`, req)
+    console.log(`↗ [${req.url}] request:`, req)
     return req
   },
   (error) => {
@@ -78,7 +79,7 @@ api.interceptors.response.use(
       )
     }
 
-    console.log(`# [${res.config.url}] response:`, res)
+    console.log(`↘ [${res.config.url}] response:`, res)
     return res
   },
   (error: any) => {
