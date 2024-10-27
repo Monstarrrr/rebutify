@@ -22,7 +22,11 @@ export const vote = async (
     )
     return response.data
   } catch (error: any) {
-    console.error('# Vote request failed: ', error.response.data ?? error)
+    console.error(
+      '❌ Vote request failed: ',
+      error?.response?.data ?? error?.response?.message ?? error,
+    )
+
     throw error
   }
 }

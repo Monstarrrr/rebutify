@@ -16,12 +16,13 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     upvotes: item.upvotes,
     downvotes: item.downvotes,
     id: item.id,
+    type: item.type,
   })
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
       // We update the actual post
-      await vote('argument', post.id, direction)
+      await vote(post.type, post.id, direction)
       // We update the post state
       if (direction === 'up') {
         setPost({

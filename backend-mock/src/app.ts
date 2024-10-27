@@ -23,13 +23,22 @@ mockApi.use('*', (req, res, next) => {
 // Swagger documentation
 mockApi.use('/docs', routes.swaggerDocs)
 
-// Routes
+/* 
+  Routes
+*/
+// OLD
 mockApi.use('/api/posts', routes.postsRouter) // temporary (to match existing non-mock routes)
-mockApi.use('/arguments', routes.argumentsRouter)
+
+// POSTS
+mockApi.use('/arguments', routes.postRouter)
+mockApi.use('/rebuttals', routes.postRouter)
+mockApi.use('/comments', routes.postRouter)
+
+// AUTH
 mockApi.use('/auth/users', routes.authUsersRouter)
 mockApi.use('/auth/jwt', routes.authJwtRouter)
 
-// Not found and error handler
+// ERRORS
 mockApi.use(notFoundRoute)
 mockApi.use(errorHandler)
 

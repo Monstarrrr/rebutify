@@ -1,12 +1,12 @@
 import authJwtRouter from './auth-jwt'
 import authUsersRouter from './auth-users'
-import argumentsRouter from './arguments'
+import postRouter from './post'
 import postsRouter from './posts'
 import swaggerDocs from './swagger'
 
 export default {
   authJwtRouter,
-  argumentsRouter,
+  postRouter,
   postsRouter,
   authUsersRouter,
   swaggerDocs,

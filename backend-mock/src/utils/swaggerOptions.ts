@@ -19,6 +19,27 @@ export const swaggerOptions: swaggerJSDoc.Options = {
       },
     ],
     components: {
+      parameters: {
+        PostType: {
+          name: 'postType',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            enum: ['argument', 'rebuttal', 'comment'],
+            example: 'argument',
+          },
+        },
+        PostId: {
+          name: 'postId',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            example: '1',
+          },
+        },
+      },
       schemas: {
         User: {
           type: 'object',
