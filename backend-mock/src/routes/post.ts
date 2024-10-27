@@ -3,7 +3,8 @@ import { votePost } from 'controllers/posts/post-id-vote'
 
 const postRouter = express.Router()
 
-// ":postType/"
-postRouter.route('/:postId/:voteDirection').post(votePost)
+// "/arguments | /rebuttals | /comments"
+// Voting
+postRouter.route('/:postId/:voteDirection/:undo?').post(votePost)
 
 export default postRouter
