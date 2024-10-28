@@ -6,7 +6,7 @@ import * as express from 'express'
 export const votePost = async (req: express.Request, res: express.Response) => {
   /**
    * @openapi
-   * /{postType}/{postId}/{voteDirection}:
+   * /{postType}/{postId}/{voteDirection}/{undo?}:
    *   post:
    *     summary: Vote on a post
    *     description: Vote on a post
@@ -14,6 +14,8 @@ export const votePost = async (req: express.Request, res: express.Response) => {
    *     parameters:
    *     - $ref: '#/components/parameters/PostType'
    *     - $ref: '#/components/parameters/PostId'
+   *     - $ref: '#/components/parameters/VoteDirection'
+   *     - $ref: '#/components/parameters/Undo'
    *     responses:
    *       200:
    *         $ref: '#/components/responses/Ok'

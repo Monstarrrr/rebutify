@@ -39,6 +39,25 @@ export const swaggerOptions: swaggerJSDoc.Options = {
             example: '1',
           },
         },
+        VoteDirection: {
+          name: 'voteDirection',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            enum: ['up', 'down'],
+            example: 'upvote',
+          },
+        },
+        Undo: {
+          name: 'undo',
+          in: 'path',
+          required: false,
+          schema: {
+            type: 'boolean',
+            example: true,
+          },
+        },
       },
       schemas: {
         User: {
