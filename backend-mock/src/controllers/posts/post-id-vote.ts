@@ -104,19 +104,16 @@ export const votePost = async (req: express.Request, res: express.Response) => {
         downvotedPosts.splice(downvotedPosts.indexOf(postId))
         const updatedDownvotedPosts = downvotedPosts.join(' ')
         await updateUserVotes(updatedDownvotedPosts, 'down')
-        console.log(`✅ ${postType} ${voteDirection}vote removed.`)
       }
-      console.log(
-        `# Post upvotes :`,
-        allPosts.find((post) => post.id === Number(postId)).upvotes,
-      )
-      console.log(
-        `# Post downvotes :`,
-        allPosts.find((post) => post.id === Number(postId)).downvotes,
-      )
-      return res
-        .status(200)
-        .json({ message: `✅ ${postType} ${voteDirection}vote removed.` })
+      const post = allPosts.find((post) => post.id === Number(postId))
+      const updatedUser = await users.findOne({
+        where: { id: Number(userIdFromReq) },
+      })
+      return res.status(200).json({
+        message: `✅ ${postType} ${voteDirection}vote removed.`,
+        user: updatedUser,
+        post,
+      })
     }
 
     if (!undo) {
@@ -149,8 +146,6 @@ export const votePost = async (req: express.Request, res: express.Response) => {
 
         // Add upvote to post
         allPosts.find((post) => post.id == Number(postId)).upvotes += 1
-
-        console.log(`✅ Upvote added to post.`)
       }
 
       if (voteDirection === 'down') {
@@ -182,18 +177,15 @@ export const votePost = async (req: express.Request, res: express.Response) => {
 
         // Add downvote to post
         allPosts.find((post) => post.id === Number(postId)).downvotes += 1
-        console.log(`✅ Downvote added to post.`)
       }
-
-      console.log(
-        `# Post upvotes :`,
-        allPosts.find((post) => post.id === Number(postId)).upvotes,
-      )
-      console.log(
-        `# Post downvotes :`,
-        allPosts.find((post) => post.id === Number(postId)).downvotes,
-      )
-      return res.status(200).json({ message: `✅ ${voteDirection}voted post` })
+      // return res.status(200).json({ message: `✅ ${voteDirection}voted post` })
+      const message = `✅ ${voteDirection}voted post`
+      const updatedUser = await users.findOne({
+        where: { id: Number(userIdFromReq) },
+      })
+      console.log(message)
+      const post = allPosts.find((post) => post.id === Number(postId))
+      return res.status(200).json({ message, user: updatedUser, post })
     }
   } catch (error) {
     return res.status(500).json({
