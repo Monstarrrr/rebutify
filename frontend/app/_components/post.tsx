@@ -8,7 +8,7 @@ import { useState } from 'react'
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user)
-
+  const [voteError, setVoteError] = useState(null)
   // We use state to keep the post values reactive
   const [post, setPost] = useState({
     title: item.title,
@@ -21,10 +21,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
-      const data = await vote(user, post.type, post.id, direction)
-      setPost(data.post)
-      dispatch(updateUser(data.user))
-    } catch (error) {
+      const { data } = await vote(user, post.type, post.id, direction)
+      setPost(data.resources.post)
+      dispatch(updateUser(data.resources.user))
+    } catch (error: any) {
+      setVoteError(error && 'Vote request failed')
       console.error(`❌ Vote request failed: ${error}`)
     }
   }
@@ -41,6 +42,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           <button onClick={handleVote('up')}>+</button>
           {post.upvotes - post.downvotes}
           <button onClick={handleVote('down')}>-</button>
+          {voteError && <p>{voteError}</p>}
         </div>
         <div>
           <p>{post.body}</p>
