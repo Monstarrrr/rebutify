@@ -1,3 +1,5 @@
+// isTokenExpired.ts compares the current time with the token expiration date
+
 import { jwtDecode } from 'jwt-decode'
 
 export default function isTokenExpired(token: string): boolean {

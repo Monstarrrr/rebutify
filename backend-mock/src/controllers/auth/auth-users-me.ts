@@ -47,7 +47,9 @@ export const deleteUserSelf = async (
   try {
     // get user from database
     const users = AppDataSource.getRepository(User)
-    const user = await users.findOne({ where: { id: res.locals.user.id } })
+    const user = await users.findOne({
+      where: { id: Number(res.locals.user.id) },
+    })
     if (!user) {
       return res.status(400).json({
         message:
@@ -57,7 +59,7 @@ export const deleteUserSelf = async (
     // check if the user password from req.body.password matches the password in the database
     if (bcrypt.compareSync(req.body.current_password, user.password)) {
       // delete user from database
-      await users.delete({ id: res.locals.user.id })
+      await users.delete({ id: Number(res.locals.user.id) })
       return res.json({ message: successResponse })
     } else {
       return res.status(422).json({

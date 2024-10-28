@@ -1,34 +1,36 @@
 import * as express from 'express'
 import { allPosts } from '@/utils/allPosts'
 import * as jwt from 'jsonwebtoken'
+import { getUserIdFromReq } from '@/utils/getUserIdFromReq'
 
-/**
- * @openapi
- * /api/posts/{id}:
- *   get:
- *     summary: Get a post by id
- *     description: Get a post by its id.
- *     tags: [Posts]
- *     parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       schema:
- *         type: string
- *       description: The post id.
- *     responses:
- *       200:
- *         $ref: '#/components/responses/Retrieved'
- *       400:
- *         $ref: '#/components/responses/BadRequest'
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- *
- */
-const postError = { message: 'Post not found.' }
 export const getPost = async (req: express.Request, res: express.Response) => {
+  /**
+   * @openapi
+   * /api/posts/{id}:
+   *   get:
+   *     summary: Get a post by id
+   *     description: Get a post by its id.
+   *     tags: [Posts]
+   *     parameters:
+   *     - in: path
+   *       name: id
+   *       required: true
+   *       schema:
+   *         type: string
+   *       description: The post id.
+   *     responses:
+   *       200:
+   *         $ref: '#/components/responses/Retrieved'
+   *       400:
+   *         $ref: '#/components/responses/BadRequest'
+   *       401:
+   *         $ref: '#/components/responses/Unauthorized'
+   *       500:
+   *         $ref: '#/components/responses/InternalServerError'
+   *
+   */
+  const postError = { message: 'Post not found.' }
+
   const { id } = req.params
   const post = allPosts.find((post) => post.id.toString() === id)
   if (!post || !id) {
@@ -131,11 +133,7 @@ export const createPost = (req: express.Request, res: express.Response) => {
   const id = Math.floor(Math.random() * 999999)
 
   // Set user id from token as ownerUserId
-  const token = req.headers.authorization.split(' ')[1]
-  const decodedToken = jwt.decode(token)
-  const user =
-    typeof decodedToken === 'string' ? JSON.parse(decodedToken) : decodedToken
-  const ownerUserId = user.id
+  const ownerUserId = getUserIdFromReq(req)
 
   // Validate title and body
   req.body.title.length > titleCharacterLimit && titleErrors.push(titleError)
@@ -151,6 +149,8 @@ export const createPost = (req: express.Request, res: express.Response) => {
     ...req.body,
     ownerUserId,
     id,
+    upvotes: 0,
+    downvotes: 0,
     created: new Date(),
     updated: new Date(),
   })

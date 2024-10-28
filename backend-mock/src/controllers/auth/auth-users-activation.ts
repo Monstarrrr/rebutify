@@ -54,7 +54,7 @@ export const activateAccount = async (
     'An error has occured on our end, please try again later or contact support.'
 
   const { uid, token } = req.body
-  const id = parseInt(uid)
+  const id = Number(uid)
   try {
     // Get the user repository
     const users = AppDataSource.getRepository(User)

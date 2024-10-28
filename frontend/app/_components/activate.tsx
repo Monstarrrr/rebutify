@@ -1,5 +1,6 @@
-'use client'
+// activate.tsx handles the activation page linked in the account activation email
 
+'use client'
 import api from '@/api/api'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'

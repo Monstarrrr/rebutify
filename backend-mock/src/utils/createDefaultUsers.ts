@@ -15,7 +15,7 @@ export const createDefaultUsers = async (db: EntityManager) => {
       password: await bcrypt.hash('Passw0rd!', 10),
       reputation: 100,
       refreshToken: null,
-      savedPosts: [{ id: 1 }],
+      savedPosts: '1 2',
       username: 'JohnAdmin',
       verified: true,
     })
@@ -32,7 +32,9 @@ export const createDefaultUsers = async (db: EntityManager) => {
       password: await bcrypt.hash('Passw0rd!', 10),
       reputation: 100,
       refreshToken: null,
-      savedPosts: [{ id: 1 }],
+      savedPosts: '2',
+      upvotedPosts: '',
+      downvotedPosts: '',
       username: 'JohnDoe',
       verified: true,
     })
@@ -48,7 +50,7 @@ export const createDefaultUsers = async (db: EntityManager) => {
       created: new Date(),
       email: 'johnsock@email.com',
       password: await bcrypt.hash('Passw0rd123!', 10),
-      savedPosts: [{ id: 1 }],
+      savedPosts: '',
       verified: false,
     })
     await db.save(unverifiedUser)

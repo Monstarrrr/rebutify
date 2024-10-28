@@ -6,4 +6,6 @@ export type User = {
   refreshToken: string | null
   username: string
   verified: boolean
+  upvotedPosts: string // SQLite doesn't support arrays & objects
+  downvotedPosts: string // SQLite doesn't support arrays & objects
 }

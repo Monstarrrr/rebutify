@@ -1,6 +1,6 @@
 import * as express from 'express'
 import routes from './routes'
-import { errorHandler, notFoundRoute, requestLogger } from './utils/middleware'
+import { errorHandler, notFoundRoute, requestLogger } from '@/utils/middleware'
 import { corsHeaders } from './utils/config'
 
 const mockApi = express()
@@ -23,12 +23,22 @@ mockApi.use('*', (req, res, next) => {
 // Swagger documentation
 mockApi.use('/docs', routes.swaggerDocs)
 
-// Routes
-mockApi.use('/api/posts', routes.postsRouter)
+/* 
+  Routes
+*/
+// OLD
+mockApi.use('/api/posts', routes.postsRouter) // temporary (to match existing non-mock routes)
+
+// POSTS
+mockApi.use('/arguments', routes.postRouter)
+mockApi.use('/rebuttals', routes.postRouter)
+mockApi.use('/comments', routes.postRouter)
+
+// AUTH
 mockApi.use('/auth/users', routes.authUsersRouter)
 mockApi.use('/auth/jwt', routes.authJwtRouter)
 
-// Not found and error handler
+// ERRORS
 mockApi.use(notFoundRoute)
 mockApi.use(errorHandler)
 

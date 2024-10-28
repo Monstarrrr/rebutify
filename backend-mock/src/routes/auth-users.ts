@@ -1,8 +1,8 @@
 import * as express from 'express'
 import { authenticator } from '../utils/middleware'
-import { registerUser } from '../controllers/auth-users'
-import { activateAccount } from '../controllers/auth-users-activation'
-import { deleteUserSelf } from 'controllers/auth-users-me'
+import { registerUser } from '../controllers/auth/auth-users'
+import { activateAccount } from '../controllers/auth/auth-users-activation'
+import { deleteUserSelf } from 'controllers/auth/auth-users-me'
 
 // /auth/users
 const authUsersRouter = express.Router()

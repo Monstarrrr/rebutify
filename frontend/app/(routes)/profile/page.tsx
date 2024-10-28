@@ -4,15 +4,15 @@ import { deleteSelfAccount } from '@/api/auth'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { getPosts } from '@/api/posts'
-import { updateUser } from '@/store/slices/user'
+import { removeUser } from '@/store/slices/user'
+import { List, PostCard } from '@/components'
 
 export default function Profile() {
   const user = useAppSelector((state) => state.user)
   const [password, setPassword] = useState('')
   const router = useRouter()
-  const [argumentsList, setArgumentsList] = useState<Post[] | null>(null)
+  const [argumentsList, setArgumentsList] = useState<Post[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -27,15 +27,7 @@ export default function Profile() {
   const handleDelete = async () => {
     try {
       password && (await deleteSelfAccount(password))
-      dispatch(
-        updateUser({
-          access: '',
-          email: '',
-          id: null,
-          refresh: '',
-          username: '',
-        }),
-      )
+      dispatch(removeUser())
       router.push('/')
     } catch (error: any) {
       console.error(
@@ -88,15 +80,7 @@ export default function Profile() {
       <h2>My posts</h2>
       <hr style={{ border: 'none', borderTop: '1px dotted black' }} />
       <br />
-      <ul>
-        {argumentsList &&
-          argumentsList.map((argument) => (
-            <Link href={`/argument/${argument.id}`} key={argument.id}>
-              {argument.title}
-              <br />
-            </Link>
-          ))}
-      </ul>
+      <List items={argumentsList} Layout={PostCard} />
       <br />
       <h2>Settings</h2>
       <hr style={{ border: 'none', borderTop: '1px dotted black' }} />

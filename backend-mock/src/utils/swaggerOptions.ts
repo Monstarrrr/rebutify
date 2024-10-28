@@ -19,6 +19,46 @@ export const swaggerOptions: swaggerJSDoc.Options = {
       },
     ],
     components: {
+      parameters: {
+        PostType: {
+          name: 'postType',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            enum: ['argument', 'rebuttal', 'comment'],
+            example: 'argument',
+          },
+        },
+        PostId: {
+          name: 'postId',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            example: '1',
+          },
+        },
+        VoteDirection: {
+          name: 'voteDirection',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+            enum: ['up', 'down'],
+            example: 'upvote',
+          },
+        },
+        Undo: {
+          name: 'undo',
+          in: 'path',
+          required: false,
+          schema: {
+            type: 'boolean',
+            example: true,
+          },
+        },
+      },
       schemas: {
         User: {
           type: 'object',
@@ -290,5 +330,5 @@ export const swaggerOptions: swaggerJSDoc.Options = {
     ],
   },
   // Where the OpenAPI specs are located
-  apis: ['src/routes/*.ts', 'src/schema/*.ts', 'src/controllers/*.ts'],
+  apis: ['src/**/*.ts'],
 }

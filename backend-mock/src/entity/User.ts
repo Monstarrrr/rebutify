@@ -14,6 +14,12 @@ export class User {
   @Column({ nullable: true })
   verified: boolean = false
 
+  @Column({ nullable: true })
+  upvotedPosts: string | null = '' // SQLite does not support arrays & objects
+
+  @Column({ nullable: true })
+  downvotedPosts: string | null = '' // SQLite does not support arrays & objects
+
   @Column()
   username: string
 
