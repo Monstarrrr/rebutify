@@ -1,9 +1,9 @@
 'use client'
 import { vote } from '@/api/vote'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { addDownvote, addUpvote } from '@/store/slices/user'
+import { updatePostDownvotes, updatePostUpvotes } from '@/store/slices/user'
 import * as type from '@/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -20,39 +20,60 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   })
 
   const handleVote = (direction: 'up' | 'down') => async () => {
-    try {
-      // We update the actual post
-      await vote(post.type, post.id, direction)
-      // We update the post state
-      if (direction === 'up') {
+    // Undoing a vote?
+    console.log('The post id: ', post.id)
+    console.log('user.upvotedPosts: ', user.upvotedPosts)
+    if (
+      (user.upvotedPosts.includes(post.id) && direction === 'up') ||
+      (user.downvotedPosts.includes(post.id) && direction === 'down')
+    ) {
+      try {
+        await vote(post.type, post.id, direction, true)
+        // We remove the vote from the post
         setPost({
           ...post,
-          [`upvotes`]: post[`upvotes`] + 1,
-          // We remove a downvote if the user downvoted
-          [`downvotes`]:
-            post[`downvotes`] - (user.downvotedPosts.includes(post.id) ? 1 : 0),
+          [`${direction}votes`]: post[`${direction}votes`] - 1,
         })
-      } else {
-        setPost({
-          ...post,
-          // We remove an upvote if the user upvoted
-          [`upvotes`]:
-            post[`upvotes`] - (user.upvotedPosts.includes(post.id) ? 1 : 0),
-          [`downvotes`]: post[`downvotes`] + 1,
-        })
+        // We remove the vote from the user voted posts list
+        direction === 'up'
+          ? dispatch(updatePostUpvotes(['remove', post.id]))
+          : dispatch(updatePostDownvotes(['remove', post.id]))
+      } catch (error) {
+        console.error(error)
       }
-      // We update the user state
-      if (direction === 'up') {
-        dispatch(addUpvote(post.id))
-        // We remove a downvote if the user downvoted
-        user.upvotedPosts.includes(post.id) && dispatch(addDownvote(post.id))
-      } else {
-        dispatch(addDownvote(post.id))
-        // We remove an upvote if the user upvoted
-        user.downvotedPosts.includes(post.id) && dispatch(addUpvote(post.id))
+      // Not undoing a vote
+    } else {
+      try {
+        await vote(post.type, post.id, direction)
+        if (direction === 'up') {
+          setPost({
+            ...post,
+            [`upvotes`]: post[`upvotes`] + 1,
+            // We remove a downvote if the user downvoted before
+            [`downvotes`]:
+              post[`downvotes`] - (user.downvotedPosts.includes(post.id) ? 1 : 0),
+          })
+          dispatch(updatePostUpvotes(['add', post.id]))
+          // We remove user downvote if the user downvoted before
+          user.downvotedPosts.includes(post.id) &&
+            dispatch(updatePostDownvotes(['remove', post.id]))
+        }
+        if (direction === 'down') {
+          setPost({
+            ...post,
+            // We remove an upvote if the user upvoted before
+            [`upvotes`]:
+              post[`upvotes`] - (user.upvotedPosts.includes(post.id) ? 1 : 0),
+            [`downvotes`]: post[`downvotes`] + 1,
+          })
+          dispatch(updatePostDownvotes(['add', post.id]))
+          // We remove an upvote if the user upvoted before
+          user.upvotedPosts.includes(post.id) &&
+            dispatch(updatePostUpvotes(['remove', post.id]))
+        }
+      } catch (error) {
+        console.error(`❌ Vote request failed: ${error}`)
       }
-    } catch (error) {
-      console.error(`❌ Vote request failed: ${error}`)
     }
   }
 
