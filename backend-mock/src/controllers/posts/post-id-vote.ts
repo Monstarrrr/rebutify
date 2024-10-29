@@ -18,7 +18,7 @@ export const votePost = async (req: express.Request, res: express.Response) => {
    *     - $ref: '#/components/parameters/Undo'
    *     responses:
    *       200:
-   *         $ref: '#/components/responses/Ok'
+   *         $ref: '#/components/responses/Created'
    *       400:
    *         $ref: '#/components/responses/BadRequest'
    *       401:
@@ -111,8 +111,10 @@ export const votePost = async (req: express.Request, res: express.Response) => {
       })
       return res.status(200).json({
         message: `✅ ${postType} ${voteDirection}vote removed.`,
-        user: updatedUser,
-        post,
+        resources: {
+          user: updatedUser,
+          post,
+        },
       })
     }
 
@@ -185,7 +187,9 @@ export const votePost = async (req: express.Request, res: express.Response) => {
       })
       console.log(message)
       const post = allPosts.find((post) => post.id === Number(postId))
-      return res.status(200).json({ message, user: updatedUser, post })
+      return res
+        .status(200)
+        .json({ message, resources: { user: updatedUser, post } })
     }
   } catch (error) {
     return res.status(500).json({

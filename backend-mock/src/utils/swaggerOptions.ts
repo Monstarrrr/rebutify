@@ -168,13 +168,24 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                     type: 'string',
                     example: 'Resource created.',
                   },
-                  resource: {
+                  resources: {
                     type: 'object',
                     description: 'Returning the created resource.',
                     example: {
-                      id: 1,
-                      username: 'johndoe',
-                      email: 'johndoe@email.com',
+                      user: {
+                        id: 1,
+                        username: 'johndoe',
+                        email: 'johndoe@email.com',
+                      },
+                      post: {
+                        id: 1,
+                        type: 'argument',
+                        ownerUserId: 123456,
+                        title: 'Veganism is unatural',
+                        body: 'Veganism is unatural because humans are omnivores, I read it in a book.',
+                        created: '2024-01-01T00:00:00.000Z',
+                        updated: '2024-01-01T00:00:00.000Z',
+                      },
                     },
                   },
                 },
