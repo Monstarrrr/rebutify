@@ -56,13 +56,14 @@ export default function Login() {
       router.push('/')
     } catch (error: any) {
       setLoading(false)
+      console.error(error)
       setApiErrors(
         error.response ?? {
           data: {
             detail:
               'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
           },
-          status: 401,
+          code: 401,
         },
       )
     }

@@ -29,22 +29,22 @@ export const createJwt = async (req: express.Request, res: express.Response) => 
    *         $ref: '#/components/responses/InternalServerError'
    */
 
-  // 200
-  const successResponse = (accessToken: string, refreshToken: string) => ({
+  const successResponse = (access: string, refresh: string) => ({
     code: 200,
     message: 'Login successful.',
-    access: accessToken,
-    refresh: refreshToken,
+    access, // old api
+    refresh, // old api
+    resources: {
+      access,
+      refresh,
+    },
   })
-  // 400
   const credentialsError = {
     message: 'Invalid username or password.',
   }
-  // 401
   const unauthorizedError = {
     message: `Your account isn't available yet. Please check your email to activate it.`,
   }
-  // 500
   const internalServerError = {
     message: 'Internal server error.',
   }

@@ -6,5 +6,4 @@ export type ApiResponse = {
   headers: Object
   request: XMLHttpRequest
   status: number
-  statusText: string
 }

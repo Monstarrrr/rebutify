@@ -38,6 +38,15 @@ export default function Form(props: FormProps) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   ) => {
+    // Reset errors
+    setInputsState((prev) => {
+      return prev.map((inputField) => ({
+        ...inputField,
+        errors: [],
+      }))
+    })
+
+    // Update state
     setInputsState((prev) =>
       prev.map((inputField) => {
         if (inputField.id === e.target.name) {
@@ -61,13 +70,6 @@ export default function Form(props: FormProps) {
   }
 
   useEffect(() => {
-    // Reset errors
-    setInputsState((prev) => {
-      return prev.map((inputField) => ({
-        ...inputField,
-        errors: [],
-      }))
-    })
     // Field errors
     if (inputsErrors?.status === 400) {
       // Add error(s) to the corresponding field(s)

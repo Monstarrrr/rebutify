@@ -69,9 +69,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (res) => {
     // Add tokens to local storage if they are in the response
-    res.data?.access && localStorage.setItem('access_token', res.data?.access)
-    res.data?.refresh && localStorage.setItem('refresh_token', res.data?.refresh)
-    res.data?.token && localStorage.setItem('access_token', res.data?.token)
+    res.data?.access && localStorage.setItem('access_token', res.data?.access) // old api
+    res.data?.refresh && localStorage.setItem('refresh_token', res.data?.refresh) // old api
+    res.data?.token && localStorage.setItem('access_token', res.data?.token) // old api
+    res.data?.resources?.access &&
+      localStorage.setItem('access_token', res.data?.resources?.access)
+    res.data?.resources?.refresh &&
+      localStorage.setItem('refresh_token', res.data?.resources?.refresh)
+    res.data?.resources?.token &&
+      localStorage.setItem('access_token', res.data?.resources?.token)
     if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',

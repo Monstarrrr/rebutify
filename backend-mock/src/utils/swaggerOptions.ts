@@ -221,40 +221,44 @@ export const swaggerOptions: swaggerJSDoc.Options = {
               schema: {
                 type: 'object',
                 properties: {
-                  // code: {
-                  //   type: 'number',
-                  //   example: 422,
-                  // },
-                  // message: {
-                  //   type: 'string',
-                  //   example: 'Form data is invalid.',
-                  // },
-                  // resource: {
-
-                  // },
-                  email: {
-                    type: 'array',
-                    items: {
-                      type: 'string',
-                    },
-                    example: ['Email is already in use'],
+                  code: {
+                    type: 'number',
+                    example: 422,
                   },
-                  password: {
-                    type: 'array',
-                    items: {
-                      type: 'string',
-                    },
-                    example: [
-                      'Password is too weak',
-                      'Password must contain a number',
-                    ],
+                  message: {
+                    description: 'Global form error.',
+                    type: 'string',
+                    example: 'Invalid username or password.',
                   },
-                  username: {
-                    type: 'array',
-                    items: {
-                      type: 'string',
+                  formErrors: {
+                    description: 'Errors corresponding to the fields.',
+                    type: 'object',
+                    properties: {
+                      email: {
+                        type: 'array',
+                        items: {
+                          type: 'string',
+                        },
+                        example: ['Email is already in use'],
+                      },
+                      password: {
+                        type: 'array',
+                        items: {
+                          type: 'string',
+                        },
+                        example: [
+                          'Password is too weak',
+                          'Password must contain a number',
+                        ],
+                      },
+                      username: {
+                        type: 'array',
+                        items: {
+                          type: 'string',
+                        },
+                        example: ['Username already exists'],
+                      },
                     },
-                    example: ['Username already exists'],
                   },
                 },
               },
