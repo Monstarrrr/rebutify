@@ -6,7 +6,8 @@ export type FormProps = {
   inputsErrors: ApiResponse | null
   inputsFields: TextInput[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
-  loading?: boolean
-  submitButtonLabel: string
+  loading: boolean
   successMessage?: string | null
+  // Children is the submit button
+  children: React.ReactElement | null
 }

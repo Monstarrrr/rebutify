@@ -4,13 +4,13 @@ import { ChangeEvent, useEffect, useState } from 'react'
 
 export default function Form(props: FormProps) {
   const {
-    submitButtonLabel,
     id,
     inputsErrors,
     inputsFields,
     loading,
     onSubmit,
     successMessage,
+    children,
   } = props
   // Renaming to avoid confusion with fields ids
   const formId = id
@@ -144,9 +144,8 @@ export default function Form(props: FormProps) {
       {/* Success message */}
       {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
       <br />
-      <button disabled={loading} type='submit'>
-        {loading ? 'Loading...' : submitButtonLabel}
-      </button>
+
+      {children}
     </form>
   )
 }

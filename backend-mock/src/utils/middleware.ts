@@ -43,6 +43,20 @@ export const authenticator = async (
   }
 }
 
+export const delay = (delay: number) => {
+  return (
+    _req: express.Request,
+    _res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.log(`Delaying for ${delay}ms...`)
+    setTimeout(() => {
+      console.log('Delay finished!')
+      return next()
+    }, delay)
+  }
+}
+
 export const errorHandler = (
   error: unknown,
   _req: express.Request,

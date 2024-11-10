@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
-import { Form } from '@/components'
+import { Form, Button } from '@/components'
 import { ApiResponse, TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -78,8 +78,9 @@ export default function Login() {
         onSubmit={handleSubmit}
         loading={loading}
         successMessage={success ? successMessage : null}
-        submitButtonLabel={submitButtonLabel}
-      />
+      >
+        <Button loading={loading} label={submitButtonLabel} />
+      </Form>
     </>
   )
 }

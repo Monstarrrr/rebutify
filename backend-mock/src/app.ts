@@ -1,6 +1,11 @@
 import * as express from 'express'
 import routes from './routes'
-import { errorHandler, notFoundRoute, requestLogger } from '@/utils/middleware'
+import {
+  delay,
+  errorHandler,
+  notFoundRoute,
+  requestLogger,
+} from '@/utils/middleware'
 import { corsHeaders } from './utils/config'
 
 const mockApi = express()
@@ -8,6 +13,7 @@ const mockApi = express()
 // Middlewares
 mockApi.use(express.json())
 mockApi.use(requestLogger)
+mockApi.use(delay(500))
 
 // Enable CORS based on the corsOptions configuration
 mockApi.use('*', (req, res, next) => {

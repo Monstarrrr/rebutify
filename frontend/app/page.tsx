@@ -1,7 +1,7 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, List, PostCard } from '@/components'
+import { Form, List, PostCard, Button } from '@/components'
 import type { Post, TextInput } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
@@ -17,14 +17,13 @@ const newArgumentInputs: TextInput[] = [
   },
   {
     id: 'body',
-    label: 'Argument',
+    label: 'Argument content',
     placeholder:
       "If vegans don't eat meat, why do they eat plants? They are living beings too!",
     type: 'textarea',
     value: '',
   },
 ]
-const submitButtonLabel = 'Create post'
 const successMessage = 'New post created successfully!'
 
 const Body = styled.div`
@@ -119,14 +118,15 @@ export default function Home() {
       <FormWrapper>
         {isLogged ? (
           <Form
-            submitButtonLabel={submitButtonLabel}
             id='new-argument'
             inputsErrors={apiErrors}
             inputsFields={newArgumentInputs}
             onSubmit={handleSubmitArgument}
             loading={loading}
             successMessage={success ? successMessage : null}
-          />
+          >
+            <Button label={'Create post'} loading={loading} />
+          </Form>
         ) : (
           <div>
             <BtnLink href='/register'>Get started</BtnLink>

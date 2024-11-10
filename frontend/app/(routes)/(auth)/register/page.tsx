@@ -7,6 +7,7 @@ import { formDataToObj } from '@/helpers'
 import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
+import Button from '@/components/button'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -34,7 +35,6 @@ export default function Register() {
       value: '',
     },
   ]
-  const submitButtonLabel = 'Register'
   const successMessage = 'Check your email to verify your account.'
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Register() {
       setIsLoading(false)
       setApiFormErrors(
         error.response ?? {
-          data: {
+          formData: {
             detail:
               'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
           },
@@ -74,12 +74,14 @@ export default function Register() {
       <h1>Register</h1>
       <Form
         id='register-form'
-        submitButtonLabel={submitButtonLabel}
+        loading={isLoading}
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
         successMessage={formSuccess ? successMessage : undefined}
-      />
+      >
+        <Button label={'Register'} loading={isLoading} />
+      </Form>
       {isLoading && <p>Loading...</p>}
     </>
   )
