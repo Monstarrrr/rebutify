@@ -6,6 +6,7 @@ import type { Post, TextInput } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
+import styled from 'styled-components'
 
 const newArgumentInputs: TextInput[] = [
   {
@@ -25,6 +26,47 @@ const newArgumentInputs: TextInput[] = [
 ]
 const submitButtonLabel = 'Create post'
 const successMessage = 'New post created successfully!'
+
+const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  padding: 20px;
+`
+
+const WelcomeTitle = styled.h1`
+  margin: 12vh auto;
+  font-size: 3rem;
+  text-align: center;
+`
+
+const FormWrapper = styled.div`
+  display: flex;
+  margin: 0 auto calc(10vh + 24px);
+`
+
+const BtnLink = styled(Link)`
+  background-color: #3d6aff;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border-radius: 99px;
+  cursor: pointer;
+  text-decoration: none;
+`
+
+const ListWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`
+
+const ListTitle = styled.h2`
+  margin: 0 auto 24px;
+`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
@@ -65,42 +107,37 @@ export default function Home() {
   }
 
   return (
-    <>
-      <h2>Welcome to Rebutify!</h2>
-      <br />
-      <h1>
-        Rebutify is a platform for sharing rebuttals to common arguments against
-        veganism.
-      </h1>
-      <br />
-      <h3>
-        Have you heard a common argument against veganism to which you want to
-        provide a rebuttal?
-      </h3>
-      <br />
-      <br />
-      {isLogged ? (
-        <Form
-          submitButtonLabel={submitButtonLabel}
-          id='new-argument'
-          inputsErrors={apiErrors}
-          inputsFields={newArgumentInputs}
-          onSubmit={handleSubmitArgument}
-          loading={loading}
-          successMessage={success ? successMessage : null}
-        />
-      ) : (
-        <p>
-          <Link href='/register'>Register</Link> or{' '}
-          <Link href='/login'>login</Link> to start sharing your rebuttals!
-        </p>
-      )}
-      <br />
-      <br />
-      <hr />
-      <h2>All arguments</h2>
-      <hr />
-      <List items={allPosts} Layout={PostCard} />
-    </>
+    <Body>
+      <WelcomeTitle>
+        Answer,
+        <br />
+        Optimize,
+        <br />
+        Spread.
+        <br />
+      </WelcomeTitle>
+      <FormWrapper>
+        {isLogged ? (
+          <Form
+            submitButtonLabel={submitButtonLabel}
+            id='new-argument'
+            inputsErrors={apiErrors}
+            inputsFields={newArgumentInputs}
+            onSubmit={handleSubmitArgument}
+            loading={loading}
+            successMessage={success ? successMessage : null}
+          />
+        ) : (
+          <div>
+            <BtnLink href='/register'>Get started</BtnLink>
+          </div>
+        )}
+      </FormWrapper>
+
+      <ListWrapper>
+        <ListTitle>All arguments</ListTitle>
+        <List items={allPosts} Layout={PostCard} />
+      </ListWrapper>
+    </Body>
   )
 }
