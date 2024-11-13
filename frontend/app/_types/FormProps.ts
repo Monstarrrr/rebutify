@@ -6,8 +6,9 @@ export type FormProps = {
   inputsErrors: ApiResponse | null
   inputsFields: TextInput[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  setSuccess: (success: boolean) => void
   loading: boolean
-  successMessage?: string | null
+  success: boolean
   // Children is the submit button
   children: React.ReactElement | null
 }

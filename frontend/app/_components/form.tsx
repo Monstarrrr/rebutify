@@ -1,6 +1,14 @@
 'use client'
 import { FormProps, TextInput } from '@/types'
+import { on } from 'events'
 import { ChangeEvent, useEffect, useState } from 'react'
+import styled from 'styled-components'
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+`
 
 export default function Form(props: FormProps) {
   const {
@@ -9,8 +17,9 @@ export default function Form(props: FormProps) {
     inputsFields,
     loading,
     onSubmit,
-    successMessage,
     children,
+    success,
+    setSuccess,
   } = props
   // Renaming to avoid confusion with fields ids
   const formId = id
@@ -38,6 +47,9 @@ export default function Form(props: FormProps) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   ) => {
+    // Reset success
+    setSuccess(false)
+
     // Reset errors
     setInputsState((prev) => {
       return prev.map((inputField) => ({
@@ -86,13 +98,28 @@ export default function Form(props: FormProps) {
     }
   }, [inputsErrors])
 
+  // Clear inputs when success
+  useEffect(() => {
+    if (success) {
+      localStorage.removeItem(formId)
+      setInputsState((prev) => {
+        return prev.map((inputField) => ({
+          ...inputField,
+          value: '',
+        }))
+      })
+    }
+  }, [success, formId])
+
   return (
     <form onSubmit={onSubmit}>
       {inputsState.map(
         ({ id, label, placeholder, type, value, errors, required = true }) => (
-          <label key={id}>
-            <strong>{label || placeholder}</strong>
-            <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+          <InputContainer key={id}>
+            <label htmlFor={id}>
+              <strong>{label || placeholder}</strong>
+              <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+            </label>
             <br />
             {type === 'textarea' ? (
               <textarea
@@ -127,7 +154,7 @@ export default function Form(props: FormProps) {
                 </span>
               ))}
             <br />
-          </label>
+          </InputContainer>
         ),
       )}
       {/* Global errors */}
@@ -141,8 +168,6 @@ export default function Form(props: FormProps) {
             </span>
           ))
         ))}
-      {/* Success message */}
-      {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
       <br />
 
       {children}

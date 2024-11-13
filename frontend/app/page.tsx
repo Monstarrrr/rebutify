@@ -30,7 +30,7 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   padding: 20px;
 `
@@ -69,24 +69,32 @@ const ListTitle = styled.h2`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState<boolean>(false)
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
 
-  // Fetch all 'arguments' posts
-  useEffect(() => {
-    let fetchApi = async () => {
-      try {
-        const response = await getPosts('argument')
-        setAllPosts(response)
-      } catch (error: any) {
-        console.error('# Error fetching posts: ', error.response.data)
-      }
+  const fetchArguments = async () => {
+    try {
+      const response = await getPosts('argument')
+      setAllPosts(response)
+    } catch (error: any) {
+      console.error('# Error fetching posts: ', error.response.data)
     }
-    fetchApi()
+  }
+
+  // Fetch onLoad
+  useEffect(() => {
+    fetchArguments()
   }, [])
+
+  // re-fetch on success
+  useEffect(() => {
+    if (success) {
+      fetchArguments()
+    }
+  }, [success])
 
   async function handleSubmitArgument(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -123,9 +131,15 @@ export default function Home() {
             inputsFields={newArgumentInputs}
             onSubmit={handleSubmitArgument}
             loading={loading}
-            successMessage={success ? successMessage : null}
+            success={success}
+            setSuccess={setSuccess}
           >
-            <Button label={'Create post'} loading={loading} />
+            <Button
+              label={'Create post'}
+              loading={loading}
+              success={success}
+              successMessage={successMessage}
+            />
           </Form>
         ) : (
           <div>
