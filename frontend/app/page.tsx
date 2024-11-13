@@ -11,13 +11,13 @@ import styled from 'styled-components'
 const newArgumentInputs: TextInput[] = [
   {
     id: 'title',
-    label: 'Argument title',
+    label: 'Title',
     placeholder: 'Plants are alive too!',
     value: '',
   },
   {
     id: 'body',
-    label: 'Argument content',
+    label: 'Argument',
     placeholder:
       "If vegans don't eat meat, why do they eat plants? They are living beings too!",
     type: 'textarea',
@@ -35,15 +35,26 @@ const Body = styled.div`
   padding: 20px;
 `
 
-const WelcomeTitle = styled.h1`
-  margin: 12vh auto;
-  font-size: 3rem;
-  text-align: center;
+const WelcomeContainer = styled.div`
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+const Title = styled.h2`
+  text-align: left;
+  font-size: 36px;
+  margin-bottom: 32px;
+`
+const Subtitle = styled.h1`
+  font-size: 54px;
 `
 
 const FormWrapper = styled.div`
   display: flex;
-  margin: 0 auto calc(10vh + 24px);
+  height: calc(50vh - 70px);
+  max-width: 640px;
+  width: 100%;
 `
 
 const BtnLink = styled(Link)`
@@ -115,14 +126,14 @@ export default function Home() {
 
   return (
     <Body>
-      <WelcomeTitle>
-        Answer,
-        <br />
-        Optimize,
-        <br />
-        Spread.
-        <br />
-      </WelcomeTitle>
+      <WelcomeContainer>
+        <Title>Rebutify</Title>
+        <Subtitle>
+          Submit arguments,
+          <br />
+          Optimize their rebuttals.
+        </Subtitle>
+      </WelcomeContainer>
       <FormWrapper>
         {isLogged ? (
           <Form
@@ -135,7 +146,8 @@ export default function Home() {
             setSuccess={setSuccess}
           >
             <Button
-              label={'Create post'}
+              style={{ marginTop: '10px' }}
+              label={'Submit argument'}
               loading={loading}
               success={success}
               successMessage={successMessage}

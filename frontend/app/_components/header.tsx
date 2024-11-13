@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
+import { Button } from '@/components'
 
 const links: NavLink[] = [
   { href: '/profile', label: 'Profile', requiresAuth: true },
@@ -99,7 +100,7 @@ export default function Header() {
               </LinkWrapper>
             )
           })}
-          {user.id && <button onClick={handleLogout}>Logout</button>}
+          {user.id && <Button onClick={handleLogout} label='Logout' />}
           <br />
         </RightBlock>
       </Nav>

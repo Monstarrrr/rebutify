@@ -1,13 +1,36 @@
 'use client'
 import { FormProps, TextInput } from '@/types'
-import { on } from 'events'
 import { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
+
+const StyledForm = styled.form`
+  width: 100%;
+`
 
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+`
+const Label = styled.label`
+  margin-bottom: 4px;
+`
+
+const InputStyles = `
+  background-color: #1f1f1f;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 20px;
+  max-width: 640px;
+`
+
+const Input = styled.input`
+  ${InputStyles}
+`
+
+const Textarea = styled.textarea`
+  ${InputStyles}
 `
 
 export default function Form(props: FormProps) {
@@ -112,30 +135,26 @@ export default function Form(props: FormProps) {
   }, [success, formId])
 
   return (
-    <form onSubmit={onSubmit}>
+    <StyledForm onSubmit={onSubmit}>
       {inputsState.map(
         ({ id, label, placeholder, type, value, errors, required = true }) => (
           <InputContainer key={id}>
-            <label htmlFor={id}>
+            <Label htmlFor={id}>
               <strong>{label || placeholder}</strong>
               <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
-            </label>
+            </Label>
             <br />
             {type === 'textarea' ? (
-              <textarea
+              <Textarea
                 disabled={loading}
                 name={id}
                 placeholder={placeholder}
                 required={required || true}
                 onChange={handleChange}
                 value={value}
-                style={{
-                  height: '100px',
-                  width: '500px',
-                }}
               />
             ) : (
-              <input
+              <Input
                 disabled={loading}
                 name={id}
                 placeholder={placeholder}
@@ -153,7 +172,6 @@ export default function Form(props: FormProps) {
                   {error}
                 </span>
               ))}
-            <br />
           </InputContainer>
         ),
       )}
@@ -168,9 +186,8 @@ export default function Form(props: FormProps) {
             </span>
           ))
         ))}
-      <br />
 
       {children}
-    </form>
+    </StyledForm>
   )
 }

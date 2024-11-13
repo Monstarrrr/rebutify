@@ -35,7 +35,6 @@ export default function Register() {
       value: '',
     },
   ]
-  const successMessage = 'Check your email to verify your account.'
 
   useEffect(() => {
     if (user) {
@@ -78,7 +77,8 @@ export default function Register() {
         inputsFields={registerInputs}
         inputsErrors={apiFormErrors}
         onSubmit={handleSubmit}
-        successMessage={formSuccess ? successMessage : undefined}
+        success={formSuccess}
+        setSuccess={setFormSuccess}
       >
         <Button label={'Register'} loading={isLoading} />
       </Form>

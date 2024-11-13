@@ -23,7 +23,6 @@ const loginInputs: TextInput[] = [
   },
 ]
 const submitButtonLabel = 'Login'
-const successMessage = 'Logged in successfully.'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
@@ -77,7 +76,8 @@ export default function Login() {
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}
         loading={loading}
-        successMessage={success ? successMessage : null}
+        success={success}
+        setSuccess={setSuccess}
       >
         <Button loading={loading} label={submitButtonLabel} />
       </Form>
