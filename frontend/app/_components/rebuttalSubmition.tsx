@@ -61,9 +61,15 @@ export default function RebuttalSubmition({ argument }: Props) {
         inputsFields={newRebuttalInput}
         onSubmit={handleSubmit}
         loading={loading}
-        successMessage={success ? successMessage : null}
+        success={success}
+        setSuccess={setSuccess}
       >
-        <Button loading={loading} label={'Submit'} />
+        <Button
+          loading={loading}
+          label={'Submit'}
+          success={success}
+          successMessage={successMessage}
+        />
       </Form>
     </div>
   )
