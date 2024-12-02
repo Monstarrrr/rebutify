@@ -133,12 +133,17 @@ class PostViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
+        type = self.request.query_params.get("type")
+        if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
+            Post.objects.none()
+
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-
-        # gets all posts
-        queryset = Post.objects.all()
+        if type:
+            queryset = Post.objects.filter(type=type)
+        else:
+            queryset = Post.objects.all()
         return queryset
 
     def perform_create(self, serializer):
