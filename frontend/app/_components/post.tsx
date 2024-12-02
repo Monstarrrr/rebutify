@@ -21,7 +21,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
-      const { data } = await vote(user, post.type, post.id, direction)
+      const data = await vote(user, post.type, post.id, direction)
       setPost(data.resources.post)
       dispatch(updateUser(data.resources.user))
     } catch (error: any) {
