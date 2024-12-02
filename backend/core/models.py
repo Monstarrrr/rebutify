@@ -7,13 +7,17 @@ OWNER_MAX_LEN = 255
 USERNAME_MAX_LEN = 255
 AVATAR_MAX_LEN = 255
 BIO_MAX_LEN = 255
+OPTIONS_MAX_LEN = 255
+REPORT_BODY_MAX_LEN = 255
 ARGUMENT = "argument"
 REBUTTAL = "rebuttal"
 COMMENT = "comment"
+SUGGESTION = "suggestion"
 POST_TYPES = [
     (ARGUMENT, "argument"),
     (REBUTTAL, "rebuttal"),
     (COMMENT, "comment"),
+    (SUGGESTION, "suggestion"),
 ]
 UPVOTE = "upvote"
 DOWNVOTE = "downvote"
@@ -36,6 +40,14 @@ class Post(models.Model):
     parentId: models.IntegerField = models.IntegerField(null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
+
+
+class Report(models.Model):
+    ownerUserId: models.IntegerField = models.IntegerField(null=True)
+    parentId: models.IntegerField = models.IntegerField(null=True)
+    body: models.TextField = models.TextField(max_length=REPORT_BODY_MAX_LEN, null=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    options: models.CharField = models.CharField(max_length=OPTIONS_MAX_LEN, null=True)
 
 
 class UserProfile(models.Model):
