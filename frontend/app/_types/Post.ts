@@ -7,8 +7,8 @@ export type Post = {
   title: string
   upvotes: number
   downvotes: number
-  ownerUserId: number
-  parentId: number
+  ownerUserId: string
+  parentId: string
   created: string
   updated: string
 }

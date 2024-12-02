@@ -1,6 +1,6 @@
 export type UserInfo = {
   email: string
-  id: number | null
+  id: string | null
   access?: string
   refresh?: string
   username: string
