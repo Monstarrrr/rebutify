@@ -37,6 +37,16 @@ class Post(models.Model):
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        output = "Post {"
+        output += f"\n    Type: {self.type}"
+        output += f"\n    Title: {self.title}"
+        output += f"\n    Body: {self.body}"
+        output += f"\n    Owner ID: {self.ownerUserId}"
+        output += "\n}"
+
+        return output
+
 
 class UserProfile(models.Model):
     # Public
@@ -65,3 +75,45 @@ class Vote(models.Model):
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+
+    def upvote(self):
+        """
+        Changes vote to upvote.
+
+        Raises:
+            Exception: If an upvote from the user (identified by `self.ownerUserId`)
+                    for the post (identified by `self.parent_id`) is already an upvote.
+        """
+
+        # If vote already is upvoted, raise an error
+        if self.is_upvoted():
+            raise Exception(
+                f"An upvote between user: {self.ownerUserId} & post: {self.parentId} already exists"
+            )
+
+        # Upvote
+        self.type = UPVOTE
+
+    def downvote(self):
+        """
+        Changes vote to downvote.
+
+        Raises:
+            Exception: If an downvote from the user (identified by `self.ownerUserId`)
+                    for the post (identified by `self.parentId`) is already an downvote.
+        """
+
+        # If vote already is downvoted, raise an error
+        if self.is_downvoted():
+            raise Exception(
+                f"An downvote between user: {self.ownerUserId} & post: {self.parentId} already exists"
+            )
+
+        # Downvote
+        self.type = DOWNVOTE
+
+    def is_upvoted(self):
+        return self.type == UPVOTE
+
+    def is_downvoted(self):
+        return self.type == DOWNVOTE
