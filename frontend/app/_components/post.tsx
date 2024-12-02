@@ -32,25 +32,12 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
-  const [loading, setLoading] = useState(false)
-  const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
-
   const handleDelete = async (id: string) => {
     try {
       const res = await deletePost(id)
-      setSuccess(true)
-      setLoading(false)
       console.log(`# Delete rebuttal - response :`, res)
     } catch (error: any) {
-      setSuccess(false)
-      setLoading(false)
-      setApiErrors(
-        error?.response?.data?.detail ??
-          error?.response?.data ??
-          error?.response ??
-          error,
-      )
+      console.log(`❌ Delete rebuttal failed: ${error}`)
     }
   }
 
