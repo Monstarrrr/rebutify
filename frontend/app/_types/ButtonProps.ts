@@ -12,6 +12,6 @@ export type ButtonProps = {
   onClick?: () => void
 
   loading?: boolean
-  success?: boolean
+  success?: string | null | undefined
   successMessage?: string
 }

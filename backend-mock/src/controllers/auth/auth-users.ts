@@ -56,11 +56,19 @@ export const registerUser = async (
     message:
       'Your account has been created. Please check your email to activate it.',
   }
+  const formErrors = {
+    username: [],
+    email: [],
+    password: [],
+  }
   const usernameErrorResponse = 'This username is already taken.'
   const emailErrorResponse =
     'This email is already being used. Please login or reset your password.'
-  const internalServerErrorResponse =
-    'An error has occured on our end, please try again later or contact support.'
+  const internalServerErrorResponse = {
+    code: 500,
+    message:
+      'An error has occured on our end, please try again later or contact support.',
+  }
 
   console.log('📩 Received request to create a new user')
   const { username, email, password } = req.body
@@ -78,8 +86,12 @@ export const registerUser = async (
       existingUsername && usernameErrors.push(usernameErrorResponse)
       existingEmail && emailErrors.push(emailErrorResponse)
       return res.status(422).json({
-        username: usernameErrors,
-        email: emailErrors,
+        code: 422,
+        formErrors: {
+          ...formErrors,
+          username: usernameErrors,
+          email: emailErrors,
+        },
       })
     }
 
@@ -87,7 +99,11 @@ export const registerUser = async (
     if (password.toLowerCase().includes('password')) {
       console.log('✖️ Password not strong enough.')
       return res.status(422).json({
-        password: ['Password not strong enough.'],
+        code: 422,
+        formErrors: {
+          ...formErrors,
+          password: ['Password not strong enough.'],
+        },
       })
     }
 

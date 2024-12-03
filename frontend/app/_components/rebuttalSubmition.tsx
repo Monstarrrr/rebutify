@@ -32,7 +32,7 @@ const SectionTitle = styled.h2`
 export default function RebuttalSubmition({ argument }: Props) {
   const [loading, setLoading] = useState(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -41,12 +41,11 @@ export default function RebuttalSubmition({ argument }: Props) {
     const formData = formDataToObj(event)
 
     try {
-      const res = await createPost({ ...formData }, 'rebuttal', argument.id)
-      setSuccess(true)
+      const { data } = await createPost({ ...formData }, 'rebuttal', argument.id)
+      setSuccess(data.message)
       setLoading(false)
-      console.log(`# Create rebuttal - response :`, res)
     } catch (error: any) {
-      setSuccess(false)
+      setSuccess(null)
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??

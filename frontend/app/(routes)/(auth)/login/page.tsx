@@ -2,13 +2,14 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 import { Form, Button } from '@/components'
-import { ApiResponse, TextInput } from '@/types'
+import { TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
 import { Page } from '@/styles'
+import { AxiosResponse } from 'axios'
 
 const loginInputs: TextInput[] = [
   {
@@ -27,8 +28,8 @@ const submitButtonLabel = 'Login'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [apiErrors, setApiErrors] = useState<ApiResponse | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [apiErrors, setApiErrors] = useState<AxiosResponse | null>(null)
   const dispatch = useAppDispatch()
   const router = useRouter()
 
@@ -51,7 +52,7 @@ export default function Login() {
       const userInfo = await fetchUserInfo()
 
       setLoading(false)
-      setSuccess(true)
+      setSuccess(null)
       dispatch(updateUser(userInfo))
       router.push('/')
     } catch (error: any) {
