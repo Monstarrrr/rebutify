@@ -290,3 +290,49 @@ class VoteView(APIView):
             {"user": request.user, "post": PostSerializer(post).data}
         )
         return Response(serializer.data, status=200)
+
+
+class EditView(APIView):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+    @extend_schema(
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {"body": {"type": "string"}, "title": {"type": "string"}},
+            }
+        },
+        responses={200: PostSerializer},
+    )
+    def post(self, request, post_type, post_id):
+        try:
+            # Validate post type
+            if post_type.lower() not in ["argument", "rebuttal", "comment"]:
+                return Response({"error": "Invalid post type"}, status=400)
+
+            # Find the post
+            try:
+                post = Post.objects.get(id=post_id, type=post_type.lower())
+            except Post.DoesNotExist:
+                return Response({"error": "Post not found"}, status=404)
+
+            if post.ownerUserId != request.user.id:
+                return Response(status=401)
+
+            # Only allow editing body and title
+            update_data = {
+                key: value
+                for key, value in request.data.items()
+                if key in ["body", "title"]
+            }
+
+            # Validate and update the post
+            serializer = PostSerializer(post, data=update_data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+
+            return Response(serializer.errors, status=400)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)

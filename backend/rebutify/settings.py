@@ -135,12 +135,13 @@ WSGI_APPLICATION = "rebutify.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DEBUG_DB = os.getenv("DEBUG_DB", "True") == "True"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-    if os.getenv("DEBUG_DB", "True") == "True"
+    if DEBUG_DB
     else {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_NAME", ""),

@@ -91,7 +91,7 @@ export default function Home() {
       const response = await getPosts('argument')
       setAllPosts(response)
     } catch (error: any) {
-      console.error('# Error fetching posts: ', error.response.data)
+      console.error('# Error fetching posts: ', error)
     }
   }
 
