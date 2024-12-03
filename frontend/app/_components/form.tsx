@@ -1,16 +1,48 @@
 'use client'
 import { FormProps, TextInput } from '@/types'
 import { ChangeEvent, useEffect, useState } from 'react'
+import styled from 'styled-components'
+
+const StyledForm = styled.form`
+  width: 100%;
+`
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+`
+const Label = styled.label`
+  margin-bottom: 4px;
+`
+
+const InputStyles = `
+  background-color: #1f1f1f;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 20px;
+  max-width: 640px;
+`
+
+const Input = styled.input`
+  ${InputStyles}
+`
+
+const Textarea = styled.textarea`
+  ${InputStyles}
+`
 
 export default function Form(props: FormProps) {
   const {
-    submitButtonLabel,
     id,
     inputsErrors,
     inputsFields,
     loading,
     onSubmit,
-    successMessage,
+    children,
+    success,
+    setSuccess,
   } = props
   // Renaming to avoid confusion with fields ids
   const formId = id
@@ -38,6 +70,9 @@ export default function Form(props: FormProps) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   ) => {
+    // Reset success
+    setSuccess(false)
+
     // Reset errors
     setInputsState((prev) => {
       return prev.map((inputField) => ({
@@ -86,29 +121,41 @@ export default function Form(props: FormProps) {
     }
   }, [inputsErrors])
 
+  // Clear inputs when success
+  useEffect(() => {
+    if (success) {
+      localStorage.removeItem(formId)
+      setInputsState((prev) => {
+        return prev.map((inputField) => ({
+          ...inputField,
+          value: '',
+        }))
+      })
+    }
+  }, [success, formId])
+
   return (
-    <form onSubmit={onSubmit}>
+    <StyledForm onSubmit={onSubmit}>
       {inputsState.map(
         ({ id, label, placeholder, type, value, errors, required = true }) => (
-          <label key={id}>
-            <strong>{label || placeholder}</strong>
-            <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
-            <br />
+          <InputContainer key={id}>
+            {label && (
+              <Label htmlFor={id}>
+                <strong>{label || placeholder}</strong>
+                <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+              </Label>
+            )}
             {type === 'textarea' ? (
-              <textarea
+              <Textarea
                 disabled={loading}
                 name={id}
                 placeholder={placeholder}
                 required={required || true}
                 onChange={handleChange}
                 value={value}
-                style={{
-                  height: '100px',
-                  width: '500px',
-                }}
               />
             ) : (
-              <input
+              <Input
                 disabled={loading}
                 name={id}
                 placeholder={placeholder}
@@ -126,8 +173,7 @@ export default function Form(props: FormProps) {
                   {error}
                 </span>
               ))}
-            <br />
-          </label>
+          </InputContainer>
         ),
       )}
       {/* Global errors */}
@@ -141,12 +187,8 @@ export default function Form(props: FormProps) {
             </span>
           ))
         ))}
-      {/* Success message */}
-      {successMessage && <span style={{ color: 'green' }}>{successMessage}</span>}
-      <br />
-      <button disabled={loading} type='submit'>
-        {loading ? 'Loading...' : submitButtonLabel}
-      </button>
-    </form>
+
+      {children}
+    </StyledForm>
   )
 }

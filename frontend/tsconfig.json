@@ -31,6 +31,8 @@
       "@/components": ["./_components"],
       "@/components/*": ["./_components/*"],
       "@/store/*": ["../store/*"],
+      "@/styles": ["./_styles"],
+      "@/styles/*": ["./_styles/*"],
       "@/types": ["./_types"],
       "@/types/*": ["./_types/*"],
       "@/typeGuards/*": ["./_typeGuards/*"]

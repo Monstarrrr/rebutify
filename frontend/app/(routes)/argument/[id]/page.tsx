@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { RebuttalSubmition, List, Post } from '@/components'
 import * as type from '@/types/Post'
 import { getPosts } from '@/api/posts'
+import { Page } from '@/styles'
 
 type Props = {
   params: {
@@ -37,7 +38,7 @@ export default function Argument(props: Props) {
   }, [argumentId])
 
   return (
-    <div>
+    <Page>
       {argument ? (
         <>
           <Post item={argument} />
@@ -55,6 +56,6 @@ export default function Argument(props: Props) {
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </Page>
   )
 }

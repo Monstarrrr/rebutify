@@ -1,10 +1,35 @@
 'use client'
 import { vote } from '@/api/vote'
+import { deletePost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
 import { useState } from 'react'
-import { deletePost } from '@/api/posts'
+import { Button, Icon } from '@/components'
+import styled from 'styled-components'
+
+const PostContainer = styled.div`
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+`
+
+const PostBody = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+const VoteContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const VoteValue = styled.div`
+  margin: 0 8px;
+`
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -42,19 +67,27 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   }
 
   return (
-    <div>
+    <PostContainer>
       {post.title && (
         <div>
           <h1>{post.title}</h1>
         </div>
       )}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>
-          <button onClick={handleVote('up')}>+</button>
-          {post.upvotes - post.downvotes}
-          <button onClick={handleVote('down')}>-</button>
+      <PostBody>
+        <VoteContainer>
+          <Button
+            onClick={handleVote('up')}
+            styles={{ background: 'transparent' }}
+            icon={<Icon label='arrow' />}
+          />
+          <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
+          <Button
+            onClick={handleVote('down')}
+            styles={{ background: 'transparent' }}
+            icon={<Icon label='arrow' direction='down' />}
+          />
           {voteError && <p>{voteError}</p>}
-        </div>
+        </VoteContainer>
         <div>
           <p>{post.body}</p>
         </div>
@@ -64,8 +97,8 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           </div>
         )}
         <br />
-      </div>
-    </div>
+      </PostBody>
+    </PostContainer>
   )
 }
 

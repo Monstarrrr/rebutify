@@ -1,16 +1,17 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, List, PostCard } from '@/components'
+import { Form, List, PostCard, Button } from '@/components'
 import type { Post, TextInput } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
+import styled from 'styled-components'
 
 const newArgumentInputs: TextInput[] = [
   {
     id: 'title',
-    label: 'Argument title',
+    label: 'Title',
     placeholder: 'Plants are alive too!',
     value: '',
   },
@@ -23,29 +24,93 @@ const newArgumentInputs: TextInput[] = [
     value: '',
   },
 ]
-const submitButtonLabel = 'Create post'
 const successMessage = 'New post created successfully!'
+
+const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+`
+
+const WelcomeContainer = styled.div`
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+const Title = styled.h2`
+  text-align: left;
+  font-size: 36px;
+  margin-bottom: 32px;
+`
+const Subtitle = styled.h1`
+  font-size: 54px;
+`
+
+const FormWrapper = styled.div`
+  display: flex;
+  height: calc(50vh - 70px);
+  max-width: 640px;
+  width: 100%;
+`
+
+const BtnLink = styled(Link)`
+  background-color: #3d6aff;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border-radius: 99px;
+  cursor: pointer;
+  text-decoration: none;
+`
+
+const ListWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`
+
+const ListTitle = styled.h2`
+  margin: 0 auto 24px;
+`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
-  const [loading, setLoading] = useState(false)
+  const user = useAppSelector((state) => state.user)
+  const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState<boolean>(false)
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
 
-  // Fetch all 'arguments' posts
-  useEffect(() => {
-    let fetchApi = async () => {
-      try {
-        const response = await getPosts('argument')
-        setAllPosts(response)
-      } catch (error: any) {
-        console.error('# Error fetching posts: ', error.response.data)
-      }
+  const fetchArguments = async () => {
+    try {
+      const response = await getPosts('argument')
+      setAllPosts(response)
+    } catch (error: any) {
+      console.error('# Error fetching posts: ', error.response.data)
     }
-    fetchApi()
+  }
+
+  useEffect(() => {
+    console.log(`################## user :`, user)
   }, [])
+
+  // Fetch onLoad
+  useEffect(() => {
+    fetchArguments()
+  }, [])
+
+  // re-fetch on success
+  useEffect(() => {
+    if (success) {
+      fetchArguments()
+    }
+  }, [success])
 
   async function handleSubmitArgument(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -65,42 +130,45 @@ export default function Home() {
   }
 
   return (
-    <>
-      <h2>Welcome to Rebutify!</h2>
-      <br />
-      <h1>
-        Rebutify is a platform for sharing rebuttals to common arguments against
-        veganism.
-      </h1>
-      <br />
-      <h3>
-        Have you heard a common argument against veganism to which you want to
-        provide a rebuttal?
-      </h3>
-      <br />
-      <br />
-      {isLogged ? (
-        <Form
-          submitButtonLabel={submitButtonLabel}
-          id='new-argument'
-          inputsErrors={apiErrors}
-          inputsFields={newArgumentInputs}
-          onSubmit={handleSubmitArgument}
-          loading={loading}
-          successMessage={success ? successMessage : null}
-        />
-      ) : (
-        <p>
-          <Link href='/register'>Register</Link> or{' '}
-          <Link href='/login'>login</Link> to start sharing your rebuttals!
-        </p>
-      )}
-      <br />
-      <br />
-      <hr />
-      <h2>All arguments</h2>
-      <hr />
-      <List items={allPosts} Layout={PostCard} />
-    </>
+    <Body>
+      <WelcomeContainer>
+        <Title>Rebutify</Title>
+        <Subtitle>
+          Submit arguments,
+          <br />
+          Optimize their rebuttals.
+        </Subtitle>
+      </WelcomeContainer>
+      <FormWrapper>
+        {isLogged ? (
+          <Form
+            id='new-argument'
+            inputsErrors={apiErrors}
+            inputsFields={newArgumentInputs}
+            onSubmit={handleSubmitArgument}
+            loading={loading}
+            success={success}
+            setSuccess={setSuccess}
+          >
+            <Button
+              styles={{ marginTop: '10px' }}
+              label={'Submit argument'}
+              loading={loading}
+              success={success}
+              successMessage={successMessage}
+            />
+          </Form>
+        ) : (
+          <div>
+            <BtnLink href='/register'>Get started</BtnLink>
+          </div>
+        )}
+      </FormWrapper>
+
+      <ListWrapper>
+        <ListTitle>All arguments</ListTitle>
+        <List items={allPosts} Layout={PostCard} />
+      </ListWrapper>
+    </Body>
   )
 }

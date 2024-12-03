@@ -1,13 +1,14 @@
 'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
-import { Form } from '@/components'
+import { Form, Button } from '@/components'
 import { ApiResponse, TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
+import { Page } from '@/styles'
 
 const loginInputs: TextInput[] = [
   {
@@ -23,7 +24,6 @@ const loginInputs: TextInput[] = [
   },
 ]
 const submitButtonLabel = 'Login'
-const successMessage = 'Logged in successfully.'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
@@ -70,16 +70,18 @@ export default function Login() {
   }
 
   return (
-    <>
+    <Page>
       <Form
         id='login-form'
         inputsFields={loginInputs}
         inputsErrors={apiErrors}
         onSubmit={handleSubmit}
         loading={loading}
-        successMessage={success ? successMessage : null}
-        submitButtonLabel={submitButtonLabel}
-      />
-    </>
+        success={success}
+        setSuccess={setSuccess}
+      >
+        <Button loading={loading} label={submitButtonLabel} />
+      </Form>
+    </Page>
   )
 }

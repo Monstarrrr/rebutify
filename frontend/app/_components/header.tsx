@@ -5,9 +5,11 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { NavLink } from '@/types/NavLink'
+import styled from 'styled-components'
+import Image from 'next/image'
+import { Button } from '@/components'
 
 const links: NavLink[] = [
-  { href: '/', label: 'Home', requiresAuth: false },
   { href: '/profile', label: 'Profile', requiresAuth: true },
   { href: '/login', label: 'Login', requiresAuth: false, requiresNoAuth: true },
   {
@@ -17,6 +19,38 @@ const links: NavLink[] = [
     requiresNoAuth: true,
   },
 ]
+
+const Nav = styled.nav`
+  border-bottom: 1px solid #f1f1f1;
+  display: flex;
+  padding: 4px 12px;
+`
+
+const LeftBlock = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
+const RightBlock = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
+
+const LinkWrapper = styled.div`
+  margin: 0 8px;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #fff;
+  margin: 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+`
 
 export default function Header() {
   // get user from store
@@ -36,29 +70,40 @@ export default function Header() {
   }
   return (
     <>
-      <nav>
-        {links.map(({ href, label, requiresAuth, requiresNoAuth }) => {
-          if (requiresAuth && !user.id) return null
-          if (requiresNoAuth && user.id) return null
-          return (
-            <span key={`${href}-${label}`}>
-              <Link
-                style={{
-                  opacity: pathName === href ? 0.6 : 1,
-                  pointerEvents: pathName === href ? 'none' : 'auto',
-                  textDecoration: pathName === href ? 'none' : 'underline',
-                }}
-                href={href}
-              >
-                {label}
-              </Link>
-              {` | `}
-            </span>
-          )
-        })}
-        {user.id && <button onClick={handleLogout}>Logout</button>}
-        <br />
-      </nav>
+      <Nav>
+        <LeftBlock>
+          <Link href='/'>
+            <Image
+              width={50}
+              height={50}
+              src='/images/logo-white.png'
+              alt='logo'
+            />
+          </Link>
+        </LeftBlock>
+
+        <RightBlock>
+          {links.map(({ href, label, requiresAuth, requiresNoAuth }) => {
+            if (requiresAuth && !user.id) return null
+            if (requiresNoAuth && user.id) return null
+            return (
+              <LinkWrapper key={`${href}-${label}`}>
+                <StyledLink
+                  style={{
+                    opacity: pathName === href ? 0.6 : 1,
+                    pointerEvents: pathName === href ? 'none' : 'auto',
+                  }}
+                  href={href}
+                >
+                  {label}
+                </StyledLink>
+              </LinkWrapper>
+            )
+          })}
+          {user.id && <Button onClick={handleLogout} label='Logout' />}
+          <br />
+        </RightBlock>
+      </Nav>
     </>
   )
 }
