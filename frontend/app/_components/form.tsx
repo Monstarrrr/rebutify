@@ -71,7 +71,7 @@ export default function Form(props: FormProps) {
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   ) => {
     // Reset success
-    setSuccess(false)
+    setSuccess(null)
 
     // Reset errors
     setInputsState((prev) => {
@@ -106,18 +106,18 @@ export default function Form(props: FormProps) {
 
   useEffect(() => {
     // Field errors
-    if (inputsErrors?.status === 400) {
+    if (inputsErrors?.data?.code === 422) {
       // Add error(s) to the corresponding field(s)
       setInputsState((prev) => {
         return prev.map((inputField) => ({
           ...inputField,
-          errors: inputsErrors.data[inputField.id],
+          errors: inputsErrors.data.formErrors[inputField.id],
         }))
       })
     }
     // Global errors
     if (inputsErrors?.status === 401) {
-      setGlobalFormErrors(inputsErrors.data.detail)
+      setGlobalFormErrors(inputsErrors?.data?.detail || 'Unauthorized')
     }
   }, [inputsErrors])
 
@@ -169,7 +169,6 @@ export default function Form(props: FormProps) {
             {errors &&
               Object.values(errors).map((error) => (
                 <span style={{ color: 'red' }} key={error}>
-                  <br />
                   {error}
                 </span>
               ))}
@@ -179,12 +178,18 @@ export default function Form(props: FormProps) {
       {/* Global errors */}
       {globalFormErrors &&
         (typeof globalFormErrors === 'string' ? (
-          <span style={{ color: 'red' }}>{globalFormErrors}</span>
+          <>
+            <span style={{ color: 'red' }}>{globalFormErrors}</span>
+            <br />
+          </>
         ) : (
           globalFormErrors.map((error) => (
-            <span style={{ color: 'red' }} key={error}>
-              {error}
-            </span>
+            <>
+              <span style={{ color: 'red' }} key={error}>
+                {error}
+              </span>
+              <br />
+            </>
           ))
         ))}
 

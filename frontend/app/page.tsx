@@ -80,10 +80,9 @@ const ListTitle = styled.h2`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
-  const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState<boolean>(false)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
 
@@ -95,10 +94,6 @@ export default function Home() {
       console.error('# Error fetching posts: ', error.response.data)
     }
   }
-
-  useEffect(() => {
-    console.log(`################## user :`, user)
-  }, [])
 
   // Fetch onLoad
   useEffect(() => {
@@ -121,7 +116,7 @@ export default function Home() {
     try {
       await createPost({ ...formData }, 'argument')
       setLoading(false)
-      setSuccess(true)
+      setSuccess('Post created successfully!')
     } catch (error: any) {
       const { response } = error
       setLoading(false)

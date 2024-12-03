@@ -1,15 +1,16 @@
 import { FormEvent } from 'react'
-import { ApiResponse, TextInput } from '@/types'
+import { TextInput } from '@/types'
+import { AxiosResponse } from 'axios'
 
 export type FormProps = {
   id: string
-  inputsErrors: ApiResponse | null
+  inputsErrors: AxiosResponse | null
   inputsFields: TextInput[]
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
 
   loading: boolean
-  success: boolean
-  setSuccess: (success: boolean) => void
+  success: string | null
+  setSuccess: (success: string | null) => void
 
   // Children is the submit button
   children: React.ReactElement | null
