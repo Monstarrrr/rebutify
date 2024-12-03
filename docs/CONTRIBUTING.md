@@ -79,7 +79,7 @@ python backend/manage.py migrate
 Add the site URL in the database
 
 ```bash
-python manage.py shell < scripts/update_site_domain.py
+python manage.py shell < scripts/init_db.py
 ```
 
 Start the development server with
@@ -87,6 +87,8 @@ Start the development server with
 ```bash
 python backend/manage.py runserver
 ```
+
+Tip: use `alias dj="python manage.py"` to keep your commands short.
 
 #### 2.1 OpenAPI Spec
 
