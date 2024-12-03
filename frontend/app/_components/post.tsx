@@ -1,12 +1,12 @@
 'use client'
 import { vote } from '@/api/vote'
+import { deletePost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
 import { useState } from 'react'
-import Button from '@/components/button'
+import { Button, Icon } from '@/components'
 import styled from 'styled-components'
-import Icon from '@/components/icon'
 
 const PostContainer = styled.div`
   border: 1px solid #f0f0f0;
@@ -42,17 +42,27 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     upvotes: item.upvotes,
     downvotes: item.downvotes,
     id: item.id,
+    ownerUserId: item.ownerUserId,
     type: item.type,
   })
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
-      const { data } = await vote(user, post.type, post.id, direction)
+      const data = await vote(user, post.type, post.id, direction)
       setPost(data.resources.post)
       dispatch(updateUser(data.resources.user))
     } catch (error: any) {
       setVoteError(error && 'Vote request failed')
       console.error(`❌ Vote request failed: ${error}`)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deletePost(id)
+      console.log(`# Delete rebuttal - response :`, res)
+    } catch (error: any) {
+      console.log(`❌ Delete rebuttal failed: ${error}`)
     }
   }
 
@@ -81,6 +91,12 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
         <div>
           <p>{post.body}</p>
         </div>
+        {user.id === post.ownerUserId && (
+          <div>
+            <button onClick={() => handleDelete(post.id)}>Delete</button>
+          </div>
+        )}
+        <br />
       </PostBody>
     </PostContainer>
   )

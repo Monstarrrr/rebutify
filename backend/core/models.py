@@ -36,6 +36,8 @@ class Post(models.Model):
     parentId: models.IntegerField = models.IntegerField(null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
+    upvotes: models.IntegerField = models.IntegerField(null=False, default=0)
+    downvotes: models.IntegerField = models.IntegerField(null=False, default=0)
 
 
 class UserProfile(models.Model):

@@ -71,4 +71,9 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc-ui",
     ),
+    path(
+        "<str:post_type>/<int:post_id>/<str:vote_type>/",
+        views.VoteView.as_view(),
+        name="vote",
+    ),
 ]

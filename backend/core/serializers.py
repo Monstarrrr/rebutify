@@ -55,6 +55,22 @@ class VoteSerializer(serializers.ModelSerializer):
         ]
 
 
+class VoteResponseSerializer(serializers.Serializer):
+    code = serializers.IntegerField(default=201)
+    message = serializers.CharField(default="Resource created.")
+    resources = serializers.SerializerMethodField()
+
+    def get_resources(self, obj):
+        return {
+            "user": {
+                "id": obj["user"].id,
+                "username": obj["user"].username,
+                "email": obj["user"].email,
+            },
+            "post": obj["post"],
+        }
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile

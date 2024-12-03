@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db import transaction
 from django.http import HttpResponse
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -11,6 +12,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Post, UserProfile, Vote
 from .serializers import (
@@ -19,6 +21,7 @@ from .serializers import (
     PostSerializer,
     RebuttalSerializer,
     UserProfileSerializer,
+    VoteResponseSerializer,
     VoteSerializer,
 )
 
@@ -130,12 +133,17 @@ class PostViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
+        type = self.request.query_params.get("type")
+        if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
+            Post.objects.none()
+
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-
-        # gets all posts
-        queryset = Post.objects.all()
+        if type:
+            queryset = Post.objects.filter(type=type)
+        else:
+            queryset = Post.objects.all()
         return queryset
 
     def perform_create(self, serializer):
@@ -209,3 +217,76 @@ class ActivateUserViewSet(UserViewSet):
     def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")
+
+
+class VoteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_type, post_id, vote_type):
+        if vote_type not in ["upvote", "downvote"]:
+            return Response({"error": "Invalid vote type"}, status=400)
+
+        try:
+            # Verify the post exists
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=404)
+
+        # Check for existing vote
+        existing_vote = Vote.objects.filter(
+            parentId=post_id, ownerUserId=request.user.id
+        ).first()
+
+        with transaction.atomic():
+            if existing_vote:
+                # If the user is trying to vote the same way, remove the vote
+                if existing_vote.type == vote_type:
+                    existing_vote.delete()
+
+                    # Decrement the corresponding vote count
+                    if vote_type == "upvote":
+                        post.upvotes -= 1
+                    else:
+                        post.downvotes -= 1
+
+                # If voting the opposite way, remove existing vote and add new vote
+                else:
+                    existing_vote.delete()
+
+                    # Decrement the previous vote count
+                    if existing_vote.type == "upvote":
+                        post.upvotes -= 1
+                    else:
+                        post.downvotes -= 1
+
+                    # Create and increment new vote
+                    Vote.objects.create(
+                        parentId=post.id, ownerUserId=request.user.id, type=vote_type
+                    )
+
+                    # Increment the new vote count
+                    if vote_type == "upvote":
+                        post.upvotes += 1
+                    else:
+                        post.downvotes += 1
+
+            # No existing vote - create a new vote
+            else:
+                Vote.objects.create(
+                    parentId=post.id, ownerUserId=request.user.id, type=vote_type
+                )
+
+                # Increment the corresponding vote count
+                if vote_type == "upvote":
+                    post.upvotes += 1
+                else:
+                    post.downvotes += 1
+
+            # Save the updated post
+            post.save()
+
+        # Serialize and return response
+        serializer = VoteResponseSerializer(
+            {"user": request.user, "post": PostSerializer(post).data}
+        )
+        return Response(serializer.data, status=200)
