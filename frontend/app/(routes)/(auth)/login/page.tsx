@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
+import { Page } from '@/styles'
 
 const loginInputs: TextInput[] = [
   {
@@ -69,7 +70,7 @@ export default function Login() {
   }
 
   return (
-    <>
+    <Page>
       <Form
         id='login-form'
         inputsFields={loginInputs}
@@ -81,6 +82,6 @@ export default function Login() {
       >
         <Button loading={loading} label={submitButtonLabel} />
       </Form>
-    </>
+    </Page>
   )
 }

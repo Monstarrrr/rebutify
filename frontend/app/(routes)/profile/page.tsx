@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { getPosts } from '@/api/posts'
 import { removeUser } from '@/store/slices/user'
 import { List, PostCard } from '@/components'
+import { Page } from '@/styles'
 
 export default function Profile() {
   const user = useAppSelector((state) => state.user)
@@ -16,6 +17,7 @@ export default function Profile() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    console.log(`# user  :`, user)
     if (!user.id) {
       window.location.href = '/login'
     }
@@ -53,7 +55,7 @@ export default function Profile() {
   }, [user.id])
 
   return (
-    <div>
+    <Page>
       <h1>Profile</h1>
       <hr />
       <br />
@@ -89,6 +91,6 @@ export default function Profile() {
       <button style={{ background: 'red' }} onClick={handleDelete}>
         Delete account
       </button>
-    </div>
+    </Page>
   )
 }

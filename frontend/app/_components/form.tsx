@@ -139,11 +139,12 @@ export default function Form(props: FormProps) {
       {inputsState.map(
         ({ id, label, placeholder, type, value, errors, required = true }) => (
           <InputContainer key={id}>
-            <Label htmlFor={id}>
-              <strong>{label || placeholder}</strong>
-              <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
-            </Label>
-            <br />
+            {label && (
+              <Label htmlFor={id}>
+                <strong>{label || placeholder}</strong>
+                <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+              </Label>
+            )}
             {type === 'textarea' ? (
               <Textarea
                 disabled={loading}

@@ -8,6 +8,7 @@ import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/button'
+import { Page } from '@/styles'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -69,7 +70,7 @@ export default function Register() {
   }
 
   return (
-    <>
+    <Page>
       <h1>Register</h1>
       <Form
         id='register-form'
@@ -83,6 +84,6 @@ export default function Register() {
         <Button label={'Register'} loading={isLoading} />
       </Form>
       {isLoading && <p>Loading...</p>}
-    </>
+    </Page>
   )
 }

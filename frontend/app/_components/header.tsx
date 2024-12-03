@@ -43,7 +43,7 @@ const LinkWrapper = styled.div`
   margin: 0 8px;
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   text-decoration: none;
   color: #fff;
   margin: 0 8px;

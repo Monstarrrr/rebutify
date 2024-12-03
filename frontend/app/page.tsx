@@ -80,6 +80,7 @@ const ListTitle = styled.h2`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
+  const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<boolean>(false)
@@ -94,6 +95,10 @@ export default function Home() {
       console.error('# Error fetching posts: ', error.response.data)
     }
   }
+
+  useEffect(() => {
+    console.log(`################## user :`, user)
+  }, [])
 
   // Fetch onLoad
   useEffect(() => {
@@ -146,7 +151,7 @@ export default function Home() {
             setSuccess={setSuccess}
           >
             <Button
-              style={{ marginTop: '10px' }}
+              styles={{ marginTop: '10px' }}
               label={'Submit argument'}
               loading={loading}
               success={success}

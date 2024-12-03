@@ -7,6 +7,7 @@ import { createPost } from '@/api/posts'
 import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
+import styled from 'styled-components'
 
 const newRebuttalInput: TextInput[] = [
   {
@@ -23,6 +24,10 @@ const successMessage = 'Rebuttal submitted successfully!'
 type Props = {
   argument: Argument
 }
+
+const SectionTitle = styled.h2`
+  margin: 12px auto 0;
+`
 
 export default function RebuttalSubmition({ argument }: Props) {
   const [loading, setLoading] = useState(false)
@@ -54,7 +59,7 @@ export default function RebuttalSubmition({ argument }: Props) {
 
   return (
     <div>
-      <h2>Your rebuttal</h2>
+      <SectionTitle>Your rebuttal</SectionTitle>
       <Form
         id='new-rebuttal'
         inputsErrors={apiErrors}

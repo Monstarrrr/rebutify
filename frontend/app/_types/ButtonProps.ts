@@ -4,9 +4,10 @@ export type ButtonProps = {
     onSubmit is infered by <button> existing within a <form> 
     ence why we don't need to pass it 
   */
-  label: string
+  label?: string
 
-  style?: React.CSSProperties
+  icon?: React.ReactNode
+  styles?: React.CSSProperties
   size?: 'min' | 'max'
   onClick?: () => void
 
