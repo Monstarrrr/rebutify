@@ -1,11 +1,11 @@
-# Contributing to Our Project 👩‍💻👨‍💻
+# Contributing to Our Project 🤝
 
 Welcome to our project! We're thrilled that you're interested in contributing.  
 Please take a moment to review this document to understand how you can contribute effectively.
 
 ## Table of Content
 
-- [Contributing to Our Project 👩‍💻👨‍💻](#contributing-to-our-project-)
+- [Contributing to Our Project 🤝](#contributing-to-our-project-)
   - [Table of Content](#table-of-content)
   - [Ways to Contribute 🚀](#ways-to-contribute-)
   - [Code of Conduct 🤝](#code-of-conduct-)
@@ -27,7 +27,7 @@ There are several ways you can contribute to our project:
 - **Suggesting Enhancements:** Have an idea to improve the project? Open an issue and share your suggestions!
 - **Submitting Pull Requests:** You can contribute code changes by submitting pull requests.
 
-## Code of Conduct 🤝
+## Code of Conduct 📜
 
 Please review our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
