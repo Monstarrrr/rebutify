@@ -1,6 +1,6 @@
 'use client'
 import { vote } from '@/api/vote'
-import { deletePost } from '@/api/posts'
+import { deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
@@ -31,10 +31,17 @@ const VoteValue = styled.div`
   margin: 0 8px;
 `
 
+const EditInput = styled.textarea`
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+`
+
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user)
   const [voteError, setVoteError] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
   // We use state to keep the post values reactive
   const [post, setPost] = useState({
     title: item.title,
@@ -45,6 +52,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     ownerUserId: item.ownerUserId,
     type: item.type,
   })
+  const [prevBody, setPrevBody] = useState(post.body)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -66,9 +74,25 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
+  const handleSave = async (title: string, body: string) => {
+    try {
+      const res = await editPost(post.type, post.id, { title: title, body: body })
+      console.log(`# Edit post - response :`, res)
+      setPrevBody(body)
+      setIsEditing(false)
+    } catch (error: any) {
+      console.log(`❌ Edit post failed: ${error}`)
+    }
+  }
+
+  const handleCancel = () => {
+    setPost({ ...post, body: prevBody })
+    setIsEditing(false)
+  }
+
   return (
     <PostContainer>
-      {post.title && (
+      {post.type == 'argument' && post.title && (
         <div>
           <h1>{post.title}</h1>
         </div>
@@ -89,12 +113,32 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           {voteError && <p>{voteError}</p>}
         </VoteContainer>
         <div>
-          <p>{post.body}</p>
+          <p>{!isEditing && post.body}</p>
         </div>
+        {isEditing && (
+          <>
+            <EditInput
+              value={post.body}
+              onChange={(e) => setPost({ ...post, body: e.target.value })}
+            />
+            <Button
+              label='Save'
+              onClick={() => handleSave(post.title, post.body)}
+            />
+            <Button label='Cancel' onClick={() => handleCancel()} />
+          </>
+        )}
         {user.id === post.ownerUserId && (
-          <div>
-            <button onClick={() => handleDelete(post.id)}>Delete</button>
-          </div>
+          <>
+            <div>
+              {!isEditing && (
+                <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
+              )}
+            </div>
+            <div>
+              <Button label='Delete' onClick={() => handleDelete(post.id)} />
+            </div>
+          </>
         )}
         <br />
       </PostBody>
