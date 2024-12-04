@@ -1,6 +1,6 @@
 'use client'
 import { vote } from '@/api/vote'
-import { deletePost } from '@/api/posts'
+import { deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
@@ -52,6 +52,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     ownerUserId: item.ownerUserId,
     type: item.type,
   })
+  const [prevBody, setPrevBody] = useState(post.body)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -73,7 +74,19 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
-  const handleSave = () => {
+  const handleSave = async (title: string, body: string) => {
+    try {
+      const res = await editPost(post.type, post.id, { title: title, body: body })
+      console.log(`# Edit post - response :`, res)
+      setPrevBody(body)
+      setIsEditing(false)
+    } catch (error: any) {
+      console.log(`❌ Edit post failed: ${error}`)
+    }
+  }
+
+  const handleCancel = () => {
+    setPost({ ...post, body: prevBody })
     setIsEditing(false)
   }
 
@@ -102,29 +115,30 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
         <div>
           <p>{!isEditing && post.body}</p>
         </div>
-        {isEditing ? (
+        {isEditing && (
           <>
             <EditInput
               value={post.body}
               onChange={(e) => setPost({ ...post, body: e.target.value })}
             />
-            <button onClick={handleSave}>Save</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
+            <Button
+              label='Save'
+              onClick={() => handleSave(post.title, post.body)}
+            />
+            <Button label='Cancel' onClick={() => handleCancel()} />
           </>
-        ) : (
-          <p>{post.body}</p>
         )}
         {user.id === post.ownerUserId && (
-          <div>
-            {!isEditing && (
-              <button onClick={() => setIsEditing(!isEditing)}>Edit</button>
-            )}
-          </div>
-        )}
-        {user.id === post.ownerUserId && (
-          <div>
-            <button onClick={() => handleDelete(post.id)}>Delete</button>
-          </div>
+          <>
+            <div>
+              {!isEditing && (
+                <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
+              )}
+            </div>
+            <div>
+              <Button label='Delete' onClick={() => handleDelete(post.id)} />
+            </div>
+          </>
         )}
         <br />
       </PostBody>
