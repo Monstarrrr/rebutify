@@ -31,10 +31,17 @@ const VoteValue = styled.div`
   margin: 0 8px;
 `
 
+const EditInput = styled.textarea`
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+`
+
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user)
   const [voteError, setVoteError] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
   // We use state to keep the post values reactive
   const [post, setPost] = useState({
     title: item.title,
@@ -66,6 +73,10 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
+  const handleSave = () => {
+    setIsEditing(false)
+  }
+
   return (
     <PostContainer>
       {post.type == 'argument' && post.title && (
@@ -89,8 +100,27 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           {voteError && <p>{voteError}</p>}
         </VoteContainer>
         <div>
-          <p>{post.body}</p>
+          <p>{!isEditing && post.body}</p>
         </div>
+        {isEditing ? (
+          <>
+            <EditInput
+              value={post.body}
+              onChange={(e) => setPost({ ...post, body: e.target.value })}
+            />
+            <button onClick={handleSave}>Save</button>
+            <button onClick={() => setIsEditing(false)}>Cancel</button>
+          </>
+        ) : (
+          <p>{post.body}</p>
+        )}
+        {user.id === post.ownerUserId && (
+          <div>
+            {!isEditing && (
+              <button onClick={() => setIsEditing(!isEditing)}>Edit</button>
+            )}
+          </div>
+        )}
         {user.id === post.ownerUserId && (
           <div>
             <button onClick={() => handleDelete(post.id)}>Delete</button>
