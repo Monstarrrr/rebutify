@@ -68,7 +68,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   return (
     <PostContainer>
-      {post.title && (
+      {post.type == 'argument' && post.title && (
         <div>
           <h1>{post.title}</h1>
         </div>
