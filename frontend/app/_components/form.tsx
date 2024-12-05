@@ -10,7 +10,7 @@ const StyledForm = styled.form`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 `
 const Label = styled.label`
   margin-bottom: 4px;
@@ -18,7 +18,7 @@ const Label = styled.label`
 
 const InputStyles = `
   background-color: #1f1f1f;
-  border: 1px solid white;
+  border: none;
   border-radius: 8px;
   color: #fff;
   padding: 12px 20px;

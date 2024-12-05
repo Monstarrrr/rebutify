@@ -4,16 +4,23 @@
 'use client'
 // We import * as types to address naming conflicts with components
 import * as type from '@/types'
+import styled from 'styled-components'
+
+const Ul = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`
 
 export default function List<T extends type.Identifiable>({
   items,
   Layout,
 }: type.ListProps<T>) {
   return (
-    <ul>
+    <Ul>
       {items.map((item) => (
         <Layout key={item.id} item={item} />
       ))}
-    </ul>
+    </Ul>
   )
 }

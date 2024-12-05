@@ -10,7 +10,7 @@ const StyledButton = styled('button')<{
   disabled: boolean | undefined | null | string
 }>`
   background-color: ${(props) => (props.$success ? '#4CAF50' : '#2196F3')};
-  border: 1px solid #2196f3;
+  border: none;
   color: #fff;
   font-size: 1rem;
   padding: ${(props) => (props.$icon ? '4px 8px' : '6px 20px;')};

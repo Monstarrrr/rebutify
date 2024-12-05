@@ -24,7 +24,6 @@ const newArgumentInputs: TextInput[] = [
     value: '',
   },
 ]
-const successMessage = 'New post created successfully!'
 
 const Body = styled.div`
   display: flex;
@@ -116,7 +115,7 @@ export default function Home() {
     try {
       await createPost({ ...formData }, 'argument')
       setLoading(false)
-      setSuccess('Post created successfully!')
+      setSuccess('Post created successfully! ✅')
     } catch (error: any) {
       const { response } = error
       setLoading(false)
@@ -150,7 +149,6 @@ export default function Home() {
               label={'Submit argument'}
               loading={loading}
               success={success}
-              successMessage={successMessage}
             />
           </Form>
         ) : (

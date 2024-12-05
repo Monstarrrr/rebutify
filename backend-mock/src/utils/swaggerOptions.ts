@@ -134,7 +134,7 @@ export const swaggerOptions: swaggerJSDoc.Options = {
                     type: 'string',
                     example: 'Resource retrieved.',
                   },
-                  resource: {
+                  resources: {
                     type: 'object',
                     description: 'Returning the retrieved resource.',
                     example: {

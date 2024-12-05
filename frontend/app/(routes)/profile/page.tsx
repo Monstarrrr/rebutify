@@ -3,18 +3,44 @@ import { Post } from '@/types'
 import { deleteSelfAccount } from '@/api/auth'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { getPosts } from '@/api/posts'
 import { removeUser } from '@/store/slices/user'
-import { List, PostCard } from '@/components'
+import { Button, Form, List, PostCard } from '@/components'
 import { Page } from '@/styles'
+import styled from 'styled-components'
+import { AxiosResponse } from 'axios'
+import { formDataToObj } from '@/helpers'
+
+const Title = styled.h1`
+  font-size: 3.5rem;
+  margin: 12px auto 0;
+`
+const H2 = styled.h2`
+  margin: 18px auto 8px;
+  font-size: 2rem;
+`
+const H2Section = styled.div`
+  background-color: #3d3d3d;
+  border-radius: 14px;
+  padding: 12px;
+`
+
+const H3 = styled.h3`
+  margin: 0 0 12px;
+`
+const H3Section = styled.div`
+  margin-bottom: 24px;
+`
 
 export default function Profile() {
-  const user = useAppSelector((state) => state.user)
-  const [password, setPassword] = useState('')
   const router = useRouter()
-  const [argumentsList, setArgumentsList] = useState<Post[]>([])
   const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.user)
+  const [argumentsList, setArgumentsList] = useState<Post[]>([])
+  const [deleteAccError, setDeleteAccError] = useState<AxiosResponse | null>(null)
+  const [deleteAccLoading, setDeleteAccLoading] = useState(false)
+  const [deleteAccSuccess, setDeleteAccSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     console.log(`# user  :`, user)
@@ -23,15 +49,21 @@ export default function Profile() {
     }
   }, [user])
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
-  const handleDelete = async () => {
+  const handleDelete = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setDeleteAccError(null)
+    setDeleteAccSuccess(null)
+    setDeleteAccLoading(true)
+    const { password } = formDataToObj(e)
     try {
       password && (await deleteSelfAccount(password))
       dispatch(removeUser())
+      setDeleteAccSuccess('Account deleted')
+      setDeleteAccLoading(false)
       router.push('/')
     } catch (error: any) {
+      setDeleteAccLoading(false)
+      setDeleteAccError(error?.response)
       console.error(
         error.response?.data?.detail ??
           error.response?.data ??
@@ -56,41 +88,103 @@ export default function Profile() {
 
   return (
     <Page>
-      <h1>Profile</h1>
-      <hr />
-      <br />
-      <h2>My info</h2>
-      <hr style={{ border: 'none', borderTop: '1px dotted black' }} />
-      <br />
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <b>Username:</b>
-            </td>
-            <td>{user.username}</td>
-          </tr>
-          <tr>
-            <td>
-              <b>Email:</b>
-            </td>
-            <td>{user.email}</td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-      <h2>My posts</h2>
-      <hr style={{ border: 'none', borderTop: '1px dotted black' }} />
-      <br />
-      <List items={argumentsList} Layout={PostCard} />
-      <br />
-      <h2>Settings</h2>
-      <hr style={{ border: 'none', borderTop: '1px dotted black' }} />
-      <br />
-      <input onChange={handlePassword} type='password' placeholder='Password' />
-      <button style={{ background: 'red' }} onClick={handleDelete}>
-        Delete account
-      </button>
+      <Title>Profile</Title>
+      <H2>My info</H2>
+      <H2Section>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <b>Username:</b>
+              </td>
+              <td>{user.username}</td>
+            </tr>
+            <tr>
+              <td>
+                <b>Email:</b>
+              </td>
+              <td>{user.email}</td>
+            </tr>
+          </tbody>
+        </table>
+      </H2Section>
+
+      <H2>My posts</H2>
+      <H2Section>
+        {argumentsList.length === 0 ? (
+          <p style={{ textAlign: 'center', fontStyle: 'italic' }}>No posts yet</p>
+        ) : (
+          <List items={argumentsList} Layout={PostCard} />
+        )}
+      </H2Section>
+
+      <H2>Settings</H2>
+      <H2Section>
+        <H3>Change password</H3>
+        <H3Section>
+          <Form
+            id='change-password'
+            inputsFields={[
+              {
+                id: 'old-password',
+                type: 'password',
+                placeholder: 'Old password',
+                required: true,
+                value: '',
+              },
+              {
+                id: 'new-password',
+                type: 'password',
+                placeholder: 'New password',
+                required: true,
+                value: '',
+              },
+            ]}
+            onSubmit={() => {}}
+            loading={false}
+            success={null}
+            setSuccess={() => {}}
+            inputsErrors={null}
+          >
+            <Button label='Change password' />
+          </Form>
+        </H3Section>
+
+        <H3>Delete account</H3>
+        <H3Section>
+          <Form
+            id='delete-account'
+            inputsFields={[
+              {
+                id: 'password',
+                type: 'password',
+                placeholder: 'Password',
+                required: true,
+                value: '',
+              },
+            ]}
+            onSubmit={handleDelete}
+            loading={deleteAccLoading}
+            success={deleteAccSuccess}
+            setSuccess={setDeleteAccSuccess}
+            inputsErrors={deleteAccError}
+          >
+            <Button
+              success={deleteAccSuccess}
+              loading={deleteAccLoading}
+              label='Delete account'
+              styles={
+                !deleteAccSuccess
+                  ? {
+                      background: 'red',
+                      color: 'black',
+                    }
+                  : {}
+              }
+            />
+          </Form>
+        </H3Section>
+      </H2Section>
     </Page>
   )
 }

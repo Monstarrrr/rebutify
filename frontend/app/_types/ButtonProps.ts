@@ -13,5 +13,4 @@ export type ButtonProps = {
 
   loading?: boolean
   success?: string | null | undefined
-  successMessage?: string
 }
