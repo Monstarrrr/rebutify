@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
+from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
@@ -154,7 +155,19 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(ownerUserId=self.request.user.id)
+        post: Post = serializer.save(ownerUserId=self.request.user.id)
+
+        # Get or create user profile
+        user_profile, created = UserProfile.objects.get_or_create(
+            user=self.request.user, defaults={"created": timezone.now().date()}
+        )
+        # Add the created post to saved posts
+        user_profile.saved_posts.add(post)
+
+        if post.parentId:
+            parent = Post.objects.get(id=post.parentId)
+            if parent:
+                user_profile.saved_posts.add(parent)
 
     def get_permissions(self):
         if self.action == "create":
