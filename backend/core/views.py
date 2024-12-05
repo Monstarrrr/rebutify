@@ -137,13 +137,20 @@ class PostViewSet(viewsets.ModelViewSet):
         if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
             Post.objects.none()
 
+        parentId = self.request.query_params.get("parentId")
+
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
+        queryset = None
         if type:
             queryset = Post.objects.filter(type=type)
         else:
             queryset = Post.objects.all()
+
+        if parentId:
+            queryset = queryset.filter(parentId=parentId)
+
         return queryset
 
     def perform_create(self, serializer):
