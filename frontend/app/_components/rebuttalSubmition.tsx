@@ -49,9 +49,9 @@ export default function RebuttalSubmition({ argument }: Props) {
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??
-          error?.response?.data ??
-          error?.response ??
-          error,
+        error?.response?.data ??
+        error?.response ??
+        error,
       )
     }
   }
@@ -72,7 +72,6 @@ export default function RebuttalSubmition({ argument }: Props) {
           loading={loading}
           label={'Submit'}
           success={success}
-          successMessage={successMessage}
         />
       </Form>
     </div>
