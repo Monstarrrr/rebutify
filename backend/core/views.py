@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
@@ -25,6 +27,29 @@ from .serializers import (
     VoteResponseSerializer,
     VoteSerializer,
 )
+
+logger = logging.getLogger(
+    __name__
+)  # Create a FileHandler to write log messages to 'app.log'
+file_handler = logging.FileHandler(
+    "app.log"
+)  # Create a StreamHandler to display log messages on the console
+stream_handler = (
+    logging.StreamHandler()
+)  # Create a Formatter to define the log message format
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)  # Set the formatter for both handlers
+file_handler.setFormatter(formatter)
+stream_handler.setFormatter(formatter)  # Add both handlers to the logger
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
+
+def log(e: Exception, data):
+    log = f"ERROR\n----------\n{e}\n----------\nDATA\n{data}"
+    logger.error(log)
+    return Response(status=500)
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -355,4 +380,4 @@ class EditView(APIView):
             return Response(serializer.errors, status=400)
 
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            log(e, request)
