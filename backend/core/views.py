@@ -1,6 +1,9 @@
+import logging
+
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
+from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
@@ -24,6 +27,29 @@ from .serializers import (
     VoteResponseSerializer,
     VoteSerializer,
 )
+
+logger = logging.getLogger(
+    __name__
+)  # Create a FileHandler to write log messages to 'app.log'
+file_handler = logging.FileHandler(
+    "app.log"
+)  # Create a StreamHandler to display log messages on the console
+stream_handler = (
+    logging.StreamHandler()
+)  # Create a Formatter to define the log message format
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)  # Set the formatter for both handlers
+file_handler.setFormatter(formatter)
+stream_handler.setFormatter(formatter)  # Add both handlers to the logger
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
+
+def log(e: Exception, data):
+    log = f"ERROR\n----------\n{e}\n----------\nDATA\n{data}"
+    logger.error(log)
+    return Response(status=500)
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -137,17 +163,36 @@ class PostViewSet(viewsets.ModelViewSet):
         if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
             Post.objects.none()
 
+        parentId = self.request.query_params.get("parentId")
+
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
+        queryset = None
         if type:
             queryset = Post.objects.filter(type=type)
         else:
             queryset = Post.objects.all()
+
+        if parentId:
+            queryset = queryset.filter(parentId=parentId)
+
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(ownerUserId=self.request.user.id)
+        post: Post = serializer.save(ownerUserId=self.request.user.id)
+
+        # Get or create user profile
+        user_profile, created = UserProfile.objects.get_or_create(
+            user=self.request.user, defaults={"created": timezone.now().date()}
+        )
+        # Add the created post to saved posts
+        user_profile.saved_posts.add(post)
+
+        if post.parentId:
+            parent = Post.objects.get(id=post.parentId)
+            if parent:
+                user_profile.saved_posts.add(parent)
 
     def get_permissions(self):
         if self.action == "create":
@@ -335,4 +380,4 @@ class EditView(APIView):
             return Response(serializer.errors, status=400)
 
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            log(e, request)
