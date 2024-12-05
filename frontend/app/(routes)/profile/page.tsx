@@ -14,7 +14,7 @@ import { formDataToObj } from '@/helpers'
 import { editPassword } from '@/api/auth'
 
 const Title = styled.h1`
-  font-size: 3.5rem;
+  font-size: 3.51rem;
   margin: 12px auto 0;
 `
 const H2 = styled.h2`
@@ -72,16 +72,18 @@ export default function Profile() {
     setEditPassLoading(true)
     const { currentPassword, newPassword } = formDataToObj(e)
     try {
-      await editPassword({ currentPassword, newPassword })
-      setEditPassSuccess('Password edited')
+      console.log(`# currentPassword :`, currentPassword)
+      console.log(`# newPassword :`, newPassword)
+      await editPassword(currentPassword, newPassword)
+      setEditPassSuccess('Password updated')
       setEditPassLoading(false)
     } catch (error: any) {
       setEditPassLoading(false)
       console.error(
         error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
+        error.response?.data ??
+        error.response ??
+        error,
       )
     }
   }
@@ -103,9 +105,9 @@ export default function Profile() {
       setDeleteAccError(error?.response)
       console.error(
         error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
+        error.response?.data ??
+        error.response ??
+        error,
       )
     }
   }
@@ -150,14 +152,14 @@ export default function Profile() {
             id='edit-password'
             inputsFields={[
               {
-                id: 'old-password',
+                id: 'currentPassword',
                 type: 'password',
                 placeholder: 'Old password',
                 required: true,
                 value: '',
               },
               {
-                id: 'new-password',
+                id: 'newPassword',
                 type: 'password',
                 placeholder: 'New password',
                 required: true,
@@ -170,7 +172,11 @@ export default function Profile() {
             setSuccess={setEditPassSuccess}
             inputsErrors={deleteAccError}
           >
-            <Button label='Change password' />
+            <Button
+              label='Change password'
+              loading={editPassLoading}
+              success={editPassSuccess}
+            />
           </Form>
         </H3Section>
 
@@ -200,9 +206,9 @@ export default function Profile() {
               styles={
                 !deleteAccSuccess
                   ? {
-                      background: 'red',
-                      color: 'black',
-                    }
+                    background: 'red',
+                    color: 'black',
+                  }
                   : {}
               }
             />
