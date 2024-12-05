@@ -27,7 +27,7 @@ api.interceptors.request.use(
         accessToken !== 'undefined' &&
         !isTokenExpired(accessToken)
       ) {
-        console.log(`# accessToken is not expired.`)
+        console.log(`ℹ️ accessToken is not expired.`)
         // Add the access token to the request headers
         req.headers['authorization'] = `Bearer ${accessToken}`
         return req

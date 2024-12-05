@@ -26,7 +26,7 @@ export default function Argument(props: Props) {
         // Fetch the argument
         const { data } = await api.get(`api/posts/${argumentId}`)
         // Fetch the argument's rebuttals
-        const rebuttals = await getPosts('rebuttal')
+        const rebuttals = await getPosts('rebuttal', argumentId)
         setArgument(data)
         setRebuttals(rebuttals)
       } catch (error) {
