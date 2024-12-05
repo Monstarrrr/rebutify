@@ -7,6 +7,7 @@ from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -104,6 +105,21 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    @action(detail=True, methods=["get"])
+    def followers(self):
+        # put your code here
+        print("test")
+
+    @action(detail=True, methods=["post"])
+    def follow(self):
+        # put your code here
+        print("test")
+
+    @action(detail=True, url_path="follow/undo", methods=["post"])
+    def undo_follow(self):
+        # put your code here
+        print("test")
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
