@@ -115,7 +115,7 @@ export default function Home() {
     try {
       await createPost({ ...formData }, 'argument')
       setLoading(false)
-      setSuccess('Post created successfully! ✅')
+      setSuccess('Post created successfully!')
     } catch (error: any) {
       const { response } = error
       setLoading(false)

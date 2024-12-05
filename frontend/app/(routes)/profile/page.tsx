@@ -168,7 +168,7 @@ export default function Profile() {
             loading={editPassLoading}
             success={editPassSuccess}
             setSuccess={setEditPassSuccess}
-            inputsErrors={null}
+            inputsErrors={deleteAccError}
           >
             <Button label='Change password' />
           </Form>

@@ -30,6 +30,7 @@ api.interceptors.request.use(
         console.log(`ℹ️ accessToken is not expired.`)
         // Add the access token to the request headers
         req.headers['authorization'] = `Bearer ${accessToken}`
+        console.log(`↗ [${req.url}] request:`, req)
         return req
       }
       console.log(`# accessToken is expired.`)

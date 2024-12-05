@@ -19,7 +19,6 @@ const newRebuttalInput: TextInput[] = [
     value: '',
   },
 ]
-const successMessage = 'Rebuttal submitted successfully!'
 
 type Props = {
   argument: Argument
@@ -49,9 +48,9 @@ export default function RebuttalSubmition({ argument }: Props) {
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??
-        error?.response?.data ??
-        error?.response ??
-        error,
+          error?.response?.data ??
+          error?.response ??
+          error,
       )
     }
   }
@@ -68,11 +67,7 @@ export default function RebuttalSubmition({ argument }: Props) {
         success={success}
         setSuccess={setSuccess}
       >
-        <Button
-          loading={loading}
-          label={'Submit'}
-          success={success}
-        />
+        <Button loading={loading} label={'Submit'} success={success} />
       </Form>
     </div>
   )

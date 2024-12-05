@@ -10,10 +10,15 @@ export const editPassword = async ({
 }): Promise<AxiosResponse> => {
   try {
     const res = await api.post(
-      '/auth/edit-password',
-      { requiresAuth: true },
+      '/auth/users/set-password',
       {
-        data: { current_password: currentPassword, new_password: newPassword },
+        data: {
+          current_password: currentPassword,
+          new_password: newPassword,
+        },
+      },
+      {
+        requiresAuth: true,
       },
     )
     return res
