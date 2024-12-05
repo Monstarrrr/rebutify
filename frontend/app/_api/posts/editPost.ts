@@ -11,7 +11,10 @@ export const editPost = async (
     })
     return response.data
   } catch (error: any) {
-    console.error('# "Edit post" request failed: ', error.response.data ?? error)
+    console.error(
+      `${postType}/${postId} request failed: `,
+      error.response.data ?? error,
+    )
     throw error
   }
 }

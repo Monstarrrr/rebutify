@@ -11,6 +11,7 @@ import { Page } from '@/styles'
 import styled from 'styled-components'
 import { AxiosResponse } from 'axios'
 import { formDataToObj } from '@/helpers'
+import { editPassword } from '@/api/auth'
 
 const Title = styled.h1`
   font-size: 3.5rem;
@@ -41,6 +42,8 @@ export default function Profile() {
   const [deleteAccError, setDeleteAccError] = useState<AxiosResponse | null>(null)
   const [deleteAccLoading, setDeleteAccLoading] = useState(false)
   const [deleteAccSuccess, setDeleteAccSuccess] = useState<string | null>(null)
+  const [editPassSuccess, setEditPassSuccess] = useState<string | null>(null)
+  const [editPassLoading, setEditPassLoading] = useState(false)
 
   useEffect(() => {
     console.log(`# user  :`, user)
@@ -48,6 +51,40 @@ export default function Profile() {
       window.location.href = '/login'
     }
   }, [user])
+
+  useEffect(() => {
+    let fetchApi = async () => {
+      try {
+        let response = await getPosts('argument')
+        response = response.filter((post: Post) => post.ownerUserId === user.id)
+        console.log(`# response :`, response)
+        setArgumentsList(response)
+      } catch (error: any) {
+        console.error('# Error fetching posts: ', error.response.data)
+      }
+    }
+    fetchApi()
+  }, [user.id])
+
+  const handleEditPassword = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setEditPassSuccess(null)
+    setEditPassLoading(true)
+    const { currentPassword, newPassword } = formDataToObj(e)
+    try {
+      await editPassword({ currentPassword, newPassword })
+      setEditPassSuccess('Password edited')
+      setEditPassLoading(false)
+    } catch (error: any) {
+      setEditPassLoading(false)
+      console.error(
+        error.response?.data?.detail ??
+          error.response?.data ??
+          error.response ??
+          error,
+      )
+    }
+  }
 
   const handleDelete = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -72,19 +109,6 @@ export default function Profile() {
       )
     }
   }
-  useEffect(() => {
-    let fetchApi = async () => {
-      try {
-        let response = await getPosts('argument')
-        response = response.filter((post: Post) => post.ownerUserId === user.id)
-        console.log(`# response :`, response)
-        setArgumentsList(response)
-      } catch (error: any) {
-        console.error('# Error fetching posts: ', error.response.data)
-      }
-    }
-    fetchApi()
-  }, [user.id])
 
   return (
     <Page>
@@ -123,7 +147,7 @@ export default function Profile() {
         <H3>Change password</H3>
         <H3Section>
           <Form
-            id='change-password'
+            id='edit-password'
             inputsFields={[
               {
                 id: 'old-password',
@@ -140,10 +164,10 @@ export default function Profile() {
                 value: '',
               },
             ]}
-            onSubmit={() => {}}
-            loading={false}
-            success={null}
-            setSuccess={() => {}}
+            onSubmit={handleEditPassword}
+            loading={editPassLoading}
+            success={editPassSuccess}
+            setSuccess={setEditPassSuccess}
             inputsErrors={null}
           >
             <Button label='Change password' />
