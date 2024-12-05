@@ -7,6 +7,7 @@ import * as type from '@/types'
 import { useState } from 'react'
 import { Button, Icon } from '@/components'
 import styled from 'styled-components'
+import { useRouter } from 'next/navigation'
 
 const PostContainer = styled.div`
   border: 1px solid #f0f0f0;
@@ -39,6 +40,7 @@ const EditInput = styled.textarea`
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const user = useAppSelector((state) => state.user)
   const [voteError, setVoteError] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -67,8 +69,12 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   const handleDelete = async (id: string) => {
     try {
+      const wasArgument = post.type === 'argument'
       const res = await deletePost(id)
       console.log(`# Delete rebuttal - response :`, res)
+      if (wasArgument) {
+        router.push('/')
+      }
     } catch (error: any) {
       console.log(`❌ Delete rebuttal failed: ${error}`)
     }
