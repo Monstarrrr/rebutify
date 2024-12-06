@@ -42,6 +42,10 @@ const H3 = styled.h3`
 `
 const H3Section = styled.div`
   padding-bottom: 34px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 `
 
 const Hr = styled.hr`
@@ -93,9 +97,9 @@ export default function Profile() {
       setEditPassLoading(false)
       console.error(
         error.response?.data?.detail ??
-        error.response?.data ??
-        error.response ??
-        error,
+          error.response?.data ??
+          error.response ??
+          error,
       )
     }
   }
@@ -117,9 +121,9 @@ export default function Profile() {
       setDeleteAccError(error?.response)
       console.error(
         error.response?.data?.detail ??
-        error.response?.data ??
-        error.response ??
-        error,
+          error.response?.data ??
+          error.response ??
+          error,
       )
     }
   }
@@ -216,9 +220,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                        background: 'red',
-                        color: 'black',
-                      }
+                          background: 'red',
+                          color: 'black',
+                        }
                       : {}
                   }
                 />

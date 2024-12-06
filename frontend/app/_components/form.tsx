@@ -36,10 +36,9 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
-  margin-top: 16px;
-  margin-left: 16px;
-  ${({ $floating }) => $floating && 'margin-left: 0;'}
+const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+  margin: 0 16px 8px;
+  ${({ $floating }) => $floating && 'margin: 16px 16px 0 0;'}
 `
 
 export default function Form(props: FormProps) {
