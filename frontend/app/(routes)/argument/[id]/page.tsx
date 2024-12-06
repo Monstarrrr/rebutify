@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { RebuttalSubmition, List, Post } from '@/components'
 import * as type from '@/types/Post'
 import { getPosts } from '@/api/posts'
-import { Page } from '@/styles'
+import { SectionStyle, EmptySectionStyle } from '@/styles'
 
 type Props = {
   params: {
@@ -38,17 +38,20 @@ export default function Argument(props: Props) {
   }, [argumentId])
 
   return (
-    <Page>
+    <>
       {argument ? (
         <>
           <Post item={argument} />
 
-          <br />
           <h2>Rebuttals</h2>
-          <List items={rebuttals} Layout={Post} />
-          <br />
-          <br />
-          <hr />
+          <SectionStyle>
+            {rebuttals.length === 0 ? (
+              <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>
+            ) : (
+              <List items={rebuttals} Layout={Post} />
+            )}
+          </SectionStyle>
+
           <RebuttalSubmition argument={argument} />
         </>
       ) : error ? (
@@ -56,6 +59,6 @@ export default function Argument(props: Props) {
       ) : (
         <p>Loading...</p>
       )}
-    </Page>
+    </>
   )
 }

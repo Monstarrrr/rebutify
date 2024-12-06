@@ -14,4 +14,7 @@ export type FormProps = {
 
   // Children is the submit button
   children: React.ReactElement | null
+
+  // Floating form (submit button outside)
+  floating: boolean
 }

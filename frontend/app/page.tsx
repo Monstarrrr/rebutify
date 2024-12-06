@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
+import Image from 'next/image'
 
 const newArgumentInputs: TextInput[] = [
   {
@@ -25,13 +26,13 @@ const newArgumentInputs: TextInput[] = [
   },
 ]
 
-const Body = styled.div`
+const FirstSection = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  padding: 20px;
+  gap: 28px;
+  justify-content: center;
+  height: calc(100dvh - 54px - 24px);
+  padding: 128px;
 `
 
 const WelcomeContainer = styled.div`
@@ -39,21 +40,12 @@ const WelcomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
-const Title = styled.h2`
-  text-align: left;
-  font-size: 36px;
-  margin-bottom: 32px;
-`
-const Subtitle = styled.h1`
-  font-size: 54px;
+  flex: 3;
+  margin-bottom: 52px;
 `
 
-const FormWrapper = styled.div`
-  display: flex;
-  height: calc(50vh - 70px);
-  max-width: 640px;
-  width: 100%;
+const Subtitle = styled.h1`
+  font-size: 54px;
 `
 
 const BtnLink = styled(Link)`
@@ -74,7 +66,7 @@ const ListWrapper = styled.div`
 `
 
 const ListTitle = styled.h2`
-  margin: 0 auto 24px;
+  margin: 0 auto 28px;
 `
 
 export default function Home() {
@@ -124,44 +116,45 @@ export default function Home() {
   }
 
   return (
-    <Body>
-      <WelcomeContainer>
-        <Title>Rebutify</Title>
-        <Subtitle>
-          Submit arguments,
-          <br />
-          Optimize their rebuttals.
-        </Subtitle>
-      </WelcomeContainer>
-      <FormWrapper>
-        {isLogged ? (
-          <Form
-            id='new-argument'
-            inputsErrors={apiErrors}
-            inputsFields={newArgumentInputs}
-            onSubmit={handleSubmitArgument}
-            loading={loading}
-            success={success}
-            setSuccess={setSuccess}
-          >
-            <Button
-              styles={{ marginTop: '10px' }}
-              label={'Submit argument'}
+    <>
+      <FirstSection>
+        <WelcomeContainer>
+          <Subtitle>
+            Submit arguments,
+            <br />
+            Optimize their rebuttals.
+          </Subtitle>
+        </WelcomeContainer>
+
+        <div style={{ flex: 2 }}>
+          {isLogged ? (
+            <Form
+              id='new-argument'
+              inputsErrors={apiErrors}
+              inputsFields={newArgumentInputs}
+              onSubmit={handleSubmitArgument}
               loading={loading}
               success={success}
-            />
-          </Form>
-        ) : (
-          <div>
-            <BtnLink href='/register'>Get started</BtnLink>
-          </div>
-        )}
-      </FormWrapper>
-
+              setSuccess={setSuccess}
+              floating
+            >
+              <Button
+                label={'Submit argument'}
+                loading={loading}
+                success={success}
+              />
+            </Form>
+          ) : (
+            <div>
+              <BtnLink href='/register'>Get started</BtnLink>
+            </div>
+          )}
+        </div>
+      </FirstSection>
       <ListWrapper>
         <ListTitle>All arguments</ListTitle>
         <List items={allPosts} Layout={PostCard} />
       </ListWrapper>
-    </Body>
+    </>
   )
 }

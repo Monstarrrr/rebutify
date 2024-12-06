@@ -8,7 +8,7 @@ import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/button'
-import { Page } from '@/styles'
+import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
 
 export default function Register() {
@@ -71,19 +71,26 @@ export default function Register() {
   }
 
   return (
-    <Page>
-      <h1>Register</h1>
-      <Form
-        id='register-form'
-        loading={isLoading}
-        inputsFields={registerInputs}
-        inputsErrors={apiFormErrors}
-        onSubmit={handleSubmit}
-        success={formSuccess}
-        setSuccess={setFormSuccess}
-      >
-        <Button label={'Register'} success={formSuccess} loading={isLoading} />
-      </Form>
-    </Page>
+    <>
+      <h1 style={{ marginBottom: '12px' }}>Register</h1>
+      <SectionStyle>
+        <Form
+          id='register-form'
+          loading={isLoading}
+          inputsFields={registerInputs}
+          inputsErrors={apiFormErrors}
+          onSubmit={handleSubmit}
+          success={formSuccess}
+          setSuccess={setFormSuccess}
+        >
+          <Button
+            size='max'
+            label={'Register'}
+            success={formSuccess}
+            loading={isLoading}
+          />
+        </Form>
+      </SectionStyle>
+    </>
   )
 }

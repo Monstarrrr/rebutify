@@ -18,7 +18,7 @@ const PostContainer = styled.div`
 
 const PostBody = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 `
 
@@ -98,11 +98,6 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   return (
     <PostContainer>
-      {post.type == 'argument' && post.title && (
-        <div>
-          <h1>{post.title}</h1>
-        </div>
-      )}
       <PostBody>
         <VoteContainer>
           <Button
@@ -119,6 +114,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           {voteError && <p>{voteError}</p>}
         </VoteContainer>
         <div>
+          {post.type == 'argument' && post.title && (
+            <div>
+              <h1>{post.title}</h1>
+            </div>
+          )}
           <p>{!isEditing && post.body}</p>
         </div>
         {isEditing && (
@@ -146,7 +146,6 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             </div>
           </>
         )}
-        <br />
       </PostBody>
     </PostContainer>
   )

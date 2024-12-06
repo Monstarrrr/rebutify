@@ -7,15 +7,25 @@ import { FormEvent, useEffect, useState } from 'react'
 import { getPosts } from '@/api/posts'
 import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
-import { Page } from '@/styles'
 import styled from 'styled-components'
 import { AxiosResponse } from 'axios'
 import { formDataToObj } from '@/helpers'
 import { editPassword } from '@/api/auth'
 
+const Container = styled.div`
+  display: flex;
+  gap: 28px;
+`
+
+const Left = styled.div`
+  flex: 1;
+`
+const Right = styled.div`
+  flex: 1;
+`
+
 const Title = styled.h1`
   font-size: 3.51rem;
-  margin: 12px auto 0;
 `
 const H2 = styled.h2`
   margin: 18px auto 8px;
@@ -24,14 +34,18 @@ const H2 = styled.h2`
 const H2Section = styled.div`
   background-color: #3d3d3d;
   border-radius: 14px;
-  padding: 12px;
+  padding: 24px;
 `
 
 const H3 = styled.h3`
   margin: 0 0 12px;
 `
 const H3Section = styled.div`
-  margin-bottom: 24px;
+  padding-bottom: 34px;
+`
+
+const Hr = styled.hr`
+  margin: 12px 0;
 `
 
 export default function Profile() {
@@ -48,9 +62,9 @@ export default function Profile() {
   useEffect(() => {
     console.log(`# user  :`, user)
     if (!user.id) {
-      window.location.href = '/login'
+      router.push('/login')
     }
-  }, [user])
+  }, [user, router])
 
   useEffect(() => {
     let fetchApi = async () => {
@@ -81,9 +95,9 @@ export default function Profile() {
       setEditPassLoading(false)
       console.error(
         error.response?.data?.detail ??
-        error.response?.data ??
-        error.response ??
-        error,
+          error.response?.data ??
+          error.response ??
+          error,
       )
     }
   }
@@ -105,116 +119,128 @@ export default function Profile() {
       setDeleteAccError(error?.response)
       console.error(
         error.response?.data?.detail ??
-        error.response?.data ??
-        error.response ??
-        error,
+          error.response?.data ??
+          error.response ??
+          error,
       )
     }
   }
 
   return (
-    <Page>
+    <>
       <Title>Profile</Title>
-      <H2>My info</H2>
-      <H2Section>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <b>Username:</b>
-              </td>
-              <td>{user.username}</td>
-            </tr>
-            <tr>
-              <td>
-                <b>Email:</b>
-              </td>
-              <td>{user.email}</td>
-            </tr>
-          </tbody>
-        </table>
-      </H2Section>
+      <Container>
+        <Left>
+          <H2>My info</H2>
+          <H2Section>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <b>Username:</b>
+                  </td>
+                  <td>{user.username}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <b>Email:</b>
+                  </td>
+                  <td>{user.email}</td>
+                </tr>
+              </tbody>
+            </table>
+          </H2Section>
 
-      <H2>My posts</H2>
-      <H2Section>
-        {argumentsList.length === 0 ? (
-          <p style={{ textAlign: 'center', fontStyle: 'italic' }}>No posts yet</p>
-        ) : (
-          <List items={argumentsList} Layout={PostCard} />
-        )}
-      </H2Section>
+          <H2>Settings</H2>
+          <H2Section>
+            <H3>Change password</H3>
+            <Hr />
 
-      <H2>Settings</H2>
-      <H2Section>
-        <H3>Change password</H3>
-        <H3Section>
-          <Form
-            id='edit-password'
-            inputsFields={[
-              {
-                id: 'currentPassword',
-                type: 'password',
-                placeholder: 'Old password',
-                required: true,
-                value: '',
-              },
-              {
-                id: 'newPassword',
-                type: 'password',
-                placeholder: 'New password',
-                required: true,
-                value: '',
-              },
-            ]}
-            onSubmit={handleEditPassword}
-            loading={editPassLoading}
-            success={editPassSuccess}
-            setSuccess={setEditPassSuccess}
-            inputsErrors={deleteAccError}
-          >
-            <Button
-              label='Change password'
-              loading={editPassLoading}
-              success={editPassSuccess}
-            />
-          </Form>
-        </H3Section>
+            <H3Section>
+              <Form
+                id='edit-password'
+                inputsFields={[
+                  {
+                    id: 'currentPassword',
+                    label: 'Current password',
+                    type: 'password',
+                    placeholder: '****************',
+                    value: '',
+                  },
+                  {
+                    id: 'newPassword',
+                    label: 'New password',
+                    type: 'password',
+                    placeholder: '*********************',
+                    value: '',
+                  },
+                ]}
+                onSubmit={handleEditPassword}
+                loading={editPassLoading}
+                success={editPassSuccess}
+                setSuccess={setEditPassSuccess}
+                inputsErrors={deleteAccError}
+              >
+                <Button
+                  label='Change password'
+                  loading={editPassLoading}
+                  success={editPassSuccess}
+                />
+              </Form>
+            </H3Section>
 
-        <H3>Delete account</H3>
-        <H3Section>
-          <Form
-            id='delete-account'
-            inputsFields={[
-              {
-                id: 'password',
-                type: 'password',
-                placeholder: 'Password',
-                required: true,
-                value: '',
-              },
-            ]}
-            onSubmit={handleDelete}
-            loading={deleteAccLoading}
-            success={deleteAccSuccess}
-            setSuccess={setDeleteAccSuccess}
-            inputsErrors={deleteAccError}
-          >
-            <Button
-              success={deleteAccSuccess}
-              loading={deleteAccLoading}
-              label='Delete account'
-              styles={
-                !deleteAccSuccess
-                  ? {
-                    background: 'red',
-                    color: 'black',
+            <H3>Delete account</H3>
+            <Hr />
+
+            <H3Section>
+              <Form
+                id='delete-account'
+                inputsFields={[
+                  {
+                    id: 'password',
+                    label: 'Password',
+                    type: 'password',
+                    placeholder: '****************',
+                    required: true,
+                    value: '',
+                  },
+                ]}
+                onSubmit={handleDelete}
+                loading={deleteAccLoading}
+                success={deleteAccSuccess}
+                setSuccess={setDeleteAccSuccess}
+                inputsErrors={deleteAccError}
+              >
+                <Button
+                  success={deleteAccSuccess}
+                  loading={deleteAccLoading}
+                  label='Delete account'
+                  styles={
+                    !deleteAccSuccess
+                      ? {
+                          background: 'red',
+                          color: 'black',
+                        }
+                      : {}
                   }
-                  : {}
-              }
-            />
-          </Form>
-        </H3Section>
-      </H2Section>
-    </Page>
+                />
+              </Form>
+            </H3Section>
+          </H2Section>
+        </Left>
+        <Right>
+          <H2>My posts</H2>
+          <H2Section>
+            {argumentsList.length === 0 ? (
+              <p style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                No posts yet
+              </p>
+            ) : (
+              <List items={argumentsList} Layout={PostCard} />
+            )}
+          </H2Section>
+        </Right>
+      </Container>
+    </>
   )
 }

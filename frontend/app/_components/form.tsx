@@ -1,4 +1,5 @@
 'use client'
+import { SectionStyle } from '@/styles'
 import { FormProps, TextInput } from '@/types'
 import { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -11,6 +12,9 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 12px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 const Label = styled.label`
   margin-bottom: 4px;
@@ -22,7 +26,6 @@ const InputStyles = `
   border-radius: 8px;
   color: #fff;
   padding: 12px 20px;
-  max-width: 640px;
 `
 
 const Input = styled.input`
@@ -31,6 +34,12 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   ${InputStyles}
+`
+
+const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+  margin-top: 16px;
+  margin-left: 16px;
+  ${({ $floating }) => $floating && 'margin-left: 0;'}
 `
 
 export default function Form(props: FormProps) {
@@ -43,6 +52,7 @@ export default function Form(props: FormProps) {
     children,
     success,
     setSuccess,
+    floating,
   } = props
   // Renaming to avoid confusion with fields ids
   const formId = id
@@ -136,64 +146,65 @@ export default function Form(props: FormProps) {
 
   return (
     <StyledForm onSubmit={onSubmit}>
-      {inputsState.map(
-        ({ id, label, placeholder, type, value, errors, required = true }) => (
-          <InputContainer key={id}>
-            {label && (
-              <Label htmlFor={id}>
-                <strong>{label || placeholder}</strong>
-                <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
-              </Label>
-            )}
-            {type === 'textarea' ? (
-              <Textarea
-                disabled={loading}
-                name={id}
-                placeholder={placeholder}
-                required={required || true}
-                onChange={handleChange}
-                value={value}
-              />
-            ) : (
-              <Input
-                disabled={loading}
-                name={id}
-                placeholder={placeholder}
-                required={required || true}
-                onChange={handleChange}
-                value={value}
-                type={type || 'text'}
-              />
-            )}
-            {/* Field errors */}
-            {errors &&
-              Object.values(errors).map((error) => (
+      <SectionStyle>
+        {inputsState.map(
+          ({ id, label, placeholder, type, value, errors, required = false }) => (
+            <InputContainer key={id}>
+              {label && (
+                <Label htmlFor={id}>
+                  <i style={{ marginRight: '4px' }}>{label || placeholder}</i>
+                  <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+                </Label>
+              )}
+              {type === 'textarea' ? (
+                <Textarea
+                  disabled={loading}
+                  name={id}
+                  placeholder={placeholder}
+                  required={required || true}
+                  onChange={handleChange}
+                  value={value}
+                />
+              ) : (
+                <Input
+                  disabled={loading}
+                  name={id}
+                  placeholder={placeholder}
+                  required={required || true}
+                  onChange={handleChange}
+                  value={value}
+                  type={type || 'text'}
+                />
+              )}
+              {/* Field errors */}
+              {errors &&
+                Object.values(errors).map((error) => (
+                  <span style={{ color: 'red' }} key={error}>
+                    {error}
+                  </span>
+                ))}
+            </InputContainer>
+          ),
+        )}
+        {/* Global errors */}
+        {globalFormErrors &&
+          (typeof globalFormErrors === 'string' ? (
+            <>
+              <span style={{ color: 'red' }}>{globalFormErrors}</span>
+              <br />
+            </>
+          ) : (
+            globalFormErrors.map((error) => (
+              <>
                 <span style={{ color: 'red' }} key={error}>
                   {error}
                 </span>
-              ))}
-          </InputContainer>
-        ),
-      )}
-      {/* Global errors */}
-      {globalFormErrors &&
-        (typeof globalFormErrors === 'string' ? (
-          <>
-            <span style={{ color: 'red' }}>{globalFormErrors}</span>
-            <br />
-          </>
-        ) : (
-          globalFormErrors.map((error) => (
-            <>
-              <span style={{ color: 'red' }} key={error}>
-                {error}
-              </span>
-              <br />
-            </>
-          ))
-        ))}
-
-      {children}
+                <br />
+              </>
+            ))
+          ))}
+      </SectionStyle>
+      <ButtonWrapper $floating={floating}>{children}</ButtonWrapper>
     </StyledForm>
   )
 }

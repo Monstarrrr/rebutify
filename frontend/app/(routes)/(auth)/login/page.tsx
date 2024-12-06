@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
-import { Page } from '@/styles'
+import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
 
 const loginInputs: TextInput[] = [
@@ -71,18 +71,21 @@ export default function Login() {
   }
 
   return (
-    <Page>
-      <Form
-        id='login-form'
-        inputsFields={loginInputs}
-        inputsErrors={apiErrors}
-        onSubmit={handleSubmit}
-        loading={loading}
-        success={success}
-        setSuccess={setSuccess}
-      >
-        <Button loading={loading} label={submitButtonLabel} />
-      </Form>
-    </Page>
+    <>
+      <h1 style={{ marginBottom: '12px' }}>Login</h1>
+      <SectionStyle>
+        <Form
+          id='login-form'
+          inputsFields={loginInputs}
+          inputsErrors={apiErrors}
+          onSubmit={handleSubmit}
+          loading={loading}
+          success={success}
+          setSuccess={setSuccess}
+        >
+          <Button size='max' loading={loading} label={submitButtonLabel} />
+        </Form>
+      </SectionStyle>
+    </>
   )
 }

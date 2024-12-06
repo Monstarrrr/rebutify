@@ -9,21 +9,10 @@ import styled from 'styled-components'
 import Image from 'next/image'
 import { Button } from '@/components'
 
-const links: NavLink[] = [
-  { href: '/profile', label: 'Profile', requiresAuth: true },
-  { href: '/login', label: 'Login', requiresAuth: false, requiresNoAuth: true },
-  {
-    href: '/register',
-    label: 'Register',
-    requiresAuth: false,
-    requiresNoAuth: true,
-  },
-]
-
 const Nav = styled.nav`
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid #5a5a5a;
   display: flex;
-  padding: 4px 12px;
+  padding: 12px;
 `
 
 const LeftBlock = styled.div`
@@ -39,6 +28,14 @@ const RightBlock = styled.div`
   align-items: center;
 `
 
+const BrandLabel = styled.span`
+  font-size: 34px;
+  font-weight: bold;
+  position: relative;
+  top: 2px;
+  left: -6px;
+`
+
 const LinkWrapper = styled.div`
   margin: 0 8px;
 `
@@ -47,9 +44,7 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   color: #fff;
   margin: 0 8px;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: 18px;
 `
 
 export default function Header() {
@@ -58,6 +53,17 @@ export default function Header() {
   const dispatch = useAppDispatch()
   const [user, setUser] = useState(userStore)
   const pathName = usePathname()
+
+  const links: NavLink[] = [
+    { href: '/profile', label: user.username, requiresAuth: true },
+    { href: '/login', label: 'Login', requiresAuth: false, requiresNoAuth: true },
+    {
+      href: '/register',
+      label: 'Register',
+      requiresAuth: false,
+      requiresNoAuth: true,
+    },
+  ]
 
   useEffect(() => {
     setUser(userStore)
@@ -80,6 +86,7 @@ export default function Header() {
               alt='logo'
             />
           </Link>
+          <BrandLabel>ebutify</BrandLabel>
         </LeftBlock>
 
         <RightBlock>
@@ -100,7 +107,13 @@ export default function Header() {
               </LinkWrapper>
             )
           })}
-          {user.id && <Button onClick={handleLogout} label='Logout' />}
+          {user.id && (
+            <Button
+              styles={{ fontSize: '18px' }}
+              onClick={handleLogout}
+              label='Logout'
+            />
+          )}
           <br />
         </RightBlock>
       </Nav>

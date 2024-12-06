@@ -8,11 +8,12 @@ import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
+import { SectionStyle } from '@/styles'
 
 const newRebuttalInput: TextInput[] = [
   {
     id: 'body',
-    label: 'Body',
+    label: '',
     placeholder:
       'There is nothing so special about human existence that animals should have to die for us to exist ...',
     type: 'textarea',
@@ -58,17 +59,19 @@ export default function RebuttalSubmition({ argument }: Props) {
   return (
     <div>
       <SectionTitle>Your rebuttal</SectionTitle>
-      <Form
-        id='new-rebuttal'
-        inputsErrors={apiErrors}
-        inputsFields={newRebuttalInput}
-        onSubmit={handleSubmit}
-        loading={loading}
-        success={success}
-        setSuccess={setSuccess}
-      >
-        <Button loading={loading} label={'Submit'} success={success} />
-      </Form>
+      <SectionStyle>
+        <Form
+          id='new-rebuttal'
+          inputsErrors={apiErrors}
+          inputsFields={newRebuttalInput}
+          onSubmit={handleSubmit}
+          loading={loading}
+          success={success}
+          setSuccess={setSuccess}
+        >
+          <Button loading={loading} label={'Submit'} success={success} />
+        </Form>
+      </SectionStyle>
     </div>
   )
 }
