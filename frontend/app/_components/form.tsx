@@ -36,7 +36,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
   margin-top: 16px;
   margin-left: 16px;
   ${({ $floating }) => $floating && 'margin-left: 0;'}
@@ -52,7 +52,7 @@ export default function Form(props: FormProps) {
     children,
     success,
     setSuccess,
-    floating,
+    floating = false,
   } = props
   // Renaming to avoid confusion with fields ids
   const formId = id

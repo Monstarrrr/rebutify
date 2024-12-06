@@ -3,7 +3,7 @@
 import { ButtonProps } from '@/types'
 import styled from 'styled-components'
 
-const StyledButton = styled('button')<{
+const StyledButton = styled('button') <{
   $size: 'min' | 'max' | undefined
   $success: string | null | undefined
   $icon: boolean | undefined
@@ -17,7 +17,7 @@ const StyledButton = styled('button')<{
   border-radius: 99px;
   cursor: ${(props) =>
     props.disabled || props.$success ? 'not-allowed' : 'pointer'};
-
+  
   ${(props) => props.$size === 'max' && `min-width: 100%;`}
 `
 
