@@ -86,8 +86,6 @@ export default function Profile() {
     setEditPassLoading(true)
     const { currentPassword, newPassword } = formDataToObj(e)
     try {
-      console.log(`# currentPassword :`, currentPassword)
-      console.log(`# newPassword :`, newPassword)
       await editPassword(currentPassword, newPassword)
       setEditPassSuccess('Password updated')
       setEditPassLoading(false)
@@ -95,9 +93,9 @@ export default function Profile() {
       setEditPassLoading(false)
       console.error(
         error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
+        error.response?.data ??
+        error.response ??
+        error,
       )
     }
   }
@@ -119,9 +117,9 @@ export default function Profile() {
       setDeleteAccError(error?.response)
       console.error(
         error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
+        error.response?.data ??
+        error.response ??
+        error,
       )
     }
   }
@@ -218,9 +216,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                          background: 'red',
-                          color: 'black',
-                        }
+                        background: 'red',
+                        color: 'black',
+                      }
                       : {}
                   }
                 />
