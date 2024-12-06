@@ -7,7 +7,6 @@ import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
-import Image from 'next/image'
 
 const newArgumentInputs: TextInput[] = [
   {
