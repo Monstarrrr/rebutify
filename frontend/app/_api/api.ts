@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { isTokenExpired } from '@/helpers'
 import { refreshTheToken } from '@/api/auth/refreshTheToken'
+import { removeUser } from '@/store/slices/user'
 
 // API INSTANCE
 const api = axios.create({
@@ -8,6 +9,12 @@ const api = axios.create({
 })
 
 let refreshTokenPromise // used to queue up requests
+
+// # INJECT STORE TO PREVENT IMPORT ISSUES #
+let store: any
+export const injectStore = (_store: any) => {
+  store = _store
+}
 
 // INTERCEPTORS
 // On request
@@ -20,7 +27,6 @@ api.interceptors.request.use(
     if (req.requiresAuth) {
       const accessToken = localStorage.getItem('access_token')
       const refreshToken = localStorage.getItem('refresh_token')
-      console.log(`# accessToken :`, accessToken)
       if (
         accessToken &&
         accessToken !== 'null' &&
@@ -28,27 +34,33 @@ api.interceptors.request.use(
         !isTokenExpired(accessToken)
       ) {
         console.log(`ℹ️ accessToken is not expired.`)
-        // Add the access token to the request headers
         req.headers['authorization'] = `Bearer ${accessToken}`
         console.log(`↗ [${req.url}] request:`, req)
         return req
       }
-      console.log(`# accessToken is expired.`)
+      console.log(`ℹ️ accessToken is expired.`)
       localStorage.removeItem(`access_token`)
       if (
         !refreshToken ||
         refreshToken === 'null' ||
         refreshToken === 'undefined'
       ) {
-        console.log(`# No valid refresh token found.`)
+        console.log(`ℹ️ No valid refresh token found.`)
+        store.dispatch(removeUser())
         return req
       }
-      // Check for in-flight refresh requests and start one if required
-      refreshTokenPromise ??= refreshTheToken(refreshToken)
-      const newAccessToken = await refreshTokenPromise
-      refreshTokenPromise = null // clean in-flight state
-      localStorage.setItem('access_token', newAccessToken)
-      req.headers['authorization'] = `Bearer ${newAccessToken}`
+      // If there is a valid refresh token, we try using it.
+      // Check for in-flight refresh requests and start one if required.
+      try {
+        refreshTokenPromise ??= refreshTheToken(refreshToken)
+        const newAccessToken = await refreshTokenPromise
+        refreshTokenPromise = null // clean in-flight state
+        localStorage.setItem('access_token', newAccessToken)
+        req.headers['authorization'] = `Bearer ${newAccessToken}`
+      } catch (error: any) {
+        store.dispatch(removeUser())
+        return req
+      }
     }
 
     console.log(`↗ [${req.url}] request:`, req)

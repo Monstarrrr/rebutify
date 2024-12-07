@@ -1,16 +1,15 @@
 'use client'
-import { Post } from '@/types'
-import { deleteSelfAccount } from '@/api/auth'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { useRouter } from 'next/navigation'
+import { AxiosResponse } from 'axios'
+import { Post } from '@/types'
+import { formDataToObj } from '@/helpers'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getPosts } from '@/api/posts'
+import { editPassword, deleteSelfAccount } from '@/api/auth'
 import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
-import styled from 'styled-components'
-import { AxiosResponse } from 'axios'
-import { formDataToObj } from '@/helpers'
-import { editPassword } from '@/api/auth'
 
 const Container = styled.div`
   display: flex;
