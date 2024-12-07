@@ -22,8 +22,9 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Other
 
-**VSCode** users, please enable the following setting:
+**VSCode** users, please enable the following settings:
 
 ```json
 "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+"typescript.reportStyleChecksAsWarnings": false
 ```

@@ -7,7 +7,6 @@ import { createPost } from '@/api/posts'
 import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
-import styled from 'styled-components'
 import { H2, SectionStyle } from '@/styles'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
@@ -48,9 +47,9 @@ export default function RebuttalSubmition({ argument }: Props) {
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??
-          error?.response?.data ??
-          error?.response ??
-          error,
+        error?.response?.data ??
+        error?.response ??
+        error,
       )
     }
   }

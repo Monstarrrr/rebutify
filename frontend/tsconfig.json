@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "allowUnusedLabels": false,
     "target": "ES6",
     "typeRoots": ["./node_modules/@types", "./_types/declarations"],
     "plugins": [
