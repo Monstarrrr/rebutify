@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { RebuttalSubmition, List, Post } from '@/components'
 import * as type from '@/types/Post'
 import { getPosts } from '@/api/posts'
-import { SectionStyle, EmptySectionStyle } from '@/styles'
+import { SectionStyle, EmptySectionStyle, H2 } from '@/styles'
 
 type Props = {
   params: {
@@ -43,7 +43,7 @@ export default function Argument(props: Props) {
         <>
           <Post item={argument} />
 
-          <h2>Rebuttals</h2>
+          <H2>Rebuttals</H2>
           <SectionStyle>
             {rebuttals.length === 0 ? (
               <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>

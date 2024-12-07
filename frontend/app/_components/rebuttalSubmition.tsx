@@ -8,7 +8,9 @@ import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
-import { SectionStyle } from '@/styles'
+import { H2, SectionStyle } from '@/styles'
+import { useAppSelector } from '@/store/hooks'
+import Link from 'next/link'
 
 const newRebuttalInput: TextInput[] = [
   {
@@ -25,11 +27,8 @@ type Props = {
   argument: Argument
 }
 
-const SectionTitle = styled.h2`
-  margin: 12px auto 0;
-`
-
 export default function RebuttalSubmition({ argument }: Props) {
+  const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -58,19 +57,28 @@ export default function RebuttalSubmition({ argument }: Props) {
 
   return (
     <div>
-      <SectionTitle>Your rebuttal</SectionTitle>
+      <H2>Your rebuttal</H2>
       <SectionStyle>
-        <Form
-          id='new-rebuttal'
-          inputsErrors={apiErrors}
-          inputsFields={newRebuttalInput}
-          onSubmit={handleSubmit}
-          loading={loading}
-          success={success}
-          setSuccess={setSuccess}
-        >
-          <Button loading={loading} label={'Submit'} success={success} />
-        </Form>
+        {user.id ? (
+          <Form
+            id='new-rebuttal'
+            inputsErrors={apiErrors}
+            inputsFields={newRebuttalInput}
+            onSubmit={handleSubmit}
+            loading={loading}
+            success={success}
+            setSuccess={setSuccess}
+          >
+            <Button loading={loading} label={'Submit'} success={success} />
+          </Form>
+        ) : (
+          <p>
+            You must be logged in to submit a rebuttal.{' '}
+            <Link href='/login'>
+              <Button label={'Login'} />
+            </Link>
+          </p>
+        )}
       </SectionStyle>
     </div>
   )

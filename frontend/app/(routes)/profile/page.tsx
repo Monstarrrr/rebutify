@@ -10,6 +10,7 @@ import { getPosts } from '@/api/posts'
 import { editPassword, deleteSelfAccount } from '@/api/auth'
 import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
+import { H2, H3 } from '@/styles'
 
 const Container = styled.div`
   display: flex;
@@ -26,19 +27,13 @@ const Right = styled.div`
 const Title = styled.h1`
   font-size: 3.51rem;
 `
-const H2 = styled.h2`
-  margin: 18px auto 8px;
-  font-size: 2rem;
-`
+
 const H2Section = styled.div`
   background-color: #3d3d3d;
   border-radius: 14px;
   padding: 24px;
 `
 
-const H3 = styled.h3`
-  margin: 0 0 12px;
-`
 const H3Section = styled.div`
   padding-bottom: 34px;
 
