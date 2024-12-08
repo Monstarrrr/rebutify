@@ -6,11 +6,12 @@ export type ButtonProps = {
   */
   label?: string
 
-  icon?: React.ReactNode
+  icon?: React.ReactNode | null
   styles?: React.CSSProperties
   size?: 'min' | 'max'
+  transparent?: boolean
   onClick?: () => void
 
   loading?: boolean
-  success?: string | null | undefined
+  success?: string | null
 }

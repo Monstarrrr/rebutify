@@ -41,13 +41,6 @@ const LinkWrapper = styled.div`
   margin: 0 8px;
 `
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #fff;
-  margin: 0 8px;
-  font-size: 18px;
-`
-
 export default function Header() {
   // get user from store
   const userStore = useAppSelector((state) => state.user)
@@ -96,15 +89,19 @@ export default function Header() {
             if (requiresNoAuth && user.id) return null
             return (
               <LinkWrapper key={`${href}-${label}`}>
-                <StyledLink
-                  style={{
-                    opacity: pathName === href ? 0.6 : 1,
-                    pointerEvents: pathName === href ? 'none' : 'auto',
-                  }}
-                  href={href}
-                >
-                  {label}
-                </StyledLink>
+                <Link href={href}>
+                  <Button
+                    label={label}
+                    styles={{
+                      opacity: pathName === href ? 0.6 : 1,
+                      pointerEvents: pathName === href ? 'none' : 'auto',
+                    }}
+                    transparent={
+                      href === '/login' ||
+                      href === '/profile'
+                    }
+                  />
+                </Link>
               </LinkWrapper>
             )
           })}
