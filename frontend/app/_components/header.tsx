@@ -34,6 +34,7 @@ const BrandLabel = styled.span`
   position: relative;
   top: 2px;
   left: -6px;
+  color: #fff;
 `
 
 const LinkWrapper = styled.div`
@@ -78,15 +79,15 @@ export default function Header() {
     <>
       <Nav>
         <LeftBlock>
-          <Link href='/'>
+          <Link style={{ display: "flex", textDecoration: 'none' }} href='/'>
             <Image
               width={50}
               height={50}
               src='/images/logo-white.png'
               alt='logo'
             />
+            <BrandLabel>ebutify</BrandLabel>
           </Link>
-          <BrandLabel>ebutify</BrandLabel>
         </LeftBlock>
 
         <RightBlock>
