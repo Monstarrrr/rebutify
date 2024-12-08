@@ -10,7 +10,7 @@ import Image from 'next/image'
 import { Button } from '@/components'
 
 const Nav = styled.nav`
-  border-bottom: 1px solid #5a5a5a;
+  background: #1f1f1f;
   display: flex;
   padding: 12px;
 `
@@ -32,8 +32,8 @@ const BrandLabel = styled.span`
   font-size: 34px;
   font-weight: bold;
   position: relative;
-  top: 2px;
-  left: -6px;
+  top: 1px;
+  left: -7px;
   color: #fff;
 `
 
