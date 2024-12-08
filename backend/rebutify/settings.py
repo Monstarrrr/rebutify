@@ -77,6 +77,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+if DEBUG:
+    MIDDLEWARE.append("request_logging.middleware.LoggingMiddleware")
 
 # Domains that can access the API
 CORS_ALLOWED_ORIGINS = [
@@ -235,4 +237,21 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(minutes=10) if DEBUG else timedelta(minutes=5),
     # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
     "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "DEBUG",  # change debug level as appropiate
+            "propagate": False,
+        },
+    },
 }
