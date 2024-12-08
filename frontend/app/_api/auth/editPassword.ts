@@ -3,18 +3,18 @@ import { AxiosResponse } from 'axios'
 
 export const editPassword = async (
   currentPassword: string,
-  newPassword: string
+  newPassword: string,
 ): Promise<AxiosResponse> => {
   try {
     const res = await api.post(
-      '/auth/users/set-password',
+      '/auth/users/set_password',
       {
         new_password: newPassword,
         current_password: currentPassword,
       },
       {
         requiresAuth: true,
-      }
+      },
     )
     return res
   } catch (error) {
