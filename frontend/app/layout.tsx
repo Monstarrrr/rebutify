@@ -19,11 +19,18 @@ type PropsType = Readonly<{
 export default function RootLayout({ children }: PropsType) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body className={inter.className} style={{ background: '#0f0f0f' }}>
         <StoreProvider>
           <ClientInitializer />
           <Header />
-          {children}
+          <div
+            style={{
+              padding: '32px',
+              minHeight: `calc(100dvh - 54px - 24px)`,
+            }}
+          >
+            {children}
+          </div>
         </StoreProvider>
       </body>
     </html>

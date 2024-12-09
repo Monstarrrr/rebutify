@@ -77,6 +77,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+if DEBUG:
+    MIDDLEWARE.append("request_logging.middleware.LoggingMiddleware")
 
 # Domains that can access the API
 CORS_ALLOWED_ORIGINS = [
@@ -84,6 +86,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://rebutify.org",
     "http://localhost:3000",
     "http://0.0.0.0:3000",
+    "http://127.0.0.1:3000",
 ]
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
@@ -134,12 +137,13 @@ WSGI_APPLICATION = "rebutify.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DEBUG_DB = os.getenv("DEBUG_DB", "True") == "True"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-    if os.getenv("DEBUG_DB", "True") == "True"
+    if DEBUG_DB
     else {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_NAME", ""),
@@ -229,8 +233,25 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10) if DEBUG else timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=50) if DEBUG else timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=2) if DEBUG else timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=10) if DEBUG else timedelta(minutes=5),
     # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#auth-header-types
     "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "DEBUG",  # change debug level as appropiate
+            "propagate": False,
+        },
+    },
 }

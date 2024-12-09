@@ -3,8 +3,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: UserInfo = {
   email: '',
-  id: null,
-  username: '',
+  id: '0',
+  refresh: '',
+  access: '',
+  username: 'Guest',
+  upvotedPosts: '',
+  downvotedPosts: '',
 }
 
 const userSlice = createSlice({
@@ -12,7 +16,12 @@ const userSlice = createSlice({
   name: 'user',
   reducers: {
     removeUser() {
-      return initialState
+      console.log(`REMOVING THE USER !!!!`)
+      return {
+        ...initialState,
+        id: null,
+        username: '',
+      }
     },
     updateUser(state, action: { payload: UserInfo }) {
       return { ...state, ...action.payload }

@@ -11,13 +11,16 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.3",
+    "facepaint": "^1.2.1",
     "jwt-decode": "^4.0.0",
-    "next": "14.2.3",
+    "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18",
-    "react-redux": "^9.1.2"
+    "react-redux": "^9.1.2",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
+    "@types/facepaint": "^1.2.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -29,6 +29,9 @@
     "react/jsx-uses-react": "off",
     "react/jsx-uses-vars": "off",
 
+    // Disabling prop-types because we use TypeScript
+    "react/prop-types": "off",
+
     // Disallowing relative imports in favor of absolute imports
     "no-restricted-imports": [
       "error",

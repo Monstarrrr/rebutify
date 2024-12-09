@@ -71,6 +71,16 @@ urlpatterns = [
         name="redoc-ui",
     ),
     path(
+        "<str:post_type>/<int:post_id>/edit/",
+        views.EditView.as_view(),
+        name="edit",
+    ),
+    path(
+        "<str:post_type>/<int:post_id>/<str:vote_type>/",
+        views.VoteView.as_view(),
+        name="vote",
+    ),
+    path(
         "api/arguments",
         views.ArgumentViewSet.as_view({"get": "list"}),
         name="arguments",

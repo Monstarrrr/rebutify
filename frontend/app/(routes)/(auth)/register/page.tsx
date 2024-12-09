@@ -2,16 +2,19 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 import { Form } from '@/components'
-import { ApiResponse, TextInput } from '@/types'
+import { TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
+import Button from '@/components/button'
+import { SectionStyle } from '@/styles'
+import { AxiosResponse } from 'axios'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [apiFormErrors, setApiFormErrors] = useState<ApiResponse | null>(null)
-  const [formSuccess, setFormSuccess] = useState(false)
+  const [apiFormErrors, setApiFormErrors] = useState<AxiosResponse | null>(null)
+  const [formSuccess, setFormSuccess] = useState<string | null>(null)
   const user = useAppSelector((state) => state.user.id)
   const router = useRouter()
 
@@ -34,8 +37,6 @@ export default function Register() {
       value: '',
     },
   ]
-  const submitButtonLabel = 'Register'
-  const successMessage = 'Check your email to verify your account.'
 
   useEffect(() => {
     if (user) {
@@ -47,23 +48,23 @@ export default function Register() {
     event.preventDefault()
     setIsLoading(true)
     setApiFormErrors(null)
-    setFormSuccess(false)
+    setFormSuccess(null)
 
     const formData = formDataToObj(event)
 
     try {
-      await register(formData)
+      const { data } = await register(formData)
       setIsLoading(false)
-      setFormSuccess(true)
+      setFormSuccess(data.message)
     } catch (error: any) {
       setIsLoading(false)
       setApiFormErrors(
-        error.response ?? {
+        error ?? {
           data: {
-            detail:
+            code: 500,
+            message:
               'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
           },
-          status: 401,
         },
       )
     }
@@ -71,16 +72,25 @@ export default function Register() {
 
   return (
     <>
-      <h1>Register</h1>
-      <Form
-        id='register-form'
-        submitButtonLabel={submitButtonLabel}
-        inputsFields={registerInputs}
-        inputsErrors={apiFormErrors}
-        onSubmit={handleSubmit}
-        successMessage={formSuccess ? successMessage : undefined}
-      />
-      {isLoading && <p>Loading...</p>}
+      <h1 style={{ marginBottom: '12px' }}>Register</h1>
+      <SectionStyle>
+        <Form
+          id='register-form'
+          loading={isLoading}
+          inputsFields={registerInputs}
+          inputsErrors={apiFormErrors}
+          onSubmit={handleSubmit}
+          success={formSuccess}
+          setSuccess={setFormSuccess}
+        >
+          <Button
+            size='max'
+            label={'Register'}
+            success={formSuccess}
+            loading={isLoading}
+          />
+        </Form>
+      </SectionStyle>
     </>
   )
 }
