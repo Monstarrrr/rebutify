@@ -4,11 +4,10 @@ from django.conf import settings
 from django.core import serializers
 from django.db import transaction
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
@@ -89,12 +88,13 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
 
+    queryset = Post.objects.filter(type="argument")
+
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-        queryset = Post.objects.filter(type="argument")
-        return queryset
+        return self.queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -110,31 +110,66 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        argument = get_object_or_404(Post, type="argument", pk=id)
-        followers = argument.followers.all() if argument else None
-        followers = serializers.serialize("json", followers) if followers else {}
-        return Response(followers, content_type="application/json")
+        if self.queryset.filter(id=id).exists():
+            followers = serializers.serialize(
+                "json", self.queryset.get(id=id).followers.all()
+            )
+            code = status.HTTP_200_OK
+            message = "Followers for this argument."
+        else:
+            followers = {}
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = {}
+        body["code"] = code
+        body["message"] = message
+        body["response"] = {"followers": followers}
+        return Response(data=body, content_type="application/json")
 
     # the current user follows the argument
     @action(detail=True, methods=["post"])
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = get_object_or_404(Post, type="argument", pk=id).followers
-        followers = followers.add(self.request.user.id)
-        if followers:
-            followers = serializers.serialize("json", followers)
-        return Response(followers, content_type="application/json")
+        if self.queryset.filter(id=id).exists():
+            followers = self.queryset.get(id=id).followers.add(self.request.user.id)
+            headers = self.get_success_headers(followers)
+            code = status.HTTP_200_OK
+            message = "Follow argument successful."
+        else:
+            headers = {}
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = {}
+        body["code"] = code
+        body["message"] = message
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     # the current user undos the argument follow
     @action(detail=True, url_path="follow/undo", methods=["post"])
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = {}
-        followers = get_object_or_404(Post, type="argument", pk=id).followers
-        followers = followers.remove(self.request.user.id)
-        if followers:
-            followers = serializers.serialize("json", followers)
-        return Response(followers, content_type="application/json")
+        if self.queryset.filter(id=id).exists():
+            user_id = self.request.user.id
+            followers = self.queryset.get(id=id).followers
+            if followers.filter(id=user_id).exists():
+                followers = followers.remove(user_id)
+                message = "Undo follow argument successful."
+            else:
+                message = "You do not follow this argument."
+            headers = self.get_success_headers(followers)
+            code = status.HTTP_200_OK
+        else:
+            headers = {}
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = {}
+        body["code"] = code
+        body["message"] = message
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
