@@ -121,8 +121,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         id = self.kwargs.get("pk")
         followers = self.queryset.get(id=id).followers
         followers = followers.add(self.request.user.id)
-        if followers:
-            followers = serializers.serialize("json", followers.all())
+        followers = serializers.serialize("json", followers) if followers else {}
         return Response(followers, content_type="application/json")
 
     # the current user undos the argument follow
@@ -131,8 +130,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         id = self.kwargs.get("pk")
         followers = self.queryset.get(id=id).followers
         followers = followers.remove(self.request.user.id)
-        if followers:
-            followers = serializers.serialize("json", followers.all())
+        followers = serializers.serialize("json", followers) if followers else {}
         return Response(followers, content_type="application/json")
 
 
