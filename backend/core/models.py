@@ -38,6 +38,9 @@ class Post(models.Model):
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
     upvotes: models.IntegerField = models.IntegerField(null=False, default=0)
     downvotes: models.IntegerField = models.IntegerField(null=False, default=0)
+    followers: models.ManyToManyField = models.ManyToManyField(
+        User, related_name="followers", blank=True
+    )
 
 
 class UserProfile(models.Model):

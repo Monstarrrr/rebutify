@@ -6,7 +6,15 @@ from .models import Post, UserProfile, Vote
 class ArgumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ["id", "body", "title", "ownerUserId", "created", "updated"]
+        fields = [
+            "id",
+            "body",
+            "title",
+            "ownerUserId",
+            "created",
+            "updated",
+            "followers",
+        ]
         read_only_fields = [
             "ownerUserId",
         ]
