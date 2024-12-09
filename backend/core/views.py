@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.core import serializers
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
@@ -86,15 +87,15 @@ class CursorPaginationViewSet(CursorPagination):
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
+    # gets all arguments
+    queryset = Post.objects.filter(type="argument")
 
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
 
-        # gets all arguments
-        queryset = Post.objects.filter(type="argument")
-        return queryset
+        return self.queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -106,20 +107,33 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
 
+    # gets followers of the argument
     @action(detail=True, methods=["get"])
-    def followers(self):
-        # put your code here
-        print("test")
+    def followers(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers.all()
+        followers = serializers.serialize("json", followers) if followers else {}
+        return Response(followers, content_type="application/json")
 
+    # the current user follows the argument
     @action(detail=True, methods=["post"])
-    def follow(self):
-        # put your code here
-        print("test")
+    def follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers
+        followers = followers.add(self.request.user.id)
+        if followers:
+            followers = serializers.serialize("json", followers.all())
+        return Response(followers, content_type="application/json")
 
+    # the current user undos the argument follow
     @action(detail=True, url_path="follow/undo", methods=["post"])
-    def undo_follow(self):
-        # put your code here
-        print("test")
+    def undo_follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers
+        followers = followers.remove(self.request.user.id)
+        if followers:
+            followers = serializers.serialize("json", followers.all())
+        return Response(followers, content_type="application/json")
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
