@@ -3,7 +3,7 @@
 import { ReactNode, useRef } from 'react'
 import { AppStore, makeStore } from '@/store/store'
 import { Provider } from 'react-redux'
-import { injectStore } from '@/store/injector'
+import { injectStore } from '@/api/api'
 
 type PropsType = Readonly<{
   children: ReactNode

@@ -1,13 +1,15 @@
 'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
-import { Form } from '@/components'
-import { ApiResponse, TextInput } from '@/types'
+import { Form, Button } from '@/components'
+import { TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
+import { SectionStyle } from '@/styles'
+import { AxiosResponse } from 'axios'
 
 const loginInputs: TextInput[] = [
   {
@@ -23,12 +25,11 @@ const loginInputs: TextInput[] = [
   },
 ]
 const submitButtonLabel = 'Login'
-const successMessage = 'Logged in successfully.'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [apiErrors, setApiErrors] = useState<ApiResponse | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [apiErrors, setApiErrors] = useState<AxiosResponse | null>(null)
   const dispatch = useAppDispatch()
   const router = useRouter()
 
@@ -51,18 +52,19 @@ export default function Login() {
       const userInfo = await fetchUserInfo()
 
       setLoading(false)
-      setSuccess(true)
+      setSuccess(null)
       dispatch(updateUser(userInfo))
       router.push('/')
     } catch (error: any) {
       setLoading(false)
+      console.error(error)
       setApiErrors(
         error.response ?? {
           data: {
             detail:
               'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
           },
-          status: 401,
+          code: 401,
         },
       )
     }
@@ -70,15 +72,20 @@ export default function Login() {
 
   return (
     <>
-      <Form
-        id='login-form'
-        inputsFields={loginInputs}
-        inputsErrors={apiErrors}
-        onSubmit={handleSubmit}
-        loading={loading}
-        successMessage={success ? successMessage : null}
-        submitButtonLabel={submitButtonLabel}
-      />
+      <h1 style={{ marginBottom: '12px' }}>Login</h1>
+      <SectionStyle>
+        <Form
+          id='login-form'
+          inputsFields={loginInputs}
+          inputsErrors={apiErrors}
+          onSubmit={handleSubmit}
+          loading={loading}
+          success={success}
+          setSuccess={setSuccess}
+        >
+          <Button size='max' loading={loading} label={submitButtonLabel} />
+        </Form>
+      </SectionStyle>
     </>
   )
 }

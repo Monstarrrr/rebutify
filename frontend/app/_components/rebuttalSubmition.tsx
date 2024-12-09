@@ -1,32 +1,36 @@
+// rebuttalSubmition.tsx displays a form to submit a rebuttal
+
 'use client'
 import { Argument } from '@/types/Post'
 import { TextInput } from '@/types'
 import { createPost } from '@/api/posts'
-import Form from '@/components/form'
+import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
+import { H2, SectionStyle } from '@/styles'
+import { useAppSelector } from '@/store/hooks'
+import Link from 'next/link'
 
 const newRebuttalInput: TextInput[] = [
   {
     id: 'body',
-    label: 'Body',
+    label: '',
     placeholder:
       'There is nothing so special about human existence that animals should have to die for us to exist ...',
     type: 'textarea',
     value: '',
   },
 ]
-const submitButtonLabel = 'Submit rebuttal'
-const successMessage = 'Rebuttal submitted successfully!'
 
 type Props = {
   argument: Argument
 }
 
 export default function RebuttalSubmition({ argument }: Props) {
+  const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -35,34 +39,46 @@ export default function RebuttalSubmition({ argument }: Props) {
     const formData = formDataToObj(event)
 
     try {
-      const res = await createPost({ ...formData }, 'rebuttal', argument.id)
-      setSuccess(true)
+      const { data } = await createPost({ ...formData }, 'rebuttal', argument.id)
+      setSuccess(data.message)
       setLoading(false)
-      console.log(`# Create rebuttal - response :`, res)
     } catch (error: any) {
-      setSuccess(false)
+      setSuccess(null)
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??
-          error?.response?.data ??
-          error?.response ??
-          error,
+        error?.response?.data ??
+        error?.response ??
+        error,
       )
     }
   }
 
   return (
     <div>
-      <h2>Your rebuttal</h2>
-      <Form
-        submitButtonLabel={submitButtonLabel}
-        id='new-rebuttal'
-        inputsErrors={apiErrors}
-        inputsFields={newRebuttalInput}
-        onSubmit={handleSubmit}
-        loading={loading}
-        successMessage={success ? successMessage : null}
-      />
+      <H2>Your rebuttal</H2>
+      <SectionStyle>
+        {user.id ? (
+          <Form
+            id='new-rebuttal'
+            inputsErrors={apiErrors}
+            inputsFields={newRebuttalInput}
+            onSubmit={handleSubmit}
+            loading={loading}
+            success={success}
+            setSuccess={setSuccess}
+          >
+            <Button loading={loading} label={'Submit'} success={success} />
+          </Form>
+        ) : (
+          <p>
+            You must be logged in to submit a rebuttal.{' '}
+            <Link href='/login'>
+              <Button label={'Login'} />
+            </Link>
+          </p>
+        )}
+      </SectionStyle>
     </div>
   )
 }

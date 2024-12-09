@@ -1,10 +1,14 @@
+import { PostType } from '@/types'
+
 export type Post = {
   id: string
-  type: 'argument' | 'rebuttal' | 'comment'
+  type: PostType
   body: string
   title: string
-  ownerUserId: number
-  parentId: number
+  upvotes: number
+  downvotes: number
+  ownerUserId: string
+  parentId: string
   created: string
   updated: string
 }

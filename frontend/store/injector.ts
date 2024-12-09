@@ -7,10 +7,6 @@ import { AppStore } from '@/store/store'
 
 let store: AppStore | undefined
 
-export const injectStore = (_store: AppStore): void => {
-  store = _store
-}
-
 export const getInjectedStore = (): AppStore | undefined => {
   return store
 }

@@ -7,12 +7,12 @@ export const createPost = async (
   parentId?: string,
 ) => {
   try {
-    const title = type === 'argument' ? formData.title : 'Some title' // temp fix
-    const response = await api.post(
+    const title = type === 'argument' ? formData.title : 'Some Rebuttal title'
+    const res = await api.post(
       'api/posts',
       {
-        title, // temp fix
         ...formData,
+        title,
         type,
         parentId,
       },
@@ -20,7 +20,7 @@ export const createPost = async (
         requiresAuth: true,
       },
     )
-    return response.data
+    return res
   } catch (error: any) {
     console.error('# "New post" request failed: ', error.response.data ?? error)
     throw error

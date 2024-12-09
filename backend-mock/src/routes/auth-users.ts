@@ -1,17 +1,22 @@
 import * as express from 'express'
 import { authenticator } from '../utils/middleware'
-import { registerUser } from '../controllers/auth-users'
+import { registerUser } from '../controllers/auth/auth-users'
+import { activateAccount } from '../controllers/auth/auth-users-activation'
+import { deleteUserSelf } from 'controllers/auth/auth-users-me'
 
+// /auth/users
 const authUsersRouter = express.Router()
 
-// For the route "/auth/users"
+// Non-authenticated routes
 authUsersRouter.route('/').post(registerUser)
+authUsersRouter.route('/activation').post(activateAccount)
 
-// For the route "/auth/users/me"
+// Authenticated routes
+// (/auth/users/me)
 authUsersRouter
   .use(authenticator)
   .route('/me')
-  .get((_req, res) => res.json({ route: 'GET /auth/users/me' }))
-  .delete((_req, res) => res.json({ route: 'DELETE /auth/users/me' }))
+  .get((_req, res) => res.json(res.locals.user))
+  .delete(deleteUserSelf)
 
 export default authUsersRouter
