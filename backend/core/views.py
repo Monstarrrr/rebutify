@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core import serializers
 from django.db import transaction
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -87,15 +88,13 @@ class CursorPaginationViewSet(CursorPagination):
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
-    # gets all arguments
-    queryset = Post.objects.filter(type="argument")
 
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-
-        return self.queryset
+        queryset = Post.objects.filter(type="argument")
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -111,7 +110,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers.all()
+        argument = get_object_or_404(Post, type="argument", pk=id)
+        followers = argument.followers.all() if argument else None
         followers = serializers.serialize("json", followers) if followers else {}
         return Response(followers, content_type="application/json")
 
@@ -119,18 +119,21 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers
+        followers = get_object_or_404(Post, type="argument", pk=id).followers
         followers = followers.add(self.request.user.id)
-        followers = serializers.serialize("json", followers) if followers else {}
+        if followers:
+            followers = serializers.serialize("json", followers)
         return Response(followers, content_type="application/json")
 
     # the current user undos the argument follow
     @action(detail=True, url_path="follow/undo", methods=["post"])
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers
+        followers = {}
+        followers = get_object_or_404(Post, type="argument", pk=id).followers
         followers = followers.remove(self.request.user.id)
-        followers = serializers.serialize("json", followers) if followers else {}
+        if followers:
+            followers = serializers.serialize("json", followers)
         return Response(followers, content_type="application/json")
 
 
