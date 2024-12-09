@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { isTokenExpired } from '@/helpers'
 import { refreshTheToken } from '@/api/auth/refreshTheToken'
+import { removeUser } from '@/store/slices/user'
 
 // API INSTANCE
 const api = axios.create({
@@ -8,6 +9,12 @@ const api = axios.create({
 })
 
 let refreshTokenPromise // used to queue up requests
+
+// # INJECT STORE TO PREVENT IMPORT ISSUES #
+let store: any
+export const injectStore = (_store: any) => {
+  store = _store
+}
 
 // INTERCEPTORS
 // On request
@@ -26,30 +33,37 @@ api.interceptors.request.use(
         accessToken !== 'undefined' &&
         !isTokenExpired(accessToken)
       ) {
-        console.log(`# accessToken is not expired.`)
-        // Add the access token to the request headers
+        console.log(`ℹ️ accessToken is not expired.`)
         req.headers['authorization'] = `Bearer ${accessToken}`
+        console.log(`↗ [${req.url}] request:`, req)
         return req
       }
-      console.log(`# accessToken is expired.`)
+      console.log(`ℹ️ accessToken is expired.`)
       localStorage.removeItem(`access_token`)
       if (
         !refreshToken ||
         refreshToken === 'null' ||
         refreshToken === 'undefined'
       ) {
-        console.log(`# No valid refresh token found.`)
+        console.log(`ℹ️ No valid refresh token found.`)
+        store.dispatch(removeUser())
         return req
       }
-      // Check for in-flight refresh requests and start one if required
-      refreshTokenPromise ??= refreshTheToken(refreshToken)
-      const newAccessToken = await refreshTokenPromise
-      refreshTokenPromise = null // clean in-flight state
-      localStorage.setItem('access_token', newAccessToken)
-      req.headers['authorization'] = `Bearer ${newAccessToken}`
+      // If there is a valid refresh token, we try using it.
+      // Check for in-flight refresh requests and start one if required.
+      try {
+        refreshTokenPromise ??= refreshTheToken(refreshToken)
+        const newAccessToken = await refreshTokenPromise
+        refreshTokenPromise = null // clean in-flight state
+        localStorage.setItem('access_token', newAccessToken)
+        req.headers['authorization'] = `Bearer ${newAccessToken}`
+      } catch (error: any) {
+        store.dispatch(removeUser())
+        return req
+      }
     }
 
-    console.log('# Intercepted request:', req)
+    console.log(`↗ [${req.url}] request:`, req)
     return req
   },
   (error) => {
@@ -68,9 +82,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (res) => {
     // Add tokens to local storage if they are in the response
-    res.data?.access && localStorage.setItem('access_token', res.data?.access)
-    res.data?.refresh && localStorage.setItem('refresh_token', res.data?.refresh)
-    res.data?.token && localStorage.setItem('access_token', res.data?.token)
+    res.data?.access && localStorage.setItem('access_token', res.data?.access) // old api
+    res.data?.refresh && localStorage.setItem('refresh_token', res.data?.refresh) // old api
+    res.data?.token && localStorage.setItem('access_token', res.data?.token) // old api
+    res.data?.resources?.access &&
+      localStorage.setItem('access_token', res.data?.resources?.access)
+    res.data?.resources?.refresh &&
+      localStorage.setItem('refresh_token', res.data?.resources?.refresh)
+    res.data?.resources?.token &&
+      localStorage.setItem('access_token', res.data?.resources?.token)
     if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',
@@ -78,7 +98,7 @@ api.interceptors.response.use(
       )
     }
 
-    console.log('# Intercepted response:', res)
+    console.log(`↘ [${res.config.url}] response:`, res)
     return res
   },
   (error: any) => {

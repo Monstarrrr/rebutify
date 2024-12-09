@@ -8,7 +8,7 @@ export const refreshTheToken = async (refreshToken: string) => {
     return response.data.access
   } catch (error: any) {
     console.error(
-      '# Refresh request failed: ',
+      '❌ [/auth/jwt/refresh] request failed: ',
       error?.response?.data?.detail ??
         error?.response?.data ??
         error?.response ??

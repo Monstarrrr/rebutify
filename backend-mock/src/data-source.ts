@@ -1,13 +1,16 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
-import { User } from './entity/User'
+import path = require('path')
+import { allEntities } from './entity/allEntities'
 
+// Pre-defined connection configuration to a database.
 export const AppDataSource = new DataSource({
   type: 'sqlite',
   database: 'database-mock.sqlite',
   synchronize: true,
   logging: false,
-  entities: [User],
+  // Load all entities from the entity directory.
+  entities: allEntities,
   migrations: [],
   subscribers: [],
 })

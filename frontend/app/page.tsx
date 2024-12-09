@@ -1,16 +1,17 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, ArgumentCards } from '@/components'
-import type { TextInput } from '@/types'
-import { FormEvent, useState } from 'react'
-import { createPost } from '@/api/posts'
+import { Form, List, PostCard, Button } from '@/components'
+import type { Post, TextInput } from '@/types'
+import { FormEvent, useEffect, useState } from 'react'
+import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
+import styled from 'styled-components'
 
 const newArgumentInputs: TextInput[] = [
   {
     id: 'title',
-    label: 'Argument title',
+    label: 'Title',
     placeholder: 'Plants are alive too!',
     value: '',
   },
@@ -23,16 +24,80 @@ const newArgumentInputs: TextInput[] = [
     value: '',
   },
 ]
-const submitButtonLabel = 'Create post'
-const successMessage = 'New post created successfully!'
+
+const FirstSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  justify-content: center;
+  height: calc(100dvh - 54px - 24px);
+  padding: 128px;
+`
+
+const WelcomeContainer = styled.div`
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 3;
+  margin-bottom: 52px;
+`
+
+const Subtitle = styled.h1`
+  font-size: 54px;
+`
+
+const BtnLink = styled(Link)`
+  background-color: #3d6aff;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border-radius: 99px;
+  cursor: pointer;
+  text-decoration: none;
+`
+
+const ListWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`
+
+const ListTitle = styled.h2`
+  margin: 0 auto 28px;
+`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState<string | null>(null)
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [allPosts, setAllPosts] = useState<Post[]>([])
+
+  const fetchArguments = async () => {
+    try {
+      const response = await getPosts('argument')
+      setAllPosts(response)
+    } catch (error: any) {
+      console.error('# Error fetching posts: ', error)
+    }
+  }
+
+  // Fetch onLoad
+  useEffect(() => {
+    fetchArguments()
+  }, [])
+
+  // re-fetch on success
+  useEffect(() => {
+    if (success) {
+      fetchArguments()
+    }
+  }, [success])
+
+  async function handleSubmitArgument(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     setApiErrors(null)
@@ -41,7 +106,7 @@ export default function Home() {
     try {
       await createPost({ ...formData }, 'argument')
       setLoading(false)
-      setSuccess(true)
+      setSuccess('Post created successfully!')
     } catch (error: any) {
       const { response } = error
       setLoading(false)
@@ -51,41 +116,44 @@ export default function Home() {
 
   return (
     <>
-      <h2>Welcome to Rebutify!</h2>
-      <br />
-      <h1>
-        Rebutify is a platform for sharing rebuttals to common arguments against
-        veganism.
-      </h1>
-      <br />
-      <h3>
-        Have you heard a common argument against veganism to which you want to
-        provide a rebuttal?
-      </h3>
-      <br />
-      <br />
-      {isLogged ? (
-        <Form
-          submitButtonLabel={submitButtonLabel}
-          id='new-argument'
-          inputsErrors={apiErrors}
-          inputsFields={newArgumentInputs}
-          onSubmit={handleSubmit}
-          loading={loading}
-          successMessage={success ? successMessage : null}
-        />
-      ) : (
-        <p>
-          <Link href='/register'>Register</Link> or{' '}
-          <Link href='/login'>login</Link> to start sharing your rebuttals!
-        </p>
-      )}
-      <br />
-      <br />
-      <hr />
-      <h2>All arguments</h2>
-      <hr />
-      <ArgumentCards />
+      <FirstSection>
+        <WelcomeContainer>
+          <Subtitle>
+            Submit arguments,
+            <br />
+            Optimize their rebuttals.
+          </Subtitle>
+        </WelcomeContainer>
+
+        <div style={{ flex: 2 }}>
+          {isLogged ? (
+            <Form
+              id='new-argument'
+              inputsErrors={apiErrors}
+              inputsFields={newArgumentInputs}
+              onSubmit={handleSubmitArgument}
+              loading={loading}
+              success={success}
+              setSuccess={setSuccess}
+              floating
+            >
+              <Button
+                label={'Submit argument'}
+                loading={loading}
+                success={success}
+              />
+            </Form>
+          ) : (
+            <div>
+              <BtnLink href='/register'>Get started</BtnLink>
+            </div>
+          )}
+        </div>
+      </FirstSection>
+      <ListWrapper>
+        <ListTitle>All arguments</ListTitle>
+        <List items={allPosts} Layout={PostCard} />
+      </ListWrapper>
     </>
   )
 }

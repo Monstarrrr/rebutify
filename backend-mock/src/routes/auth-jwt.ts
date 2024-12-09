@@ -1,5 +1,6 @@
 import * as express from 'express'
-import { createJwt, refreshJwt } from '../controllers/auth-jwt'
+import { createJwt } from '../controllers/auth/auth-jwt-create'
+import { refreshJwt } from '../controllers/auth/auth-jwt-refresh'
 
 const authJwtRouter = express.Router()
 

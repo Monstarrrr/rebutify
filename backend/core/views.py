@@ -1,5 +1,10 @@
+import logging
+
 from django.conf import settings
+from django.core import serializers
+from django.db import transaction
 from django.http import HttpResponse
+from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
@@ -12,6 +17,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Post, Report, UserProfile, Vote
 from .serializers import (
@@ -22,8 +28,32 @@ from .serializers import (
     ReportSerializer,
     SuggestionSerializer,
     UserProfileSerializer,
+    VoteResponseSerializer,
     VoteSerializer,
 )
+
+logger = logging.getLogger(
+    __name__
+)  # Create a FileHandler to write log messages to 'app.log'
+file_handler = logging.FileHandler(
+    "app.log"
+)  # Create a StreamHandler to display log messages on the console
+stream_handler = (
+    logging.StreamHandler()
+)  # Create a Formatter to define the log message format
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)  # Set the formatter for both handlers
+file_handler.setFormatter(formatter)
+stream_handler.setFormatter(formatter)  # Add both handlers to the logger
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
+
+def log(e: Exception, data):
+    log = f"ERROR\n----------\n{e}\n----------\nDATA\n{data}"
+    logger.error(log)
+    return Response(status=500)
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -59,15 +89,15 @@ class CursorPaginationViewSet(CursorPagination):
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
+    # gets all arguments
+    queryset = Post.objects.filter(type="argument")
 
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
 
-        # gets all arguments
-        queryset = Post.objects.filter(type="argument")
-        return queryset
+        return self.queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -78,6 +108,32 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    # gets followers of the argument
+    @action(detail=True, methods=["get"])
+    def followers(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers.all()
+        followers = serializers.serialize("json", followers) if followers else {}
+        return Response(followers, content_type="application/json")
+
+    # the current user follows the argument
+    @action(detail=True, methods=["post"])
+    def follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers
+        followers = followers.add(self.request.user.id)
+        followers = serializers.serialize("json", followers) if followers else {}
+        return Response(followers, content_type="application/json")
+
+    # the current user undos the argument follow
+    @action(detail=True, url_path="follow/undo", methods=["post"])
+    def undo_follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = self.queryset.get(id=id).followers
+        followers = followers.remove(self.request.user.id)
+        followers = serializers.serialize("json", followers) if followers else {}
+        return Response(followers, content_type="application/json")
 
     @action(
         detail=True,
@@ -183,16 +239,40 @@ class PostViewSet(viewsets.ModelViewSet):
     pagination_class = CursorPaginationViewSet
 
     def get_queryset(self):
+        type = self.request.query_params.get("type")
+        if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
+            Post.objects.none()
+
+        parentId = self.request.query_params.get("parentId")
+
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
+        queryset = None
+        if type:
+            queryset = Post.objects.filter(type=type)
+        else:
+            queryset = Post.objects.all()
 
-        # gets all posts
-        queryset = Post.objects.all()
+        if parentId:
+            queryset = queryset.filter(parentId=parentId)
+
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(ownerUserId=self.request.user.id)
+        post: Post = serializer.save(ownerUserId=self.request.user.id)
+
+        # Get or create user profile
+        user_profile, created = UserProfile.objects.get_or_create(
+            user=self.request.user, defaults={"created": timezone.now().date()}
+        )
+        # Add the created post to saved posts
+        user_profile.saved_posts.add(post)
+
+        if post.parentId:
+            parent = Post.objects.get(id=post.parentId)
+            if parent:
+                user_profile.saved_posts.add(parent)
 
     def get_permissions(self):
         if self.action == "create":
@@ -282,3 +362,122 @@ class ActivateUserViewSet(UserViewSet):
     def activation(self, request, *args, **kwargs):
         super().activation(request, *args, **kwargs)
         return HttpResponse("Your account has been activated.")
+
+
+class VoteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_type, post_id, vote_type):
+        if vote_type not in ["upvote", "downvote"]:
+            return Response({"error": "Invalid vote type"}, status=400)
+
+        try:
+            # Verify the post exists
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=404)
+
+        # Check for existing vote
+        existing_vote = Vote.objects.filter(
+            parentId=post_id, ownerUserId=request.user.id
+        ).first()
+
+        with transaction.atomic():
+            if existing_vote:
+                # If the user is trying to vote the same way, remove the vote
+                if existing_vote.type == vote_type:
+                    existing_vote.delete()
+
+                    # Decrement the corresponding vote count
+                    if vote_type == "upvote":
+                        post.upvotes -= 1
+                    else:
+                        post.downvotes -= 1
+
+                # If voting the opposite way, remove existing vote and add new vote
+                else:
+                    existing_vote.delete()
+
+                    # Decrement the previous vote count
+                    if existing_vote.type == "upvote":
+                        post.upvotes -= 1
+                    else:
+                        post.downvotes -= 1
+
+                    # Create and increment new vote
+                    Vote.objects.create(
+                        parentId=post.id, ownerUserId=request.user.id, type=vote_type
+                    )
+
+                    # Increment the new vote count
+                    if vote_type == "upvote":
+                        post.upvotes += 1
+                    else:
+                        post.downvotes += 1
+
+            # No existing vote - create a new vote
+            else:
+                Vote.objects.create(
+                    parentId=post.id, ownerUserId=request.user.id, type=vote_type
+                )
+
+                # Increment the corresponding vote count
+                if vote_type == "upvote":
+                    post.upvotes += 1
+                else:
+                    post.downvotes += 1
+
+            # Save the updated post
+            post.save()
+
+        # Serialize and return response
+        serializer = VoteResponseSerializer(
+            {"user": request.user, "post": PostSerializer(post).data}
+        )
+        return Response(serializer.data, status=200)
+
+
+class EditView(APIView):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+    @extend_schema(
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {"body": {"type": "string"}, "title": {"type": "string"}},
+            }
+        },
+        responses={200: PostSerializer},
+    )
+    def post(self, request, post_type, post_id):
+        try:
+            # Validate post type
+            if post_type.lower() not in ["argument", "rebuttal", "comment"]:
+                return Response({"error": "Invalid post type"}, status=400)
+
+            # Find the post
+            try:
+                post = Post.objects.get(id=post_id, type=post_type.lower())
+            except Post.DoesNotExist:
+                return Response({"error": "Post not found"}, status=404)
+
+            if post.ownerUserId != request.user.id:
+                return Response(status=401)
+
+            # Only allow editing body and title
+            update_data = {
+                key: value
+                for key, value in request.data.items()
+                if key in ["body", "title"]
+            }
+
+            # Validate and update the post
+            serializer = PostSerializer(post, data=update_data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+
+            return Response(serializer.errors, status=400)
+
+        except Exception as e:
+            log(e, request)

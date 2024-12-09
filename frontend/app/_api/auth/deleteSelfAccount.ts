@@ -4,7 +4,6 @@ export const deleteSelfAccount = async (password: string) => {
   try {
     const response = await api.delete(`auth/users/me`, {
       data: { current_password: password },
-      // params: { current_password: password },
       requiresAuth: true,
     })
     return response.data

@@ -1,43 +1,22 @@
 import * as express from 'express'
 import swaggerJsdoc = require('swagger-jsdoc')
 import swaggerUi = require('swagger-ui-express')
-import path = require('path');
-import { version } from '../../package.json'
+import { swaggerOptions } from '@/utils/swaggerOptions'
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
+// Define the Swagger router
 const swaggerRouter = express.Router()
-console.log('here')
-// Swagger options
-const options: swaggerJsdoc.Options = {
-  definition: {
-    openapi: '3.1.0',
-    info: {
-      title: 'Mock API',
-      // Version of the API from package.json
-      version,
-      description: 'A simple mock API for reference to the public API',
-    },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-    // security: [
-    //   {
-    //     bearerAuth: [],
-    //   },
-    // ],
-  },
-  // Where the OpenAPI specs are located
-  apis: ['src/routes/*.ts', 'src/schema/*.ts', 'src/controllers/*.ts'],
+
+// Generates an OpenAPI specs from JSDoc comments (with swagger options)
+const swaggerSpec = swaggerJsdoc(swaggerOptions)
+
+// Define a Swagger UI theme
+const theme = new SwaggerTheme()
+const options = {
+  explorer: true,
+  customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK),
 }
 
-// Initialize swagger-jsdoc with the options
-const swaggerSpec = swaggerJsdoc(options)
-
-// Serve the Swagger UI
-swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Generates the Swagger UI with the generated OpenAPI specs
+swaggerRouter.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options))
 export default swaggerRouter

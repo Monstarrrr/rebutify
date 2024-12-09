@@ -1,9 +1,10 @@
 'use client'
-
 import api from '@/api/api'
 import { useEffect, useState } from 'react'
-import { RebuttalSubmition, RebuttalCards } from '@/components'
-import type { Argument } from '@/types/Post'
+import { RebuttalSubmition, List, Post } from '@/components'
+import * as type from '@/types/Post'
+import { getPosts } from '@/api/posts'
+import { SectionStyle, EmptySectionStyle, H2 } from '@/styles'
 
 type Props = {
   params: {
@@ -15,14 +16,19 @@ type Props = {
 export default function Argument(props: Props) {
   const argumentId = props.params.id
 
-  const [argument, setArgument] = useState<null | Argument>(null)
+  const [argument, setArgument] = useState<null | type.Argument>(null)
+  const [rebuttals, setRebuttals] = useState<type.Post[]>([])
   const [error, setError] = useState(false)
 
   useEffect(() => {
     let fetchApi = async () => {
       try {
+        // Fetch the argument
         const { data } = await api.get(`api/posts/${argumentId}`)
+        // Fetch the argument's rebuttals
+        const rebuttals = await getPosts('rebuttal', argumentId)
         setArgument(data)
+        setRebuttals(rebuttals)
       } catch (error) {
         setError(true)
         console.error(`api/posts/${argumentId}:`, error)
@@ -32,20 +38,20 @@ export default function Argument(props: Props) {
   }, [argumentId])
 
   return (
-    <div>
+    <>
       {argument ? (
         <>
-          <div>
-            <h1>{argument.title}</h1>
-            <p>{argument.body}</p>
-          </div>
+          <Post item={argument} />
 
-          <br />
-          <h2>Rebuttals</h2>
-          <RebuttalCards />
-          <br />
-          <br />
-          <hr />
+          <H2>Rebuttals</H2>
+          <SectionStyle>
+            {rebuttals.length === 0 ? (
+              <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>
+            ) : (
+              <List items={rebuttals} Layout={Post} />
+            )}
+          </SectionStyle>
+
           <RebuttalSubmition argument={argument} />
         </>
       ) : error ? (
@@ -53,6 +59,6 @@ export default function Argument(props: Props) {
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </>
   )
 }

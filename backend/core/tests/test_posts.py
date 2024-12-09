@@ -1,3 +1,6 @@
+import os
+
+from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -23,6 +26,13 @@ class PostTests(TestCase):
             ownerUserId=1,
             parentId=1,
             created="2024-06-26 02:20:58.689998+00:00",
+        )
+
+        # Create sample user
+        self.sample_username = "sample_user"
+        self.sample_password = os.environ["SAMPLE_USER_PASSWORD"]
+        self.sample_user = User.objects.create_user(
+            username=self.sample_username, password=self.sample_password
         )
 
         # Create sample post
@@ -99,6 +109,33 @@ class PostTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_comment.type)
+
+    def test_argument_follow(self):
+        # User logs in
+        self.client.login(username=self.sample_username, password=self.sample_password)
+
+        # Test argument followers
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.sample_user.id)
+
+        # Test argument follow
+        response = self.client.post("/api/arguments/1/follow/")
+        self.assertEqual(response.status_code, 200)
+
+        # Test argument followers a second time
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.sample_user.id)
+
+        # Test argument undo follow
+        response = self.client.post("/api/arguments/1/follow/undo/")
+        self.assertEqual(response.status_code, 200)
+
+        # Test argument followers a third time
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.sample_user.id)
 
     def test_suggestions_api(self):
         # Test the suggestions API endpoint

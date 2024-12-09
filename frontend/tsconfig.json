@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "allowUnusedLabels": false,
     "target": "ES6",
     "typeRoots": ["./node_modules/@types", "./_types/declarations"],
     "plugins": [
@@ -31,6 +32,8 @@
       "@/components": ["./_components"],
       "@/components/*": ["./_components/*"],
       "@/store/*": ["../store/*"],
+      "@/styles": ["./_styles"],
+      "@/styles/*": ["./_styles/*"],
       "@/types": ["./_types"],
       "@/types/*": ["./_types/*"],
       "@/typeGuards/*": ["./_typeGuards/*"]
