@@ -16,12 +16,13 @@ import {
   VoteContainer,
   VoteValue,
 } from '@/components/postStyles'
+import Link from 'next/link'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const user = useAppSelector((state) => state.user)
-  const [voteError, setVoteError] = useState(null)
+  const [voteError, setVoteError] = useState<boolean | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   // We use state to keep the post values reactive
   const [post, setPost] = useState({
@@ -41,7 +42,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       setPost(data.resources.post)
       dispatch(updateUser(data.resources.user))
     } catch (error: any) {
-      setVoteError(error && 'Vote request failed')
+      setVoteError(true)
       console.error(`❌ Vote request failed: ${error}`)
     }
   }
@@ -76,57 +77,66 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   }
 
   return (
-    <PostContainer>
-      <VoteContainer>
-        <Button
-          onClick={handleVote('up')}
-          styles={{ background: 'transparent' }}
-          icon={<Icon label='arrow' />}
-        />
-        <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
-        <Button
-          onClick={handleVote('down')}
-          styles={{ background: 'transparent' }}
-          icon={<Icon label='arrow' direction='down' />}
-        />
-        {voteError && <p>{voteError}</p>}
-      </VoteContainer>
-      <PostBody>
-        <ContentStyle>
-          {post.type == 'argument' && post.title && (
-            <div>
-              <h1>{post.title}</h1>
-            </div>
+    <>
+      <PostContainer>
+        <VoteContainer>
+          <Button
+            onClick={handleVote('up')}
+            styles={{ background: 'transparent' }}
+            icon={<Icon label='arrow' />}
+          />
+          <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
+          <Button
+            onClick={handleVote('down')}
+            styles={{ background: 'transparent' }}
+            icon={<Icon label='arrow' direction='down' />}
+          />
+        </VoteContainer>
+        <PostBody>
+          <ContentStyle>
+            {post.type == 'argument' && post.title && (
+              <div>
+                <h1>{post.title}</h1>
+              </div>
+            )}
+            <p>{!isEditing && post.body}</p>
+          </ContentStyle>
+          {isEditing && (
+            <>
+              <EditInput
+                value={post.body}
+                onChange={(e) => setPost({ ...post, body: e.target.value })}
+              />
+              <Button
+                label='Save'
+                onClick={() => handleSave(post.title, post.body)}
+              />
+              <Button label='Cancel' onClick={() => handleCancel()} />
+            </>
           )}
-          <p>{!isEditing && post.body}</p>
-        </ContentStyle>
-        {isEditing && (
-          <>
-            <EditInput
-              value={post.body}
-              onChange={(e) => setPost({ ...post, body: e.target.value })}
-            />
-            <Button
-              label='Save'
-              onClick={() => handleSave(post.title, post.body)}
-            />
-            <Button label='Cancel' onClick={() => handleCancel()} />
-          </>
-        )}
-        {user.id === post.ownerUserId && (
-          <ActionsStyle>
-            <div>
-              {!isEditing && (
-                <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
-              )}
-            </div>
-            <div>
-              <Button label='Delete' onClick={() => handleDelete(post.id)} />
-            </div>
-          </ActionsStyle>
-        )}
-      </PostBody>
-    </PostContainer>
+          {user.id === post.ownerUserId && (
+            <ActionsStyle>
+              <div>
+                {!isEditing && (
+                  <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
+                )}
+              </div>
+              <div>
+                <Button label='Delete' onClick={() => handleDelete(post.id)} />
+              </div>
+            </ActionsStyle>
+          )}
+        </PostBody>
+      </PostContainer>
+      {voteError && (
+        <>
+          <Link href='/login'>
+            <Button label='Login' />
+          </Link>
+          <span> to interact with this post</span>
+        </>
+      )}
+    </>
   )
 }
 
