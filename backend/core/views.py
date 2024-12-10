@@ -101,6 +101,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
 
+    # get all arguments
     queryset = Post.objects.filter(type="argument")
 
     def get_queryset(self):
