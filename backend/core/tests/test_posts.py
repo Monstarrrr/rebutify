@@ -98,28 +98,30 @@ class PostTests(TestCase):
         self.assertContains(response, self.sample_comment.type)
 
     def test_argument_follow(self):
+        id = self.sample_post.id
+
         # User logs in
         self.client.login(username=self.sample_username, password=self.sample_password)
 
         # Test argument followers
-        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": id}))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, self.sample_user.id)
 
         # Test argument follow
-        response = self.client.post("/api/arguments/1/follow/")
+        response = self.client.post("/api/arguments/{id}/follow/".format(id=id))
         self.assertEqual(response.status_code, 200)
 
         # Test argument followers a second time
-        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": id}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_user.id)
 
         # Test argument undo follow
-        response = self.client.post("/api/arguments/1/follow/undo/")
+        response = self.client.post("/api/arguments/{id}/follow/undo/".format(id=id))
         self.assertEqual(response.status_code, 200)
 
         # Test argument followers a third time
-        response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
+        response = self.client.get(reverse("arguments-followers", kwargs={"pk": id}))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, self.sample_user.id)
