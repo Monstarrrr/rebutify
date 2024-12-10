@@ -1,13 +1,12 @@
 import logging
 
 from django.conf import settings
-from django.core import serializers
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
@@ -56,6 +55,20 @@ def log(e: Exception, data):
     return Response(status=500)
 
 
+# return formatted body for the response
+def response_body(code, message, resources={}):
+    body = {}
+    if code and message:
+        body["code"] = code
+        body["message"] = message
+        if resources:
+            body["resources"] = resources
+    else:
+        body["code"] = status.HTTP_500_INTERNAL_SERVER_ERROR
+        body["message"] = "Response code and message are not both defined."
+    return body
+
+
 class IsOwnerOrReadOnly(BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
@@ -89,14 +102,14 @@ class CursorPaginationViewSet(CursorPagination):
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
-    # gets all arguments
+
+    # get all arguments
     queryset = Post.objects.filter(type="argument")
 
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-
         return self.queryset
 
     def perform_create(self, serializer):
@@ -109,31 +122,83 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
 
-    # gets followers of the argument
+    # get followers of the argument
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers.all()
-        followers = serializers.serialize("json", followers) if followers else {}
-        return Response(followers, content_type="application/json")
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            code = status.HTTP_200_OK
+            message = "Followers for this argument."
+            argument = self.get_serializer(self.queryset.get(id=id)).data
+            resources = {"followers": argument["followers"]}
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = response_body(code, message, resources)
+        return Response(data=body, content_type="application/json")
 
     # the current user follows the argument
     @action(detail=True, methods=["post"])
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers
-        followers = followers.add(self.request.user.id)
-        followers = serializers.serialize("json", followers) if followers else {}
-        return Response(followers, content_type="application/json")
+        followers = {}
+        user_id = self.request.user.id
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
+            if user_id:
+                followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
+                if followers.filter(id=user_id).exists():
+                    code = status.HTTP_200_OK
+                    message = "You already follow this argument."
+                else:
+                    followers = followers.add(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Follow argument successful."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "User account not found."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = response_body(code, message)
+        headers = self.get_success_headers(followers)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     # the current user undos the argument follow
     @action(detail=True, url_path="follow/undo", methods=["post"])
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = self.queryset.get(id=id).followers
-        followers = followers.remove(self.request.user.id)
-        followers = serializers.serialize("json", followers) if followers else {}
-        return Response(followers, content_type="application/json")
+        followers = {}
+        user_id = self.request.user.id
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
+            if user_id:
+                followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
+                if followers.filter(id=user_id).exists():
+                    followers = followers.remove(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Undo follow argument successful."
+                else:
+                    code = status.HTTP_200_OK
+                    message = "You do not follow this argument."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "User account not found."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = response_body(code, message)
+        headers = self.get_success_headers(followers)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     @action(
         detail=True,

@@ -12,7 +12,7 @@ import { Button } from '@/components'
 const Nav = styled.nav`
   background: #1f1f1f;
   display: flex;
-  padding: 12px;
+  padding: 12px 32px;
 `
 
 const LeftBlock = styled.div`
@@ -72,7 +72,7 @@ export default function Header() {
     <>
       <Nav>
         <LeftBlock>
-          <Link style={{ display: "flex", textDecoration: 'none' }} href='/'>
+          <Link style={{ display: 'flex', textDecoration: 'none' }} href='/'>
             <Image
               width={50}
               height={50}
@@ -96,10 +96,7 @@ export default function Header() {
                       opacity: pathName === href ? 0.6 : 1,
                       pointerEvents: pathName === href ? 'none' : 'auto',
                     }}
-                    transparent={
-                      href === '/login' ||
-                      href === '/profile'
-                    }
+                    transparent={href === '/login' || href === '/profile'}
                   />
                 </Link>
               </LinkWrapper>
