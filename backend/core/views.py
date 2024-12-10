@@ -54,6 +54,19 @@ def log(e: Exception, data):
     return Response(status=500)
 
 
+def response_body(code, message, resources={}):
+    body = {}
+    if code and message:
+        body["code"] = code
+        body["message"] = message
+        if resources:
+            body["resources"] = resources
+    else:
+        body["code"] = status.HTTP_500_INTERNAL_SERVER_ERROR
+        body["message"] = "Response code and message are not both defined."
+    return body
+
+
 class IsOwnerOrReadOnly(BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
@@ -111,19 +124,17 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
         if self.queryset.filter(id=id).exists():
-            followers = serializers.serialize(
-                "json", self.queryset.get(id=id).followers.all()
-            )
             code = status.HTTP_200_OK
             message = "Followers for this argument."
+            resources = {
+                "followers": serializers.serialize(
+                    "json", self.queryset.get(id=id).followers.all()
+                )
+            }
         else:
-            followers = {}
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
-        body = {}
-        body["code"] = code
-        body["message"] = message
-        body["response"] = {"followers": followers}
+        body = response_body(code, message, resources)
         return Response(data=body, content_type="application/json")
 
     # the current user follows the argument
@@ -139,9 +150,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             headers = {}
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
-        body = {}
-        body["code"] = code
-        body["message"] = message
+        body = response_body(code, message)
         return Response(
             data=body, status=code, headers=headers, content_type="application/json"
         )
@@ -164,9 +173,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             headers = {}
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
-        body = {}
-        body["code"] = code
-        body["message"] = message
+        body = response_body(code, message)
         return Response(
             data=body, status=code, headers=headers, content_type="application/json"
         )
