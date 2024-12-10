@@ -133,6 +133,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
+            resources = {}
         body = response_body(code, message, resources)
         return Response(data=body, content_type="application/json")
 
