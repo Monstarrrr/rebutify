@@ -1,10 +1,12 @@
+import ast
+import json
 import os
 
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from core.models import Post, Vote
+from core.models import Post, Report, Vote
 
 
 class PostTests(TestCase):
@@ -71,9 +73,29 @@ class PostTests(TestCase):
             ownerUserId=1,
         )
 
+        # Create sample report
+        self.sample_report = Report.objects.create(
+            id=43546543,
+            ownerUserId=1,
+            parentId=self.sample_post.id,
+            created="2024-06-26 02:20:58.689998+00:00",
+            body="<p>Sample report content</p>",
+            options=["Test Report Option"],
+        )
+
+        # Create sample report dictionary
+        self.sample_report_dict = {
+            "id": 67659876,
+            "ownerUserId": 1,
+            "parentId": self.sample_post.id,
+            "created": "2024-06-26 02:20:58.689998+00:00",
+            "body": "<p>Sample report content</p>",
+            "options": ["Not assertive", "Duplicate", "Needs improvement"],
+        }
+
         # Create sample suggestion
-        self.sample_suggestion = {
-            "id": "3245645456542324356",
+        self.sample_suggestion_dict = {
+            "id": 765768867,
             "parentId": self.sample_post.id,
             "type": "suggestion",
             "isPrivate": False,
@@ -110,6 +132,71 @@ class PostTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.sample_comment.type)
 
+    def test_argument_reports_api(self):
+        id = self.sample_post.id
+
+        # User logs in
+        self.client.login(username=self.sample_username, password=self.sample_password)
+
+        # Test get argument reports
+        response = self.client.get(reverse("arguments-reports", kwargs={"pk": id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.sample_report.id)
+
+        # Test add argument reports
+        response = self.client.post(
+            "/api/arguments/{id}/reports/add/".format(id=id),
+            data=json.dumps(self.sample_report_dict),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Report.objects.get(id=self.sample_report_dict["id"]).id,
+            self.sample_report_dict["id"],
+        )
+
+        # Test get argument reports options
+        response = self.client.get(
+            reverse("arguments-reports-options", kwargs={"pk": id})
+        )
+        self.assertEqual(response.status_code, 200)
+        decoded_response = ast.literal_eval(response.content.decode("UTF-8"))
+        if "resources" in decoded_response:
+            resources = decoded_response["resources"]
+            if "options" in resources:
+                options = resources["options"]
+            else:
+                self.assertRaisesMessage("No options in argument reports options test.")
+        else:
+            self.assertRaisesMessage("No resources in argument reports options test.")
+        self.assertTrue(set(self.sample_report_dict["options"]).issubset(set(options)))
+
+        # User logs out
+        self.client.logout()
+
+    def test_suggestions_api(self):
+        id = self.sample_post.id
+
+        # User logs in
+        self.client.login(username=self.sample_username, password=self.sample_password)
+
+        # Test the suggestions API endpoint
+        response = self.client.post(
+            "/api/arguments/{id}/suggest-edit/".format(id=id),
+            data=json.dumps(self.sample_suggestion_dict),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Post.objects.get(
+                type="suggestion", id=self.sample_suggestion_dict["id"]
+            ).id,
+            self.sample_suggestion_dict["id"],
+        )
+
+        # User logs out
+        self.client.logout()
+
     def test_argument_follow(self):
         id = self.sample_post.id
 
@@ -139,14 +226,5 @@ class PostTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, self.sample_user.id)
 
-    def test_suggestions_api(self):
-        # Test the suggestions API endpoint
-        response = self.client.post(
-            reverse("arguments-suggest-edit", kwargs={"pk": self.sample_post.id}),
-            data=self.sample_suggestion,
-        )
-        self.assertEqual(response.status_code, 200)
-        if not Post.objects.filter(
-            type="suggestion", id=self.sample_suggestion["id"]
-        ).exists():
-            self.fail("Sample suggestion not found")
+        # User logs out
+        self.client.logout()

@@ -126,16 +126,16 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
+        followers = {}
         # check if argument exists
         if self.queryset.filter(id=id).exists():
             code = status.HTTP_200_OK
             message = "Followers for this argument."
-            argument = self.get_serializer(self.queryset.get(id=id)).data
-            resources = {"followers": argument["followers"]}
+            followers = self.get_serializer(self.queryset.get(id=id)).data["followers"]
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
-            resources = {}
+        resources = {"followers": followers} if followers else {}
         body = response_body(code, message, resources)
         return Response(data=body, content_type="application/json")
 
@@ -201,6 +201,30 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             data=body, status=code, headers=headers, content_type="application/json"
         )
 
+    # get reports of the argument
+    @action(detail=True, methods=["get"], serializer_class=ReportSerializer)
+    def reports(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        reports = {}
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if reports for the argument exist
+            if Report.objects.filter(parentId=id).exists():
+                code = status.HTTP_200_OK
+                message = "Reports for this argument."
+                reports = self.get_serializer(
+                    Report.objects.filter(parentId=id), many="true"
+                ).data
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "No reports exist for this argument."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        resources = {"reports": reports} if reports else {}
+        body = response_body(code, message, resources)
+        return Response(data=body, content_type="application/json")
+
     @action(
         detail=True,
         url_path="reports/add",
@@ -208,30 +232,70 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=ReportSerializer,
     )
     def add_reports(self, *args, **kwargs):
-        # creates a report
+        # get report data
         data = self.request.data
         report = {}
-        for key in data:
-            report[key] = data[key]
-        Report.objects.create(**report)
-        if Report.objects.all().filter(id=report["id"]):
-            return HttpResponse("", status=200)
+        # check if report data is given
+        if not data:
+            code = status.HTTP_200_OK
+            message = "No report data provided."
+        # check if report data has an id that already exists
+        elif "id" in data and Report.objects.filter(id=data["id"]).exists():
+            code = status.HTTP_200_OK
+            message = "Report already exists."
         else:
-            return HttpResponse("", status=404)
+            for key in data:
+                # check if report data has an invalid key
+                if key not in [field.name for field in Report._meta.get_fields()]:
+                    report = {}
+                    code = status.HTTP_400_BAD_REQUEST
+                    message = "Invalid report data."
+                    break
+                report[key] = data[key]
+            # check if report was created
+            if report:
+                report = Report.objects.create(**report)
+                code = status.HTTP_200_OK
+                message = "Report created."
+        body = response_body(code, message)
+        headers = self.get_success_headers(report)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     @action(
         detail=True,
         url_path="reports/options",
         methods=["get"],
         serializer_class=ReportSerializer,
-        pagination_class=CursorPaginationViewSet,
     )
     def reports_options(self, *args, **kwargs):
-        # gets a report's options
-        argumentId = kwargs["pk"]
-        queryset = Report.objects.filter(parentId=argumentId)
-        options = queryset.first().options
-        return HttpResponse(options, status=200)
+        id = self.kwargs.get("pk")
+        options = []
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if reports for the argument exist
+            if Report.objects.filter(parentId=id).exists():
+                reports = Report.objects.filter(parentId=id)
+                for report in reports:
+                    report = self.get_serializer(report).data
+                    # check if options is a list
+                    if isinstance(report["options"], list):
+                        options = sorted(set(options) | set(report["options"]))
+                code = status.HTTP_200_OK
+                message = "Followers for this argument."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "No reports exist for this argument."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        resources = {"options": options} if options else {}
+        body = response_body(code, message, resources)
+        headers = self.get_success_headers(options)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     @action(
         detail=True,
@@ -240,16 +304,40 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=SuggestionSerializer,
     )
     def suggest_edit(self, *args, **kwargs):
-        # creates a suggestion
+        # get suggestion data
         data = self.request.data
         suggestion = {}
-        for key in data:
-            suggestion[key] = data[key]
-        Post.objects.create(**suggestion)
-        if Post.objects.all().filter(type="suggestion", id=suggestion["id"]):
-            return HttpResponse("", status=200)
+        # check if suggestion data is given
+        if not data:
+            code = status.HTTP_200_OK
+            message = "No suggestion data provided."
+        # check if suggestion data has an id that already exists
+        elif (
+            "id" in data
+            and Post.objects.filter(type="suggestion", id=data["id"]).exists()
+        ):
+            code = status.HTTP_200_OK
+            message = "Suggestion already exists."
         else:
-            return HttpResponse("", status=404)
+            for key in data:
+                # check if suggestion data has an invalid key
+                if key not in [field.name for field in Post._meta.get_fields()]:
+                    suggestion = {}
+                    code = status.HTTP_400_BAD_REQUEST
+                    message = "Invalid suggestion data."
+                    break
+                suggestion[key] = data[key]
+            # check if suggestion was created
+            if suggestion:
+                suggestion["type"] = "suggestion"
+                suggestion = Post.objects.create(**suggestion)
+                code = status.HTTP_200_OK
+                message = "Suggestion created."
+        body = response_body(code, message)
+        headers = self.get_success_headers(suggestion)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
@@ -346,26 +434,6 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
-
-
-class ReportViewSet(viewsets.ModelViewSet):
-    serializer_class = ReportSerializer
-    pagination_class = CursorPaginationViewSet
-
-    def get_queryset(self):
-        # gets all upvotes
-        queryset = Vote.objects.filter(type="report")
-        return queryset
-
-
-class SuggestionViewSet(viewsets.ModelViewSet):
-    serializer_class = SuggestionSerializer
-    pagination_class = CursorPaginationViewSet
-
-    def get_queryset(self):
-        # gets all upvotes
-        queryset = Vote.objects.filter(type="suggestion")
-        return queryset
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):

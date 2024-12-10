@@ -52,7 +52,7 @@ class Report(models.Model):
     parentId: models.IntegerField = models.IntegerField(null=True)
     body: models.TextField = models.TextField(max_length=REPORT_BODY_MAX_LEN, null=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-    options: models.CharField = models.CharField(max_length=OPTIONS_MAX_LEN, null=True)
+    options: models.JSONField = models.JSONField(null=True)
 
 
 class UserProfile(models.Model):
