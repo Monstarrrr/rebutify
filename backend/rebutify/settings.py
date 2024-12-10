@@ -77,8 +77,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-if DEBUG:
-    MIDDLEWARE.append("request_logging.middleware.LoggingMiddleware")
+# if DEBUG:
+#     MIDDLEWARE.append("request_logging.middleware.LoggingMiddleware")
 
 # Domains that can access the API
 CORS_ALLOWED_ORIGINS = [
