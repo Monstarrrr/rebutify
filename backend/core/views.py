@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.core import serializers
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
@@ -126,11 +125,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.queryset.filter(id=id).exists():
             code = status.HTTP_200_OK
             message = "Followers for this argument."
-            resources = {
-                "followers": serializers.serialize(
-                    "json", self.queryset.get(id=id).followers.all()
-                )
-            }
+            argument = self.get_serializer(self.queryset.get(id=id)).data
+            resources = {"followers": argument["followers"]}
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
@@ -141,16 +137,26 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
+        followers = {}
+        user_id = self.request.user.id
         if self.queryset.filter(id=id).exists():
-            followers = self.queryset.get(id=id).followers.add(self.request.user.id)
-            headers = self.get_success_headers(followers)
-            code = status.HTTP_200_OK
-            message = "Follow argument successful."
+            if user_id:
+                followers = self.queryset.get(id=id).followers
+                if followers.filter(id=user_id).exists():
+                    code = status.HTTP_200_OK
+                    message = "You already follow this argument."
+                else:
+                    followers = followers.add(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Follow argument successful."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "User account not found."
         else:
-            headers = {}
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
+        headers = self.get_success_headers(followers)
         return Response(
             data=body, status=code, headers=headers, content_type="application/json"
         )
@@ -159,21 +165,26 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, url_path="follow/undo", methods=["post"])
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
+        followers = {}
+        user_id = self.request.user.id
         if self.queryset.filter(id=id).exists():
-            user_id = self.request.user.id
             followers = self.queryset.get(id=id).followers
             if followers.filter(id=user_id).exists():
-                followers = followers.remove(user_id)
-                message = "Undo follow argument successful."
+                if user_id:
+                    followers = followers.remove(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Undo follow argument successful."
+                else:
+                    code = status.HTTP_404_NOT_FOUND
+                    message = "User account not found."
             else:
+                code = status.HTTP_200_OK
                 message = "You do not follow this argument."
-            headers = self.get_success_headers(followers)
-            code = status.HTTP_200_OK
         else:
-            headers = {}
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
+        headers = self.get_success_headers(followers)
         return Response(
             data=body, status=code, headers=headers, content_type="application/json"
         )
