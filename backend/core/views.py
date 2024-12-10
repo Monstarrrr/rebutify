@@ -53,6 +53,7 @@ def log(e: Exception, data):
     return Response(status=500)
 
 
+# return formatted body for the response
 def response_body(code, message, resources={}):
     body = {}
     if code and message:
@@ -118,10 +119,11 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
 
-    # gets followers of the argument
+    # get followers of the argument
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
         id = self.kwargs.get("pk")
+        # check if argument exists
         if self.queryset.filter(id=id).exists():
             code = status.HTTP_200_OK
             message = "Followers for this argument."
@@ -139,9 +141,12 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         id = self.kwargs.get("pk")
         followers = {}
         user_id = self.request.user.id
+        # check if argument exists
         if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
             if user_id:
                 followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
                 if followers.filter(id=user_id).exists():
                     code = status.HTTP_200_OK
                     message = "You already follow this argument."
@@ -167,9 +172,12 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         id = self.kwargs.get("pk")
         followers = {}
         user_id = self.request.user.id
+        # check if argument exists
         if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
             if user_id:
                 followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
                 if followers.filter(id=user_id).exists():
                     followers = followers.remove(user_id)
                     code = status.HTTP_200_OK
