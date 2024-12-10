@@ -37,7 +37,7 @@ const Textarea = styled.textarea`
 `
 
 const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
-  margin: 0 16px 8px;
+  margin: 0 12px 8px;
   ${({ $floating }) => $floating && 'margin: 16px 16px 0 0;'}
 `
 

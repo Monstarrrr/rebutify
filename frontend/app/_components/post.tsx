@@ -6,37 +6,16 @@ import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
 import { useState } from 'react'
 import { Button, Icon } from '@/components'
-import styled from 'styled-components'
 import { useRouter } from 'next/navigation'
-
-const PostContainer = styled.div`
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-`
-
-const PostBody = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-`
-
-const VoteContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
-const VoteValue = styled.div`
-  margin: 0 8px;
-`
-
-const EditInput = styled.textarea`
-  width: 100%;
-  min-height: 100px;
-  margin-bottom: 10px;
-`
+import {
+  ActionsStyle,
+  ContentStyle,
+  EditInput,
+  PostBody,
+  PostContainer,
+  VoteContainer,
+  VoteValue,
+} from '@/components/postStyles'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -98,29 +77,29 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
 
   return (
     <PostContainer>
+      <VoteContainer>
+        <Button
+          onClick={handleVote('up')}
+          styles={{ background: 'transparent' }}
+          icon={<Icon label='arrow' />}
+        />
+        <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
+        <Button
+          onClick={handleVote('down')}
+          styles={{ background: 'transparent' }}
+          icon={<Icon label='arrow' direction='down' />}
+        />
+        {voteError && <p>{voteError}</p>}
+      </VoteContainer>
       <PostBody>
-        <VoteContainer>
-          <Button
-            onClick={handleVote('up')}
-            styles={{ background: 'transparent' }}
-            icon={<Icon label='arrow' />}
-          />
-          <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
-          <Button
-            onClick={handleVote('down')}
-            styles={{ background: 'transparent' }}
-            icon={<Icon label='arrow' direction='down' />}
-          />
-          {voteError && <p>{voteError}</p>}
-        </VoteContainer>
-        <div>
+        <ContentStyle>
           {post.type == 'argument' && post.title && (
             <div>
               <h1>{post.title}</h1>
             </div>
           )}
           <p>{!isEditing && post.body}</p>
-        </div>
+        </ContentStyle>
         {isEditing && (
           <>
             <EditInput
@@ -135,7 +114,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           </>
         )}
         {user.id === post.ownerUserId && (
-          <>
+          <ActionsStyle>
             <div>
               {!isEditing && (
                 <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
@@ -144,7 +123,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             <div>
               <Button label='Delete' onClick={() => handleDelete(post.id)} />
             </div>
-          </>
+          </ActionsStyle>
         )}
       </PostBody>
     </PostContainer>

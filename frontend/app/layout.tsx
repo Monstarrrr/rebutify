@@ -25,7 +25,6 @@ export default function RootLayout({ children }: PropsType) {
           <Header />
           <div
             style={{
-              padding: '32px',
               minHeight: `calc(100dvh - 54px - 24px)`,
             }}
           >

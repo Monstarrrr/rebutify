@@ -29,8 +29,8 @@ export default function Icon({
     <svg
       style={{ transform: rotation }}
       fill={color || '#fff'}
-      height='24px'
-      width='18px'
+      height='32px'
+      width='24px'
       version='1.1'
       id='Layer_1'
       xmlns='http://www.w3.org/2000/svg'
