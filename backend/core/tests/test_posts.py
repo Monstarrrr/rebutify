@@ -37,6 +37,7 @@ class PostTests(TestCase):
 
         # Create sample post
         self.sample_post = Post.objects.create(
+            id="76457211",
             type="argument",
             isPrivate=False,
             created="2024-06-26 02:20:58.689998+00:00",
@@ -69,6 +70,18 @@ class PostTests(TestCase):
             body="<p>Sample comment content</p>",
             ownerUserId=1,
         )
+
+        # Create sample suggestion
+        self.sample_suggestion = {
+            "id": "3245645456542324356",
+            "parentId": self.sample_post.id,
+            "type": "suggestion",
+            "isPrivate": False,
+            "created": "2024-06-26 02:20:58.689998+00:00",
+            "updated": "2024-06-26 02:20:58.689998+00:00",
+            "body": "<p>Sample suggestion content</p>",
+            "ownerUserId": 1,
+        }
 
     def test_posts_api(self):
         # Test the posts API endpoint
@@ -123,3 +136,15 @@ class PostTests(TestCase):
         response = self.client.get(reverse("arguments-followers", kwargs={"pk": 1}))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, self.sample_user.id)
+
+    def test_suggestions_api(self):
+        # Test the suggestions API endpoint
+        response = self.client.post(
+            reverse("arguments-suggest-edit", kwargs={"pk": self.sample_post.id}),
+            data=self.sample_suggestion,
+        )
+        self.assertEqual(response.status_code, 200)
+        if not Post.objects.filter(
+            type="suggestion", id=self.sample_suggestion["id"]
+        ).exists():
+            self.fail("Sample suggestion not found")

@@ -19,12 +19,14 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Post, UserProfile, Vote
+from .models import Post, Report, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
+    ReportSerializer,
+    SuggestionSerializer,
     UserProfileSerializer,
     VoteResponseSerializer,
     VoteSerializer,
@@ -133,6 +135,56 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         followers = serializers.serialize("json", followers) if followers else {}
         return Response(followers, content_type="application/json")
 
+    @action(
+        detail=True,
+        url_path="reports/add",
+        methods=["post"],
+        serializer_class=ReportSerializer,
+    )
+    def add_reports(self, *args, **kwargs):
+        # creates a report
+        data = self.request.data
+        report = {}
+        for key in data:
+            report[key] = data[key]
+        Report.objects.create(**report)
+        if Report.objects.all().filter(id=report["id"]):
+            return HttpResponse("", status=200)
+        else:
+            return HttpResponse("", status=404)
+
+    @action(
+        detail=True,
+        url_path="reports/options",
+        methods=["get"],
+        serializer_class=ReportSerializer,
+        pagination_class=CursorPaginationViewSet,
+    )
+    def reports_options(self, *args, **kwargs):
+        # gets a report's options
+        argumentId = kwargs["pk"]
+        queryset = Report.objects.filter(parentId=argumentId)
+        options = queryset.first().options
+        return HttpResponse(options, status=200)
+
+    @action(
+        detail=True,
+        url_path="suggest-edit",
+        methods=["post"],
+        serializer_class=SuggestionSerializer,
+    )
+    def suggest_edit(self, *args, **kwargs):
+        # creates a suggestion
+        data = self.request.data
+        suggestion = {}
+        for key in data:
+            suggestion[key] = data[key]
+        Post.objects.create(**suggestion)
+        if Post.objects.all().filter(type="suggestion", id=suggestion["id"]):
+            return HttpResponse("", status=200)
+        else:
+            return HttpResponse("", status=404)
+
 
 class RebuttalViewSet(viewsets.ModelViewSet):
     serializer_class = RebuttalSerializer
@@ -228,6 +280,26 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+
+class ReportViewSet(viewsets.ModelViewSet):
+    serializer_class = ReportSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="report")
+        return queryset
+
+
+class SuggestionViewSet(viewsets.ModelViewSet):
+    serializer_class = SuggestionSerializer
+    pagination_class = CursorPaginationViewSet
+
+    def get_queryset(self):
+        # gets all upvotes
+        queryset = Vote.objects.filter(type="suggestion")
+        return queryset
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
