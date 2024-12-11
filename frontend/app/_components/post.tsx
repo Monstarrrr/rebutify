@@ -4,19 +4,19 @@ import { deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
-import { useState } from 'react'
-import { Button, Icon } from '@/components'
+import { FormEvent, useState } from 'react'
+import { Button, Form, Icon } from '@/components'
 import { useRouter } from 'next/navigation'
 import {
   ActionsStyle,
   ContentStyle,
-  EditInput,
   PostBody,
   PostContainer,
   VoteContainer,
   VoteValue,
 } from '@/components/postStyles'
 import Link from 'next/link'
+import { formDataToObj } from '@/helpers'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -35,6 +35,9 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     type: item.type,
   })
   const [prevBody, setPrevBody] = useState(post.body)
+  const [editPostLoading, setEditPostLoading] = useState(false)
+  const [editPostSuccess, setEditPostSuccess] = useState<string | null>(null)
+  const [editPostError, setEditPostError] = useState(null)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -60,13 +63,19 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
-  const handleSave = async (title: string, body: string) => {
+  const handleEditPost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setEditPostLoading(true)
+    const { title, body } = formDataToObj(e)
     try {
       const res = await editPost(post.type, post.id, { title: title, body: body })
       console.log(`# Edit post - response :`, res)
       setPrevBody(body)
+      setEditPostLoading(false)
       setIsEditing(false)
     } catch (error: any) {
+      setEditPostLoading(false)
+      setEditPostError(error?.response)
       console.log(`❌ Edit post failed: ${error}`)
     }
   }
@@ -99,30 +108,58 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                 <h1>{post.title}</h1>
               </div>
             )}
-            <p>{!isEditing && post.body}</p>
+            {isEditing ? (
+              <>
+                <Form
+                  id='editPost'
+                  inputsFields={[
+                    {
+                      type: 'textarea',
+                      label: 'Editing post',
+                      id: 'editPostBody',
+                      value: post.body,
+                      placeholder: 'Plants feel pain',
+                    },
+                  ]}
+                  inputsErrors={editPostError}
+                  onSubmit={handleEditPost}
+                  loading={editPostLoading}
+                  success={editPostSuccess}
+                  setSuccess={setEditPostSuccess}
+                >
+                  <Button
+                    label='Save'
+                    success={editPostSuccess}
+                    loading={editPostLoading}
+                  />
+                  <Button
+                    label='Cancel'
+                    onClick={() => handleCancel()}
+                    transparent
+                  />
+                </Form>
+              </>
+            ) : (
+              <p>{post.body}</p>
+            )}
           </ContentStyle>
-          {isEditing && (
-            <>
-              <EditInput
-                value={post.body}
-                onChange={(e) => setPost({ ...post, body: e.target.value })}
-              />
-              <Button
-                label='Save'
-                onClick={() => handleSave(post.title, post.body)}
-              />
-              <Button label='Cancel' onClick={() => handleCancel()} />
-            </>
-          )}
           {user.id === post.ownerUserId && (
             <ActionsStyle>
+              {!isEditing && (
+                <div>
+                  <Button
+                    label='Edit'
+                    transparent
+                    onClick={() => setIsEditing(!isEditing)}
+                  />
+                </div>
+              )}
               <div>
-                {!isEditing && (
-                  <Button label='Edit' onClick={() => setIsEditing(!isEditing)} />
-                )}
-              </div>
-              <div>
-                <Button label='Delete' onClick={() => handleDelete(post.id)} />
+                <Button
+                  label='Delete'
+                  transparent
+                  onClick={() => handleDelete(post.id)}
+                />
               </div>
             </ActionsStyle>
           )}

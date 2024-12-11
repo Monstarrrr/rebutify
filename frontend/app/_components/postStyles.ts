@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 export const PostContainer = styled.div`
+  background-color: #353535;
   flex-wrap: wrap;
-  border: 1px solid #f0f0f0;
   border-radius: 8px;
   padding: 22px;
   margin-bottom: 12px;
@@ -36,10 +36,4 @@ export const ActionsStyle = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-`
-
-export const EditInput = styled.textarea`
-  width: 100%;
-  min-height: 100px;
-  margin-bottom: 10px;
 `
