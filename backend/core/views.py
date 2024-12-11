@@ -125,8 +125,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     # get followers of the argument
     @action(detail=True, methods=["get"])
     def followers(self, *args, **kwargs):
-        id = self.kwargs.get("pk")
         followers = {}
+        id = self.kwargs.get("pk")
         # check if argument exists
         if self.queryset.filter(id=id).exists():
             code = status.HTTP_200_OK
@@ -143,11 +143,10 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = {}
         user = self.request.user
         # check if argument exists
         if self.queryset.filter(id=id).exists():
-            # check if user id exists (check if user has an account)
+            # check if user is authenticated
             if user.is_authenticated:
                 followers = self.queryset.get(id=id).followers
                 # check if user follows the argument
@@ -159,26 +158,22 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     code = status.HTTP_200_OK
                     message = "Follow argument successful."
             else:
-                code = status.HTTP_404_NOT_FOUND
+                code = status.HTTP_401_UNAUTHORIZED
                 message = "You are not logged in."
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
-        headers = self.get_success_headers(followers)
-        return Response(
-            data=body, status=code, headers=headers, content_type="application/json"
-        )
+        return Response(data=body, status=code, content_type="application/json")
 
     # the current user undos the argument follow
     @action(detail=True, url_path="follow/undo", methods=["post"])
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
-        followers = {}
         user = self.request.user
         # check if argument exists
         if self.queryset.filter(id=id).exists():
-            # check if user id exists (check if user has an account)
+            # check if user is authenticated
             if user.is_authenticated:
                 followers = self.queryset.get(id=id).followers
                 # check if user follows the argument
@@ -190,16 +185,13 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     code = status.HTTP_200_OK
                     message = "You do not follow this argument."
             else:
-                code = status.HTTP_404_NOT_FOUND
+                code = status.HTTP_401_UNAUTHORIZED
                 message = "You are not logged in."
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
-        headers = self.get_success_headers(followers)
-        return Response(
-            data=body, status=code, headers=headers, content_type="application/json"
-        )
+        return Response(data=body, status=code, content_type="application/json")
 
     # get reports of the argument
     @action(detail=True, methods=["get"], serializer_class=ReportSerializer)
