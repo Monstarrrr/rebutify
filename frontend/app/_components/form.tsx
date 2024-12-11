@@ -37,6 +37,8 @@ const Textarea = styled.textarea`
 `
 
 const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+  display: flex;
+  gap: 8px;
   margin: 0 12px 8px;
   ${({ $floating }) => $floating && 'margin: 16px 16px 0 0;'}
 `
@@ -72,6 +74,10 @@ export default function Form(props: FormProps) {
           }),
         ),
       )
+    }
+    return () => {
+      localStorage.removeItem(formId)
+      setGlobalFormErrors(null)
     }
   }, [formId])
 
@@ -126,7 +132,16 @@ export default function Form(props: FormProps) {
     }
     // Global errors
     if (inputsErrors?.status === 401) {
-      setGlobalFormErrors(inputsErrors?.data?.detail || 'Unauthorized')
+      setGlobalFormErrors(
+        inputsErrors?.data?.detail || 'Please login to perform this action.',
+      )
+    }
+    // Internal errors
+    if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
+      setGlobalFormErrors(
+        inputsErrors?.data?.detail ||
+          'There was an error on our side, please try again later.',
+      )
     }
   }, [inputsErrors])
 
@@ -151,7 +166,9 @@ export default function Form(props: FormProps) {
             <InputContainer key={id}>
               {label && (
                 <Label htmlFor={id}>
-                  <i style={{ marginRight: '4px' }}>{label || placeholder}</i>
+                  <span style={{ marginRight: '4px', color: '#acacac' }}>
+                    {label || placeholder}
+                  </span>
                   <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
                 </Label>
               )}
@@ -203,7 +220,12 @@ export default function Form(props: FormProps) {
             ))
           ))}
       </SectionStyle>
-      <ButtonWrapper $floating={floating}>{children}</ButtonWrapper>
+      <ButtonWrapper
+        onClick={() => setGlobalFormErrors(null)}
+        $floating={floating}
+      >
+        {children}
+      </ButtonWrapper>
     </StyledForm>
   )
 }
