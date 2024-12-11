@@ -81,4 +81,5 @@ urlpatterns = [
         views.VoteView.as_view(),
         name="vote",
     ),
+    path("users/email/edit/", views.EditEmailView.as_view(), name="edit_email"),
 ]

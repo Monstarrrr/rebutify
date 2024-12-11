@@ -1,6 +1,9 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
@@ -626,3 +629,67 @@ class EditView(APIView):
 
         except Exception as e:
             log(e, request)
+
+
+User = get_user_model()
+
+
+class EditEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Handle email editing for the authenticated user
+
+        Request body should contain the new email
+        """
+        try:
+            # Extract email from request
+            email = request.data["email"]
+
+            # Validate email format
+            try:
+                validate_email(email)
+            except ValidationError:
+                return Response(
+                    {
+                        "code": 400,
+                        "message": "Invalid email format",
+                        "errors": ["Please provide a valid email address"],
+                    },
+                    status=400,
+                )
+
+            # Check if email is already in use
+            if User.objects.filter(email=email).exclude(id=request.user.id).exists():
+                return Response(
+                    {
+                        "code": 400,
+                        "message": "Email already in use",
+                        "errors": [
+                            "This email is already associated with another account"
+                        ],
+                    },
+                    status=400,
+                )
+
+            # Update user's email
+            user = request.user
+            user.email = email
+            user.save()
+
+            return Response(
+                {"code": 200, "message": "Email updated successfully"}, status=200
+            )
+
+        except Exception as e:
+            # Log the error
+            logger.error(f"Email update error: {str(e)}")
+            return Response(
+                {
+                    "code": 500,
+                    "message": "Internal server error",
+                    "errors": ["Unable to update email"],
+                },
+                status=500,
+            )
