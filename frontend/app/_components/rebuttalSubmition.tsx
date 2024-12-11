@@ -39,17 +39,17 @@ export default function RebuttalSubmition({ argument }: Props) {
     const formData = formDataToObj(event)
 
     try {
-      const { data } = await createPost({ ...formData }, 'rebuttal', argument.id)
-      setSuccess(data.message)
+      await createPost({ ...formData }, 'rebuttal', argument.id)
+      setSuccess('Rebuttal submitted successfully!')
       setLoading(false)
     } catch (error: any) {
       setSuccess(null)
       setLoading(false)
       setApiErrors(
         error?.response?.data?.detail ??
-        error?.response?.data ??
-        error?.response ??
-        error,
+          error?.response?.data ??
+          error?.response ??
+          error,
       )
     }
   }
