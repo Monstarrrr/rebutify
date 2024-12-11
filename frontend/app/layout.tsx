@@ -10,6 +10,20 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   description: '',
   title: 'Rebutify',
+  icons: {
+    icon: [
+      {
+        media: '(prefers-color-scheme: light)',
+        url: '/images/logo-white.png',
+        href: '/images/logo-white.png',
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: '/images/logo-black.png',
+        href: '/images/logo-black.png',
+      },
+    ],
+  },
 }
 
 type PropsType = Readonly<{
