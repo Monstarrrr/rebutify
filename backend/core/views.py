@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
+from djoser.conf import settings as djoser_settings
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status, viewsets
@@ -52,7 +53,7 @@ logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
 
-def log(e: Exception, data):
+def logerror(e: Exception, data):
     log = f"ERROR\n----------\n{e}\n----------\nDATA\n{data}"
     logger.error(log)
     return Response(status=500)
@@ -628,7 +629,7 @@ class EditView(APIView):
             return Response(serializer.errors, status=400)
 
         except Exception as e:
-            log(e, request)
+            logerror(e, request)
 
 
 User = get_user_model()
@@ -675,11 +676,29 @@ class EditEmailView(APIView):
 
             # Update user's email
             user = request.user
+            old_address = user.email
             user.email = email
-            user.save()
+
+            try:
+                context = {"user": user}
+                to = [user.email]
+
+                logger.info(
+                    f"sending activation email for {user.email} (old address: {old_address})"
+                )
+                djoser_settings.EMAIL.activation(self.request, context).send(to)
+
+                user.is_active = False
+                user.save()
+            except Exception as email_error:
+                logger.error(f"Failed to send activation email: {str(email_error)}")
 
             return Response(
-                {"code": 200, "message": "Email updated successfully"}, status=200
+                {
+                    "code": 200,
+                    "message": "Email updated. Please check your email to reactivate your account.",
+                },
+                status=200,
             )
 
         except Exception as e:
