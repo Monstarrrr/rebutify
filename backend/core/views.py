@@ -144,23 +144,23 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     def follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
         followers = {}
-        user_id = self.request.user.id
+        user = self.request.user
         # check if argument exists
         if self.queryset.filter(id=id).exists():
             # check if user id exists (check if user has an account)
-            if user_id:
+            if user.is_authenticated:
                 followers = self.queryset.get(id=id).followers
                 # check if user follows the argument
-                if followers.filter(id=user_id).exists():
+                if followers.filter(id=user.id).exists():
                     code = status.HTTP_200_OK
                     message = "You already follow this argument."
                 else:
-                    followers = followers.add(user_id)
+                    followers = followers.add(user.id)
                     code = status.HTTP_200_OK
                     message = "Follow argument successful."
             else:
                 code = status.HTTP_404_NOT_FOUND
-                message = "User account not found."
+                message = "You are not logged in."
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
@@ -175,15 +175,15 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     def undo_follow(self, *args, **kwargs):
         id = self.kwargs.get("pk")
         followers = {}
-        user_id = self.request.user.id
+        user = self.request.user
         # check if argument exists
         if self.queryset.filter(id=id).exists():
             # check if user id exists (check if user has an account)
-            if user_id:
+            if user.is_authenticated:
                 followers = self.queryset.get(id=id).followers
                 # check if user follows the argument
-                if followers.filter(id=user_id).exists():
-                    followers = followers.remove(user_id)
+                if followers.filter(id=user.id).exists():
+                    followers = followers.remove(user.id)
                     code = status.HTTP_200_OK
                     message = "Undo follow argument successful."
                 else:
@@ -191,7 +191,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     message = "You do not follow this argument."
             else:
                 code = status.HTTP_404_NOT_FOUND
-                message = "User account not found."
+                message = "You are not logged in."
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
