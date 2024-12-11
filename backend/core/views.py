@@ -210,16 +210,11 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.queryset.filter(id=id).exists():
             # check if user is an admin
             if self.request.user.is_superuser:
-                # check if reports for the argument exist
-                if Report.objects.filter(parentId=id).exists():
-                    code = status.HTTP_200_OK
-                    message = "Reports for this argument."
-                    reports = self.get_serializer(
-                        Report.objects.filter(parentId=id), many="true"
-                    ).data
-                else:
-                    code = status.HTTP_404_NOT_FOUND
-                    message = "No reports exist for this argument."
+                code = status.HTTP_200_OK
+                message = "Reports for this argument."
+                reports = self.get_serializer(
+                    Report.objects.filter(parentId=id), many="true"
+                ).data
             else:
                 code = status.HTTP_401_UNAUTHORIZED
                 message = "You are not an admin."
@@ -240,7 +235,6 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=ReportSerializer,
     )
     def add_reports(self, *args, **kwargs):
-        report = {}
         # check if argument exists
         if self.queryset.filter(id=self.kwargs["pk"]).exists():
             # check if user is authenticated
@@ -256,10 +250,9 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     code = status.HTTP_200_OK
                     message = "Report already exists."
                 else:
+                    report = {}
+                    report_fields = [field.name for field in Report._meta.get_fields()]
                     for key in data:
-                        report_fields = [
-                            field.name for field in Report._meta.get_fields()
-                        ]
                         # check if report data has an invalid key
                         if key not in report_fields:
                             report = {}
@@ -279,10 +272,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
-        headers = self.get_success_headers(report)
-        return Response(
-            data=body, status=code, headers=headers, content_type="application/json"
-        )
+        return Response(data=body, status=code, content_type="application/json")
 
     @action(
         detail=True,
@@ -325,7 +315,6 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=SuggestionSerializer,
     )
     def suggest_edit(self, *args, **kwargs):
-        suggestion = {}
         # check if argument exists
         if self.queryset.filter(id=self.kwargs["pk"]).exists():
             # check if user is authenticated
@@ -344,6 +333,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     code = status.HTTP_200_OK
                     message = "Suggestion already exists."
                 else:
+                    suggestion = {}
                     post_fields = [field.name for field in Post._meta.get_fields()]
                     for key in data:
                         # check if suggestion data has an invalid key
@@ -366,10 +356,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         body = response_body(code, message)
-        headers = self.get_success_headers(suggestion)
-        return Response(
-            data=body, status=code, headers=headers, content_type="application/json"
-        )
+        return Response(data=body, status=code, content_type="application/json")
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
