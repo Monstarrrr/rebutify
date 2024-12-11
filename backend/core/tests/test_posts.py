@@ -33,9 +33,10 @@ class PostTests(TestCase):
         # Create sample user
         self.sample_username = "sample_user"
         self.sample_password = os.environ["SAMPLE_USER_PASSWORD"]
-        self.sample_user = User.objects.create_user(
+        self.sample_user = User.objects.create_superuser(
             username=self.sample_username, password=self.sample_password
         )
+        self.sample_user.save()
 
         # Create sample post
         self.sample_post = Post.objects.create(
