@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.utils import timezone
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import viewsets
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -17,12 +18,14 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Post, UserProfile, Vote
+from .models import Post, Report, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
+    ReportSerializer,
+    SuggestionSerializer,
     UserProfileSerializer,
     VoteResponseSerializer,
     VoteSerializer,
@@ -50,6 +53,20 @@ def log(e: Exception, data):
     log = f"ERROR\n----------\n{e}\n----------\nDATA\n{data}"
     logger.error(log)
     return Response(status=500)
+
+
+# return formatted body for the response
+def response_body(code, message, resources={}):
+    body = {}
+    if code and message:
+        body["code"] = code
+        body["message"] = message
+        if resources:
+            body["resources"] = resources
+    else:
+        body["code"] = status.HTTP_500_INTERNAL_SERVER_ERROR
+        body["message"] = "Response code and message are not both defined."
+    return body
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -86,14 +103,14 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
 
+    # get all arguments
+    queryset = Post.objects.filter(type="argument")
+
     def get_queryset(self):
         self.pagination_class.page_size = int(
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
-
-        # gets all arguments
-        queryset = Post.objects.filter(type="argument")
-        return queryset
+        return self.queryset
 
     def perform_create(self, serializer):
         serializer.save(ownerUserId=self.request.user.id)
@@ -104,6 +121,223 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    # get followers of the argument
+    @action(detail=True, methods=["get"])
+    def followers(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = {}
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            code = status.HTTP_200_OK
+            message = "Followers for this argument."
+            followers = self.get_serializer(self.queryset.get(id=id)).data["followers"]
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        resources = {"followers": followers} if followers else {}
+        body = response_body(code, message, resources)
+        return Response(data=body, content_type="application/json")
+
+    # the current user follows the argument
+    @action(detail=True, methods=["post"])
+    def follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = {}
+        user_id = self.request.user.id
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
+            if user_id:
+                followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
+                if followers.filter(id=user_id).exists():
+                    code = status.HTTP_200_OK
+                    message = "You already follow this argument."
+                else:
+                    followers = followers.add(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Follow argument successful."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "User account not found."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = response_body(code, message)
+        headers = self.get_success_headers(followers)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
+
+    # the current user undos the argument follow
+    @action(detail=True, url_path="follow/undo", methods=["post"])
+    def undo_follow(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        followers = {}
+        user_id = self.request.user.id
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if user id exists (check if user has an account)
+            if user_id:
+                followers = self.queryset.get(id=id).followers
+                # check if user follows the argument
+                if followers.filter(id=user_id).exists():
+                    followers = followers.remove(user_id)
+                    code = status.HTTP_200_OK
+                    message = "Undo follow argument successful."
+                else:
+                    code = status.HTTP_200_OK
+                    message = "You do not follow this argument."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "User account not found."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        body = response_body(code, message)
+        headers = self.get_success_headers(followers)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
+
+    # get reports of the argument
+    @action(detail=True, methods=["get"], serializer_class=ReportSerializer)
+    def reports(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        reports = {}
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if reports for the argument exist
+            if Report.objects.filter(parentId=id).exists():
+                code = status.HTTP_200_OK
+                message = "Reports for this argument."
+                reports = self.get_serializer(
+                    Report.objects.filter(parentId=id), many="true"
+                ).data
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "No reports exist for this argument."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        resources = {"reports": reports} if reports else {}
+        body = response_body(code, message, resources)
+        return Response(data=body, content_type="application/json")
+
+    @action(
+        detail=True,
+        url_path="reports/add",
+        methods=["post"],
+        serializer_class=ReportSerializer,
+    )
+    def add_reports(self, *args, **kwargs):
+        # get report data
+        data = self.request.data
+        report = {}
+        # check if report data is given
+        if not data:
+            code = status.HTTP_200_OK
+            message = "No report data provided."
+        # check if report data has an id that already exists
+        elif "id" in data and Report.objects.filter(id=data["id"]).exists():
+            code = status.HTTP_200_OK
+            message = "Report already exists."
+        else:
+            for key in data:
+                # check if report data has an invalid key
+                if key not in [field.name for field in Report._meta.get_fields()]:
+                    report = {}
+                    code = status.HTTP_400_BAD_REQUEST
+                    message = "Invalid report data."
+                    break
+                report[key] = data[key]
+            # check if report was created
+            if report:
+                report = Report.objects.create(**report)
+                code = status.HTTP_200_OK
+                message = "Report created."
+        body = response_body(code, message)
+        headers = self.get_success_headers(report)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
+
+    @action(
+        detail=True,
+        url_path="reports/options",
+        methods=["get"],
+        serializer_class=ReportSerializer,
+    )
+    def reports_options(self, *args, **kwargs):
+        id = self.kwargs.get("pk")
+        options = []
+        # check if argument exists
+        if self.queryset.filter(id=id).exists():
+            # check if reports for the argument exist
+            if Report.objects.filter(parentId=id).exists():
+                reports = Report.objects.filter(parentId=id)
+                for report in reports:
+                    report = self.get_serializer(report).data
+                    # check if options is a list
+                    if isinstance(report["options"], list):
+                        options = sorted(set(options) | set(report["options"]))
+                code = status.HTTP_200_OK
+                message = "Followers for this argument."
+            else:
+                code = status.HTTP_404_NOT_FOUND
+                message = "No reports exist for this argument."
+        else:
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
+        resources = {"options": options} if options else {}
+        body = response_body(code, message, resources)
+        headers = self.get_success_headers(options)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
+
+    @action(
+        detail=True,
+        url_path="suggest-edit",
+        methods=["post"],
+        serializer_class=SuggestionSerializer,
+    )
+    def suggest_edit(self, *args, **kwargs):
+        # get suggestion data
+        data = self.request.data
+        suggestion = {}
+        # check if suggestion data is given
+        if not data:
+            code = status.HTTP_200_OK
+            message = "No suggestion data provided."
+        # check if suggestion data has an id that already exists
+        elif (
+            "id" in data
+            and Post.objects.filter(type="suggestion", id=data["id"]).exists()
+        ):
+            code = status.HTTP_200_OK
+            message = "Suggestion already exists."
+        else:
+            for key in data:
+                # check if suggestion data has an invalid key
+                if key not in [field.name for field in Post._meta.get_fields()]:
+                    suggestion = {}
+                    code = status.HTTP_400_BAD_REQUEST
+                    message = "Invalid suggestion data."
+                    break
+                suggestion[key] = data[key]
+            # check if suggestion was created
+            if suggestion:
+                suggestion["type"] = "suggestion"
+                suggestion = Post.objects.create(**suggestion)
+                code = status.HTTP_200_OK
+                message = "Suggestion created."
+        body = response_body(code, message)
+        headers = self.get_success_headers(suggestion)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
 
 class RebuttalViewSet(viewsets.ModelViewSet):
