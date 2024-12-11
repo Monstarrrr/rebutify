@@ -204,26 +204,34 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     # get reports of the argument
     @action(detail=True, methods=["get"], serializer_class=ReportSerializer)
     def reports(self, *args, **kwargs):
-        id = self.kwargs.get("pk")
         reports = {}
+        id = self.kwargs["pk"]
         # check if argument exists
         if self.queryset.filter(id=id).exists():
-            # check if reports for the argument exist
-            if Report.objects.filter(parentId=id).exists():
-                code = status.HTTP_200_OK
-                message = "Reports for this argument."
-                reports = self.get_serializer(
-                    Report.objects.filter(parentId=id), many="true"
-                ).data
+            # check if user is an admin
+            if self.request.user.is_superuser:
+                # check if reports for the argument exist
+                if Report.objects.filter(parentId=id).exists():
+                    code = status.HTTP_200_OK
+                    message = "Reports for this argument."
+                    reports = self.get_serializer(
+                        Report.objects.filter(parentId=id), many="true"
+                    ).data
+                else:
+                    code = status.HTTP_404_NOT_FOUND
+                    message = "No reports exist for this argument."
             else:
-                code = status.HTTP_404_NOT_FOUND
-                message = "No reports exist for this argument."
+                code = status.HTTP_401_UNAUTHORIZED
+                message = "You are not an admin."
         else:
             code = status.HTTP_404_NOT_FOUND
             message = "This argument does not exist."
         resources = {"reports": reports} if reports else {}
         body = response_body(code, message, resources)
-        return Response(data=body, content_type="application/json")
+        headers = self.get_success_headers(reports)
+        return Response(
+            data=body, status=code, headers=headers, content_type="application/json"
+        )
 
     @action(
         detail=True,
@@ -232,31 +240,44 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=ReportSerializer,
     )
     def add_reports(self, *args, **kwargs):
-        # get report data
-        data = self.request.data
         report = {}
-        # check if report data is given
-        if not data:
-            code = status.HTTP_200_OK
-            message = "No report data provided."
-        # check if report data has an id that already exists
-        elif "id" in data and Report.objects.filter(id=data["id"]).exists():
-            code = status.HTTP_200_OK
-            message = "Report already exists."
+        # check if argument exists
+        if self.queryset.filter(id=self.kwargs["pk"]).exists():
+            # check if user is authenticated
+            if self.request.user.is_authenticated:
+                # get report data
+                data = self.request.data
+                # check if report data is given
+                if not data:
+                    code = status.HTTP_200_OK
+                    message = "No report data provided."
+                # check if report data has an id that already exists
+                elif "id" in data and Report.objects.filter(id=data["id"]).exists():
+                    code = status.HTTP_200_OK
+                    message = "Report already exists."
+                else:
+                    for key in data:
+                        report_fields = [
+                            field.name for field in Report._meta.get_fields()
+                        ]
+                        # check if report data has an invalid key
+                        if key not in report_fields:
+                            report = {}
+                            code = status.HTTP_400_BAD_REQUEST
+                            message = "Invalid report data."
+                            break
+                        report[key] = data[key]
+                    # check if report was created
+                    if report:
+                        report = Report.objects.create(**report)
+                        code = status.HTTP_200_OK
+                        message = "Report created."
+            else:
+                code = status.HTTP_401_UNAUTHORIZED
+                message = "You are not logged in."
         else:
-            for key in data:
-                # check if report data has an invalid key
-                if key not in [field.name for field in Report._meta.get_fields()]:
-                    report = {}
-                    code = status.HTTP_400_BAD_REQUEST
-                    message = "Invalid report data."
-                    break
-                report[key] = data[key]
-            # check if report was created
-            if report:
-                report = Report.objects.create(**report)
-                code = status.HTTP_200_OK
-                message = "Report created."
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
         body = response_body(code, message)
         headers = self.get_success_headers(report)
         return Response(
@@ -270,8 +291,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=ReportSerializer,
     )
     def reports_options(self, *args, **kwargs):
-        id = self.kwargs.get("pk")
         options = []
+        id = self.kwargs["pk"]
         # check if argument exists
         if self.queryset.filter(id=id).exists():
             # check if reports for the argument exist
@@ -283,7 +304,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     if isinstance(report["options"], list):
                         options = sorted(set(options) | set(report["options"]))
                 code = status.HTTP_200_OK
-                message = "Followers for this argument."
+                message = "Report options for this argument."
             else:
                 code = status.HTTP_404_NOT_FOUND
                 message = "No reports exist for this argument."
@@ -304,35 +325,46 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         serializer_class=SuggestionSerializer,
     )
     def suggest_edit(self, *args, **kwargs):
-        # get suggestion data
-        data = self.request.data
         suggestion = {}
-        # check if suggestion data is given
-        if not data:
-            code = status.HTTP_200_OK
-            message = "No suggestion data provided."
-        # check if suggestion data has an id that already exists
-        elif (
-            "id" in data
-            and Post.objects.filter(type="suggestion", id=data["id"]).exists()
-        ):
-            code = status.HTTP_200_OK
-            message = "Suggestion already exists."
+        # check if argument exists
+        if self.queryset.filter(id=self.kwargs["pk"]).exists():
+            # check if user is authenticated
+            if self.request.user.is_authenticated:
+                # get suggestion data
+                data = self.request.data
+                # check if suggestion data is given
+                if not data:
+                    code = status.HTTP_200_OK
+                    message = "No suggestion data provided."
+                # check if suggestion data has an id that already exists
+                elif (
+                    "id" in data
+                    and Post.objects.filter(type="suggestion", id=data["id"]).exists()
+                ):
+                    code = status.HTTP_200_OK
+                    message = "Suggestion already exists."
+                else:
+                    post_fields = [field.name for field in Post._meta.get_fields()]
+                    for key in data:
+                        # check if suggestion data has an invalid key
+                        if key not in post_fields:
+                            suggestion = {}
+                            code = status.HTTP_400_BAD_REQUEST
+                            message = "Invalid suggestion data."
+                            break
+                        suggestion[key] = data[key]
+                    # check if suggestion was created
+                    if suggestion:
+                        suggestion["type"] = "suggestion"
+                        suggestion = Post.objects.create(**suggestion)
+                        code = status.HTTP_200_OK
+                        message = "Suggestion created."
+            else:
+                code = status.HTTP_401_UNAUTHORIZED
+                message = "You are not logged in."
         else:
-            for key in data:
-                # check if suggestion data has an invalid key
-                if key not in [field.name for field in Post._meta.get_fields()]:
-                    suggestion = {}
-                    code = status.HTTP_400_BAD_REQUEST
-                    message = "Invalid suggestion data."
-                    break
-                suggestion[key] = data[key]
-            # check if suggestion was created
-            if suggestion:
-                suggestion["type"] = "suggestion"
-                suggestion = Post.objects.create(**suggestion)
-                code = status.HTTP_200_OK
-                message = "Suggestion created."
+            code = status.HTTP_404_NOT_FOUND
+            message = "This argument does not exist."
         body = response_body(code, message)
         headers = self.get_success_headers(suggestion)
         return Response(
