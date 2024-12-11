@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { Dispatch, FormEvent, SetStateAction } from 'react'
 import { TextInput } from '@/types'
 import { AxiosResponse } from 'axios'
 
@@ -10,10 +10,10 @@ export type FormProps = {
 
   loading: boolean
   success: string | null
-  setSuccess: (success: string | null) => void // To reset success message onChange
+  setSuccess: Dispatch<SetStateAction<string | null>> // To reset success message onChange
 
-  // Children is the submit button
-  children: React.ReactElement | null
+  // Children is the submit button and optional cancel button
+  children?: React.ReactNode | null
 
   // Floating form (submit button outside)
   floating?: boolean

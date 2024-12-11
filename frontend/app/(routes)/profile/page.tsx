@@ -8,6 +8,7 @@ import { formDataToObj } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getPosts } from '@/api/posts'
 import { editPassword, deleteSelfAccount } from '@/api/auth'
+import { editEmail } from '@/api/auth/editEmail'
 import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
 import { H2, H3 } from '@/styles'
@@ -29,7 +30,7 @@ const Title = styled.h1`
 `
 
 const H2Section = styled.div`
-  background-color: #3d3d3d;
+  background-color: #353535;
   border-radius: 14px;
   padding: 24px;
 `
@@ -51,11 +52,20 @@ export default function Profile() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user)
   const [argumentsList, setArgumentsList] = useState<Post[]>([])
+
   const [deleteAccError, setDeleteAccError] = useState<AxiosResponse | null>(null)
   const [deleteAccLoading, setDeleteAccLoading] = useState(false)
   const [deleteAccSuccess, setDeleteAccSuccess] = useState<string | null>(null)
+
   const [editPassSuccess, setEditPassSuccess] = useState<string | null>(null)
   const [editPassLoading, setEditPassLoading] = useState(false)
+
+  const [isEditingEmail, setIsEditingEmail] = useState(false)
+  const [editEmailSuccess, setEditEmailSuccess] = useState<string | null>(null)
+  const [editEmailLoading, setEditEmailLoading] = useState(false)
+  const [editEmailErrors, setEditEmailErrors] = useState<AxiosResponse | null>(
+    null,
+  )
 
   useEffect(() => {
     console.log(`# user  :`, user)
@@ -78,6 +88,30 @@ export default function Profile() {
     fetchApi()
   }, [user.id])
 
+  useEffect(() => {
+    // We remove errors when we stop/start editing the email
+    setEditEmailErrors(null)
+  }, [isEditingEmail])
+
+  const handleIsEditingEmail = () => {
+    setIsEditingEmail(true)
+  }
+  const handleEditEmail = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setEditEmailLoading(true)
+    const { email } = formDataToObj(e)
+    try {
+      await editEmail(email)
+      setEditEmailLoading(false)
+      setEditEmailSuccess('Email updated')
+      setIsEditingEmail(false)
+    } catch (error: any) {
+      setEditEmailLoading(false)
+      setEditEmailErrors(error?.response)
+      console.error(error.response ?? error)
+    }
+  }
+
   const handleEditPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setEditPassSuccess(null)
@@ -89,12 +123,7 @@ export default function Profile() {
       setEditPassLoading(false)
     } catch (error: any) {
       setEditPassLoading(false)
-      console.error(
-        error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
-      )
+      console.error(error.response ?? error)
     }
   }
 
@@ -113,12 +142,7 @@ export default function Profile() {
     } catch (error: any) {
       setDeleteAccLoading(false)
       setDeleteAccError(error?.response)
-      console.error(
-        error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
-      )
+      console.error(error.response ?? error)
     }
   }
 
@@ -141,7 +165,48 @@ export default function Profile() {
                   <td>
                     <b>Email:</b>
                   </td>
-                  <td>{user.email}</td>
+                  {isEditingEmail ? (
+                    <td>
+                      <Form
+                        id='edit-email'
+                        inputsFields={[
+                          {
+                            id: 'email',
+                            label: 'Editing email',
+                            type: 'email',
+                            placeholder: 'user@email.com',
+                            value: user.email,
+                          },
+                        ]}
+                        onSubmit={handleEditEmail}
+                        success={editEmailSuccess}
+                        setSuccess={setEditEmailSuccess}
+                        loading={editEmailLoading}
+                        inputsErrors={editEmailErrors}
+                      >
+                        <Button
+                          label='Save'
+                          success={editEmailSuccess}
+                          loading={editEmailLoading}
+                        />
+                        <Button
+                          label='Cancel'
+                          onClick={(_) => setIsEditingEmail(false)}
+                          transparent
+                        />
+                      </Form>
+                    </td>
+                  ) : (
+                    <td>
+                      {user.email}
+                      <Button
+                        styles={{ marginLeft: '8px' }}
+                        label='Edit'
+                        onClick={handleIsEditingEmail}
+                        transparent
+                      />
+                    </td>
+                  )}
                 </tr>
               </tbody>
             </table>

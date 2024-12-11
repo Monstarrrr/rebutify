@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const SectionStyle = styled.div`
-  background-color: #3d3d3d;
+  background-color: #353535;
   border-radius: 14px;
   padding: 12px;
 `
