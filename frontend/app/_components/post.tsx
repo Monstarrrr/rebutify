@@ -17,6 +17,7 @@ import {
 } from '@/components/postStyles'
 import Link from 'next/link'
 import { formDataToObj } from '@/helpers'
+import { SectionStyle } from '@/styles'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -109,7 +110,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               </div>
             )}
             {isEditing ? (
-              <>
+              <SectionStyle>
                 <Form
                   id='editPost'
                   inputsFields={[
@@ -138,7 +139,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                     transparent
                   />
                 </Form>
-              </>
+              </SectionStyle>
             ) : (
               <p>{post.body}</p>
             )}

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const PostContainer = styled.div`
-  background-color: #353535;
+  background-color: #1e1e1e;
   flex-wrap: wrap;
   border-radius: 8px;
   padding: 22px;
