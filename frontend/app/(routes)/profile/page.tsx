@@ -98,6 +98,7 @@ export default function Profile() {
   }, [isEditingEmail])
 
   const handleIsEditingEmail = () => {
+    setEditEmailSuccess(null)
     setIsEditingEmail(true)
   }
   const handleEditEmail = async (e: FormEvent<HTMLFormElement>) => {
@@ -107,7 +108,7 @@ export default function Profile() {
     try {
       await editEmail(email)
       setEditEmailLoading(false)
-      setEditEmailSuccess('Email updated')
+      setEditEmailSuccess('Email updated, please check your inbox.')
       setIsEditingEmail(false)
     } catch (error: any) {
       setEditEmailLoading(false)
@@ -220,6 +221,9 @@ export default function Profile() {
                         onClick={handleIsEditingEmail}
                         transparent
                       />
+                      <p style={{ color: 'green' }}>
+                        {editEmailSuccess}
+                      </p>
                     </td>
                   )}
                 </tr>
