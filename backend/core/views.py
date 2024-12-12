@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
 from django.http import HttpResponse
@@ -22,7 +23,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Post, Report, UserProfile, Vote
+from .models import POST_TYPES, Post, Report, UserProfile, Vote
 from .serializers import (
     ArgumentSerializer,
     CommentSerializer,
@@ -409,8 +410,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         type = self.request.query_params.get("type")
-        if type is not None and type not in ["Argument", "Rebuttal", "Comment"]:
-            Post.objects.none()
+        if type is not None and type not in [x[1] for x in POST_TYPES]:
+            return Post.objects.none()
 
         parentId = self.request.query_params.get("parentId")
 
@@ -442,6 +443,48 @@ class PostViewSet(viewsets.ModelViewSet):
             parent = Post.objects.get(id=post.parentId)
             if parent:
                 user_profile.saved_posts.add(parent)
+
+        # get all followers fo this post and notify
+        author = User.objects.get(pk=post.ownerUserId)
+        followers = User.objects.filter(userprofile__saved_posts__id=post.parentId)
+        follower_emails = [
+            follower.email for follower in followers if follower != author
+        ]
+
+        try:
+            send_mail(
+                "New update on an argument you follow",
+                f"Check it out at https://{settings.SITE_URL}/{parent.type}/{post.parentId}",
+                settings.EMAIL_FROM,
+                follower_emails,
+                fail_silently=False,
+            )
+        except Exception as e:
+            logerror(e, f"Couldn't send email to followers: {follower_emails}")
+
+    def perform_destroy(self, instance: Post):
+        title = instance.title
+        followers = User.objects.filter(userprofile__saved_posts__id=instance.pk)
+        author = User.objects.get(pk=instance.ownerUserId)
+        # fmt: off
+        follower_emails = [follower.email for follower in followers if follower != author] # type: ignore[attr-defined]
+        # fmt: on
+        if instance.type == "argument":
+            deletion_message = f'The argument titled "{title}" was deleted.'
+        else:
+            deletion_message = f"The {instance.type} by {author.username} was deleted."  # type: ignore[attr-defined]
+        try:
+            send_mail(
+                f"An {instance.type} you follow was deleted",
+                deletion_message,
+                settings.EMAIL_FROM,
+                follower_emails,
+                fail_silently=False,
+            )
+        except Exception as e:
+            logerror(e, f"Couldn't send email to followers: {follower_emails}")
+
+        return super().perform_destroy(instance)
 
     def get_permissions(self):
         if self.action == "create":
@@ -601,7 +644,7 @@ class EditView(APIView):
     def post(self, request, post_type, post_id):
         try:
             # Validate post type
-            if post_type.lower() not in ["argument", "rebuttal", "comment"]:
+            if post_type.lower() not in [x[1] for x in POST_TYPES]:
                 return Response({"error": "Invalid post type"}, status=400)
 
             # Find the post
@@ -624,6 +667,23 @@ class EditView(APIView):
             serializer = PostSerializer(post, data=update_data, partial=True)
             if serializer.is_valid():
                 serializer.save()
+
+                author = User.objects.get(pk=post.ownerUserId)
+                followers = User.objects.filter(userprofile__saved_posts__id=post.pk)
+                follower_emails = [
+                    follower.email for follower in followers if follower != author
+                ]
+
+                try:
+                    send_mail(
+                        "New update on an argument you follow",
+                        f"Check it out at https://{settings.SITE_URL}/{post.type}/{post.pk}",
+                        settings.EMAIL_FROM,
+                        follower_emails,
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    logerror(e, f"Couldn't send email to followers: {follower_emails}")
                 return Response(serializer.data, status=200)
 
             return Response(serializer.errors, status=400)

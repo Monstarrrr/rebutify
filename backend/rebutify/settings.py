@@ -88,6 +88,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://0.0.0.0:3000",
     "http://127.0.0.1:3000",
 ]
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += ["http://" + host for host in ALLOWED_HOSTS]
 
 # Normalizing URLs for front-end (https://docs.djangoproject.com/en/4.0/ref/middleware/#django.middleware.common.CommonMiddleware)
 APPEND_SLASH = True
