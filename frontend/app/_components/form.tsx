@@ -36,7 +36,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px 8px;
@@ -76,7 +76,6 @@ export default function Form(props: FormProps) {
       )
     }
     return () => {
-      localStorage.removeItem(formId)
       setGlobalFormErrors(null)
     }
   }, [formId])
@@ -171,7 +170,7 @@ export default function Form(props: FormProps) {
     if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
       setGlobalFormErrors(
         inputsErrors?.data?.detail ||
-          'There was an error on our side, please try again later.',
+        'There was an error on our side, please try again later.',
       )
     }
   }, [inputsErrors])

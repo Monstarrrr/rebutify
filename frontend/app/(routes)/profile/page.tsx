@@ -144,9 +144,12 @@ export default function Profile() {
     setDeleteAccError(null)
     setDeleteAccSuccess(null)
     setDeleteAccLoading(true)
-    const { password } = formDataToObj(e)
+    const { current_password } = formDataToObj(e)
     try {
-      password && (await deleteSelfAccount(password))
+      if (!current_password) {
+        throw new Error('current_password field id not found')
+      }
+      await deleteSelfAccount(current_password)
       dispatch(removeUser())
       setDeleteAccSuccess('Account deleted')
       setDeleteAccLoading(false)
@@ -154,7 +157,7 @@ export default function Profile() {
     } catch (error: any) {
       setDeleteAccLoading(false)
       setDeleteAccError(error?.response)
-      console.error(error?.response)
+      console.error(error?.response ?? error)
     }
   }
 
@@ -270,11 +273,10 @@ export default function Profile() {
                 id='delete-account'
                 inputsFields={[
                   {
-                    id: 'password',
+                    id: 'current_password',
                     label: 'Password',
                     type: 'password',
                     placeholder: '****************',
-                    required: true,
                     value: '',
                   },
                 ]}
@@ -291,9 +293,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                          background: 'red',
-                          color: 'black',
-                        }
+                        background: 'red',
+                        color: 'black',
+                      }
                       : {}
                   }
                 />

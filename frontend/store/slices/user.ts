@@ -16,7 +16,6 @@ const userSlice = createSlice({
   name: 'user',
   reducers: {
     removeUser() {
-      console.log(`REMOVING THE USER !!!!`)
       return {
         ...initialState,
         id: null,
