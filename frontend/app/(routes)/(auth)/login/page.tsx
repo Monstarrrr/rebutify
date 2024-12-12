@@ -57,7 +57,6 @@ export default function Login() {
       router.push('/')
     } catch (error: any) {
       setLoading(false)
-      console.error(error)
       setApiErrors(
         error.response ?? {
           data: {

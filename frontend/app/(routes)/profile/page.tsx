@@ -58,6 +58,7 @@ export default function Profile() {
   const [deleteAccSuccess, setDeleteAccSuccess] = useState<string | null>(null)
 
   const [editPassSuccess, setEditPassSuccess] = useState<string | null>(null)
+  const [editPassErrors, setEditPassErrors] = useState<AxiosResponse | null>(null)
   const [editPassLoading, setEditPassLoading] = useState(false)
 
   const [isEditingEmail, setIsEditingEmail] = useState(false)
@@ -82,7 +83,10 @@ export default function Profile() {
         console.log(`# response :`, response)
         setArgumentsList(response)
       } catch (error: any) {
-        console.error('# Error fetching posts: ', error.response.data)
+        console.error(
+          '# Error fetching posts: ',
+          error?.response?.data ?? error?.response ?? error,
+        )
       }
     }
     fetchApi()
@@ -116,14 +120,22 @@ export default function Profile() {
     e.preventDefault()
     setEditPassSuccess(null)
     setEditPassLoading(true)
-    const { currentPassword, newPassword } = formDataToObj(e)
+    const { current_password, new_password } = formDataToObj(e)
     try {
-      await editPassword(currentPassword, newPassword)
+      await editPassword(current_password, new_password)
       setEditPassSuccess('Password updated')
       setEditPassLoading(false)
     } catch (error: any) {
       setEditPassLoading(false)
-      console.error(error.response ?? error)
+      setEditPassErrors(
+        error.response ?? {
+          data: {
+            detail:
+              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+          },
+          code: 401,
+        },
+      )
     }
   }
 
@@ -142,7 +154,7 @@ export default function Profile() {
     } catch (error: any) {
       setDeleteAccLoading(false)
       setDeleteAccError(error?.response)
-      console.error(error.response ?? error)
+      console.error(error?.response)
     }
   }
 
@@ -222,14 +234,14 @@ export default function Profile() {
                 id='edit-password'
                 inputsFields={[
                   {
-                    id: 'currentPassword',
+                    id: 'current_password',
                     label: 'Current password',
                     type: 'password',
                     placeholder: '****************',
                     value: '',
                   },
                   {
-                    id: 'newPassword',
+                    id: 'new_password',
                     label: 'New password',
                     type: 'password',
                     placeholder: '*********************',
@@ -240,7 +252,7 @@ export default function Profile() {
                 loading={editPassLoading}
                 success={editPassSuccess}
                 setSuccess={setEditPassSuccess}
-                inputsErrors={deleteAccError}
+                inputsErrors={editPassErrors}
               >
                 <Button
                   label='Change password'

@@ -9,7 +9,10 @@ export const login = async (formData: FormDataObj) => {
     })
     return response.data
   } catch (error: any) {
-    console.error('# Login request failed: ', error.response.data ?? error)
+    console.error(
+      '# Login request failed: ',
+      error.response.data ?? error.response ?? error,
+    )
     throw error
   }
 }

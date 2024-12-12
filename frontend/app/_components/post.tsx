@@ -1,16 +1,16 @@
 'use client'
 import { vote } from '@/api/vote'
-import { deletePost, editPost } from '@/api/posts'
+import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
 import { FormEvent, useState } from 'react'
-import { Button, Form, Icon } from '@/components'
+import { Button, Form, Icon, Comments } from '@/components'
 import { useRouter } from 'next/navigation'
 import {
   ActionsStyle,
   ContentStyle,
-  PostBody,
+  PostInner,
   PostContainer,
   VoteContainer,
   VoteValue,
@@ -23,8 +23,6 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const user = useAppSelector((state) => state.user)
-  const [voteError, setVoteError] = useState<boolean | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
   // We use state to keep the post values reactive
   const [post, setPost] = useState({
     title: item.title,
@@ -35,10 +33,14 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     ownerUserId: item.ownerUserId,
     type: item.type,
   })
+  const [voteError, setVoteError] = useState<boolean | null>(null)
   const [prevBody, setPrevBody] = useState(post.body)
+  const [isEditing, setIsEditing] = useState(false)
   const [editPostLoading, setEditPostLoading] = useState(false)
   const [editPostSuccess, setEditPostSuccess] = useState<string | null>(null)
   const [editPostError, setEditPostError] = useState(null)
+
+  const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -86,6 +88,18 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     setIsEditing(false)
   }
 
+  const handleComment = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = formDataToObj(e)
+    try {
+      const res = await createPost(formData, 'comment', post.id)
+      console.log(`# Create comment - response :`, res)
+      setCommentSuccess('Comment created')
+    } catch (error: any) {
+      console.log(`❌ Create comment failed: ${error}`)
+    }
+  }
+
   return (
     <>
       <PostContainer>
@@ -102,7 +116,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             icon={<Icon label='arrow' direction='down' />}
           />
         </VoteContainer>
-        <PostBody>
+        <PostInner>
           <ContentStyle>
             {post.type == 'argument' && post.title && (
               <div>
@@ -116,7 +130,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                   inputsFields={[
                     {
                       type: 'textarea',
-                      label: 'Editing post',
+                      label: `Editing ${post.type}`,
                       id: 'editPostBody',
                       value: post.body,
                       placeholder: 'Plants feel pain',
@@ -164,7 +178,29 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               </div>
             </ActionsStyle>
           )}
-        </PostBody>
+          {/* Comments */}
+          <SectionStyle>
+            <Comments parentPostId={post.id} />
+            <Form
+              id='comment'
+              inputsFields={[
+                {
+                  id: 'body',
+                  placeholder: 'I think it could be better if ...',
+                  type: 'textarea',
+                  label: 'Comment',
+                },
+              ]}
+              inputsErrors={null}
+              onSubmit={handleComment}
+              loading={false}
+              success={null}
+              setSuccess={setCommentSuccess}
+            >
+              <Button label='Comment' success={commentSuccess} />
+            </Form>
+          </SectionStyle>
+        </PostInner>
       </PostContainer>
       {voteError && (
         <>

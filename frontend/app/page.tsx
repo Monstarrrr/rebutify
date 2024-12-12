@@ -2,28 +2,11 @@
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
 import { Form, List, PostCard, Button } from '@/components'
-import type { Post, TextInput } from '@/types'
+import type { Post } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
-
-const newArgumentInputs: TextInput[] = [
-  {
-    id: 'title',
-    label: 'Title',
-    placeholder: 'Plants are alive too!',
-    value: '',
-  },
-  {
-    id: 'body',
-    label: 'Argument',
-    placeholder:
-      "If vegans don't eat meat, why do they eat plants? They are living beings too!",
-    type: 'textarea',
-    value: '',
-  },
-]
 
 const FirstSection = styled.div`
   display: flex;
@@ -130,7 +113,22 @@ export default function Home() {
             <Form
               id='new-argument'
               inputsErrors={apiErrors}
-              inputsFields={newArgumentInputs}
+              inputsFields={[
+                {
+                  id: 'title',
+                  label: 'Title',
+                  placeholder: 'Plants are alive too!',
+                  value: '',
+                },
+                {
+                  id: 'body',
+                  label: 'Argument',
+                  placeholder:
+                    "If vegans don't eat meat, why do they eat plants? They are living beings too!",
+                  type: 'textarea',
+                  value: '',
+                },
+              ]}
               onSubmit={handleSubmitArgument}
               loading={loading}
               success={success}

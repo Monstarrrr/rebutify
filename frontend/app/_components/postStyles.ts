@@ -10,10 +10,10 @@ export const PostContainer = styled.div`
   display: flex;
 `
 
-export const PostBody = styled.div`
+export const PostInner = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
-  align-items: flex-start;
   gap: 22px;
 `
 

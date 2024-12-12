@@ -103,7 +103,7 @@ api.interceptors.response.use(
   },
   (error: any) => {
     console.error(
-      '# response error :',
+      '❌ response error :',
       error?.reponse?.data?.detail ??
         error?.response?.data ??
         error?.response ??

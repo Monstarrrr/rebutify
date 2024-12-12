@@ -1,13 +1,15 @@
 import api from '@/api/api'
 import { AxiosResponse } from 'axios'
 
+const endpoint = '/auth/users/set_password'
+
 export const editPassword = async (
   currentPassword: string,
   newPassword: string,
 ): Promise<AxiosResponse> => {
   try {
     const res = await api.post(
-      '/auth/users/set_password',
+      endpoint,
       {
         new_password: newPassword,
         current_password: currentPassword,
@@ -17,7 +19,11 @@ export const editPassword = async (
       },
     )
     return res
-  } catch (error) {
+  } catch (error: any) {
+    console.error(
+      `❌ ${endpoint} request failed: `,
+      error?.response?.data ?? error?.response ?? error,
+    )
     throw error
   }
 }

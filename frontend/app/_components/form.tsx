@@ -96,7 +96,7 @@ export default function Form(props: FormProps) {
       }))
     })
 
-    // Update state
+    // Update value
     setInputsState((prev) =>
       prev.map((inputField) => {
         if (inputField.id === e.target.name) {
@@ -121,14 +121,45 @@ export default function Form(props: FormProps) {
 
   useEffect(() => {
     // Field errors
-    if (inputsErrors?.data?.code === 422) {
+    if (
+      inputsErrors?.data?.code === 422 || // schema v2
+      inputsErrors?.data?.code === 400 || // schema v2
+      inputsErrors?.status === 422 || // schema v1
+      inputsErrors?.status === 400 // schema v1
+    ) {
       // Add error(s) to the corresponding field(s)
+      // schema v2:
+      inputsErrors.data.formErrors &&
+        setInputsState((prev) => {
+          return prev.map((inputField) => ({
+            ...inputField,
+            errors: inputsErrors.data.formErrors[inputField.id],
+          }))
+        })
+      // schema v1:
       setInputsState((prev) => {
         return prev.map((inputField) => ({
           ...inputField,
-          errors: inputsErrors.data.formErrors[inputField.id],
+          errors: inputsErrors.data[inputField.id],
         }))
       })
+
+      // Check if some fields from inputsErrors don't exist in inputsState
+      const missingFields: string[] = Object.keys(inputsErrors.data).filter(
+        (fieldErrorId) =>
+          !inputsState.some((inputField) => inputField.id === fieldErrorId),
+      )
+      if (missingFields.length > 0) {
+        console.error(
+          `❌ Fields returned by API don't exist in inputsFields: ${missingFields.join(', ')}`,
+        )
+        setInputsState((prev) => {
+          return prev.map((inputField) => ({
+            ...inputField,
+            errors: ['Some field is not being recognized, check logs.'],
+          }))
+        })
+      }
     }
     // Global errors
     if (inputsErrors?.status === 401) {
@@ -162,7 +193,15 @@ export default function Form(props: FormProps) {
     <StyledForm onSubmit={onSubmit}>
       <SectionStyle>
         {inputsState.map(
-          ({ id, label, placeholder, type, value, errors, required = false }) => (
+          ({
+            id,
+            label,
+            placeholder,
+            type,
+            value = '',
+            errors,
+            required = false,
+          }) => (
             <InputContainer key={id}>
               {label && (
                 <Label htmlFor={id}>
