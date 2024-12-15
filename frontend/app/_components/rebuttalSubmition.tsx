@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
 import { H2, SectionStyle } from '@/styles'
 import { useAppSelector } from '@/store/hooks'
-import Link from 'next/link'
+import { LoginBlocker } from '@/components'
 
 const newRebuttalInput: TextInput[] = [
   {
@@ -71,12 +71,7 @@ export default function RebuttalSubmition({ argument }: Props) {
             <Button loading={loading} label={'Submit'} success={success} />
           </Form>
         ) : (
-          <p>
-            You must be logged in to submit a rebuttal.{' '}
-            <Link href='/login'>
-              <Button label={'Login'} />
-            </Link>
-          </p>
+          <LoginBlocker action={'submit a rebuttal'} />
         )}
       </SectionStyle>
     </div>

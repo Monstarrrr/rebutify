@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
 import { FormEvent, useState } from 'react'
-import { Button, Form, Icon, Comments } from '@/components'
+import { Button, Form, Icon, Comments, LoginBlocker } from '@/components'
 import { useRouter } from 'next/navigation'
 import {
   ActionsStyle,
@@ -40,6 +40,8 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const [editPostSuccess, setEditPostSuccess] = useState<string | null>(null)
   const [editPostError, setEditPostError] = useState(null)
 
+  const [isCommenting, setIsCommenting] = useState(false)
+  const [commentLoading, setCommentLoading] = useState(false)
   const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
@@ -91,15 +93,24 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const handleComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = formDataToObj(e)
+    setCommentLoading(true)
     try {
-      const res = await createPost(formData, 'comment', post.id)
-      console.log(`# Create comment - response :`, res)
+      await createPost(formData, 'comment', post.id)
       setCommentSuccess('Comment created')
+      setIsCommenting(false)
+      setCommentLoading(false)
+      setTimeout(() => {
+        setCommentSuccess(null)
+      }, 2000)
     } catch (error: any) {
+      setCommentLoading(false)
       console.log(`❌ Create comment failed: ${error}`)
     }
   }
 
+  const handleCommentsVisibility = (state: boolean) => {
+    setIsCommenting(state)
+  }
   return (
     <>
       <PostContainer>
@@ -181,24 +192,41 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           {/* Comments */}
           <SectionStyle>
             <Comments parentPostId={post.id} />
-            <Form
-              id='comment'
-              inputsFields={[
-                {
-                  id: 'body',
-                  placeholder: 'I think it could be better if ...',
-                  type: 'textarea',
-                  label: 'Comment',
-                },
-              ]}
-              inputsErrors={null}
-              onSubmit={handleComment}
-              loading={false}
-              success={null}
-              setSuccess={setCommentSuccess}
-            >
-              <Button label='Comment' success={commentSuccess} />
-            </Form>
+            {isCommenting ? (
+              <Form
+                id='comment'
+                inputsFields={[
+                  {
+                    id: 'body',
+                    placeholder: 'I think it could be better if ...',
+                    type: 'textarea',
+                    label: 'Comment',
+                  },
+                ]}
+                inputsErrors={null}
+                onSubmit={handleComment}
+                loading={false}
+                success={null}
+                setSuccess={setCommentSuccess}
+              >
+                <Button label='Submit' />
+                <Button
+                  transparent
+                  label='Cancel'
+                  onClick={() => handleCommentsVisibility(false)}
+                />
+              </Form>
+            ) : user.id ? (
+              <Button
+                loading={commentLoading}
+                success={commentSuccess}
+                transparent
+                label='Add a comment'
+                onClick={() => handleCommentsVisibility(true)}
+              />
+            ) : (
+              <LoginBlocker action={'comment'} />
+            )}
           </SectionStyle>
         </PostInner>
       </PostContainer>

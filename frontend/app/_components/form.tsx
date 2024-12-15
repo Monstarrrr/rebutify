@@ -36,7 +36,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
+const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px 8px;
@@ -79,6 +79,12 @@ export default function Form(props: FormProps) {
       setGlobalFormErrors(null)
     }
   }, [formId])
+
+  useEffect(() => {
+    if (success) {
+      localStorage.removeItem(formId)
+    }
+  }, [formId, success])
 
   // Currently, only reason we update the state is to cache the fields values
   const handleChange = (
@@ -170,9 +176,10 @@ export default function Form(props: FormProps) {
     if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
       setGlobalFormErrors(
         inputsErrors?.data?.detail ||
-        'There was an error on our side, please try again later.',
+          'There was an error on our side, please try again later.',
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputsErrors])
 
   // Clear inputs when success
