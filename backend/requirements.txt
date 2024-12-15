@@ -3,7 +3,7 @@ python-dotenv==1.0.1
 gunicorn==22.0.0
 uvicorn==0.29.0
 djangorestframework==3.15.2
-djoser==2.2.2
+djoser==2.3.0
 djangorestframework_simplejwt==5.3.1
 django-cors-headers==4.3.1
 drf-spectacular==0.27.2
