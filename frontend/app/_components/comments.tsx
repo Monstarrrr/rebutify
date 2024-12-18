@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { useAppSelector } from '@/store/hooks'
 import { Button } from '@/components'
 import { AxiosResponse } from 'axios'
+import { ServerErrorMessage } from '@/helpers'
 
 const CommentSectionStyle = styled.div`
   background-color: #353535;
@@ -47,9 +48,9 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
         console.error(
           '# "Get comments" request failed: ',
           error.response?.data?.detail ??
-          error.response?.data ??
-          error.response ??
-          error,
+            error.response?.data ??
+            error.response ??
+            error,
         )
       }
     }
@@ -67,7 +68,7 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
       setDeleteError(
         error?.response ?? {
           data: {
-            detail: error.message,
+            detail: ServerErrorMessage,
           },
           status: 500,
         },

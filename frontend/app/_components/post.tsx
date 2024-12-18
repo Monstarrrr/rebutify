@@ -17,7 +17,7 @@ import {
   VoteValue,
 } from '@/components/postStyles'
 import Link from 'next/link'
-import { formDataToObj } from '@/helpers'
+import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
 
@@ -112,8 +112,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       setCommentErrors(
         error?.response ?? {
           data: {
-            detail:
-              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+            detail: ServerErrorMessage,
           },
           status: 500,
         },

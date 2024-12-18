@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Form } from '@/components'
 import { TextInput } from '@/types'
-import { formDataToObj } from '@/helpers'
+import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
@@ -60,10 +60,9 @@ export default function Register() {
       setIsLoading(false)
       setApiFormErrors(
         error ?? {
+          status: 500,
           data: {
-            code: 500,
-            message:
-              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+            message: ServerErrorMessage,
           },
         },
       )

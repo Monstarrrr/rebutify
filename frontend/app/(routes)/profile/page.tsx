@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useRouter } from 'next/navigation'
 import { AxiosResponse } from 'axios'
 import { Post } from '@/types'
-import { formDataToObj } from '@/helpers'
+import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getPosts } from '@/api/posts'
 import { editPassword, deleteSelfAccount } from '@/api/auth'
@@ -131,10 +131,9 @@ export default function Profile() {
       setEditPassErrors(
         error.response ?? {
           data: {
-            detail:
-              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+            detail: ServerErrorMessage,
           },
-          code: 401,
+          status: 500,
         },
       )
     }

@@ -1,4 +1,5 @@
 'use client'
+import { ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { FormProps, TextInput } from '@/types'
 import { ChangeEvent, useEffect, useState } from 'react'
@@ -122,6 +123,7 @@ export default function Form(props: FormProps) {
   }
 
   useEffect(() => {
+    console.log(`# inputsErrors :`, inputsErrors)
     // Field errors
     if (
       inputsErrors?.data?.code === 422 || // schema v2
@@ -171,10 +173,7 @@ export default function Form(props: FormProps) {
     }
     // Internal errors
     if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
-      setGlobalFormErrors(
-        inputsErrors?.data?.detail ||
-          'There was an error on our side, please try again later.',
-      )
+      setGlobalFormErrors(inputsErrors?.data?.detail || ServerErrorMessage)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputsErrors])

@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Form, Button } from '@/components'
 import { TextInput } from '@/types'
-import { formDataToObj } from '@/helpers'
+import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
@@ -61,10 +61,9 @@ export default function Login() {
       setApiErrors(
         error.response ?? {
           data: {
-            detail:
-              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+            detail: ServerErrorMessage,
           },
-          code: 401,
+          status: 500,
         },
       )
     }
