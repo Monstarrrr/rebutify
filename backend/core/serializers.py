@@ -1,7 +1,26 @@
+import logging
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Post, Report, UserProfile, Vote
+
+logger = logging.getLogger(
+    __name__
+)  # Create a FileHandler to write log messages to 'app.log'
+file_handler = logging.FileHandler(
+    "app.log"
+)  # Create a StreamHandler to display log messages on the console
+stream_handler = (
+    logging.StreamHandler()
+)  # Create a Formatter to define the log message format
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)  # Set the formatter for both handlers
+file_handler.setFormatter(formatter)
+stream_handler.setFormatter(formatter)  # Add both handlers to the logger
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 
 class FollowerSerializer(serializers.ModelSerializer):
@@ -97,8 +116,15 @@ class PostSerializer(serializers.ModelSerializer):
         # Fetch the user profile based on ownerUserId
         try:
             user = User.objects.get(id=obj.ownerUserId)
+            user_profile = user.userprofile
+
+            if not user_profile.username:
+                user_profile.username = user.username
+                user_profile.save()
+
             return UserProfileSerializer(user.userprofile).data
-        except (User.DoesNotExist, UserProfile.DoesNotExist):
+        except (User.DoesNotExist, UserProfile.DoesNotExist) as e:
+            logger.error(f"Error fetching owner user: {e}")
             return None
 
 
