@@ -8,6 +8,9 @@ export default function LoginBlocker({ action }: { action: string }) {
         margin: '6px',
       }}
     >
+      <Link href='/login'>
+        <Button label={'Login'} />
+      </Link>
       <span
         style={{
           opacity: 0.7,
@@ -16,11 +19,8 @@ export default function LoginBlocker({ action }: { action: string }) {
           pointerEvents: 'none',
         }}
       >
-        You must be logged in to {action}.{' '}
+        {' '}to {action}.
       </span>
-      <Link href='/login'>
-        <Button label={'Login'} />
-      </Link>
     </div>
   )
 }

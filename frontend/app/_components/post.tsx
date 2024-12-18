@@ -14,8 +14,8 @@ import {
   PostContainer,
   VoteContainer,
   VoteValue,
+  LoginBlockerStyle,
 } from '@/components/postStyles'
-import Link from 'next/link'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
@@ -53,7 +53,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       setPost(data.resources.post)
       dispatch(updateUser(data.resources.user))
     } catch (error: any) {
-      setVoteError(true)
+      setVoteError(true) // make toast
       console.error(`❌ Vote request failed: ${error}`)
     }
   }
@@ -247,15 +247,12 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             )}
           </SectionStyle>
         </PostInner>
+        {voteError && (
+          <LoginBlockerStyle>
+            <LoginBlocker action={'vote'} />
+          </LoginBlockerStyle>
+        )}
       </PostContainer>
-      {voteError && (
-        <>
-          <Link href='/login'>
-            <Button label='Login' />
-          </Link>
-          <span> to interact with this post</span>
-        </>
-      )}
     </>
   )
 }

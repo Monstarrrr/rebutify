@@ -1,16 +1,18 @@
 import styled from 'styled-components'
 
 export const PostContainer = styled.div`
+  display: grid;
+  grid-template-columns: 72px auto 1fr;
   background-color: #1e1e1e;
-  flex-wrap: wrap;
   border-radius: 8px;
   padding: 22px;
   margin-bottom: 12px;
-  flex-direction: row;
-  display: flex;
 `
 
 export const PostInner = styled.div`
+  grid-column-start: 2;
+  grid-row-start: 1;
+  grid-column-end: 4;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -18,10 +20,19 @@ export const PostInner = styled.div`
 `
 
 export const VoteContainer = styled.div`
+  grid-column-start: 1;
+  grid-row-start: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-right: 22px;
+`
+
+export const LoginBlockerStyle = styled.div`
+  grid-row-start: 2;
+  grid-column-start: 3;
+  display: flex;
+  align-items: center;
 `
 
 export const VoteValue = styled.div`
