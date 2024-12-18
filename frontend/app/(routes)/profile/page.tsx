@@ -221,9 +221,7 @@ export default function Profile() {
                         onClick={handleIsEditingEmail}
                         transparent
                       />
-                      <p style={{ color: 'green' }}>
-                        {editEmailSuccess}
-                      </p>
+                      <p style={{ color: 'green' }}>{editEmailSuccess}</p>
                     </td>
                   )}
                 </tr>
@@ -297,9 +295,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                        background: 'red',
-                        color: 'black',
-                      }
+                          background: 'red',
+                          color: 'black',
+                        }
                       : {}
                   }
                 />

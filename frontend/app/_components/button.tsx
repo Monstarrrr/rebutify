@@ -3,7 +3,7 @@
 import { ButtonProps } from '@/types'
 import styled from 'styled-components'
 
-const StyledButton = styled('button')<{
+const StyledButton = styled('button') <{
   $size: 'min' | 'max' | undefined
   $success: string | null
   $icon: boolean
