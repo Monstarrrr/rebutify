@@ -1,6 +1,5 @@
 import ast
 import json
-import os
 
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
@@ -31,8 +30,9 @@ class PostTests(TestCase):
         )
 
         # Create sample user
+
         self.sample_username = "sample_user"
-        self.sample_password = os.environ["SAMPLE_USER_PASSWORD"]
+        self.sample_password = "testpassword123"  # nosec
         self.sample_user = User.objects.create_superuser(
             username=self.sample_username, password=self.sample_password
         )

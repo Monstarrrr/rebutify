@@ -2,14 +2,15 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from core.models import Post, UserProfile, Vote
+from core.models import Post, Vote
 
 
 class UserTests(TestCase):
     def setUp(self):
         self.client = Client()
-        user = User.objects.create_superuser("username")
-
+        # fmt: off
+        self.user = User.objects.create_superuser(username="username", password="testpassword123") # nosec
+        # fmt: on
         # Create sample upvote
         self.sample_upvote = Vote.objects.create(
             type="upvote",
@@ -37,21 +38,14 @@ class UserTests(TestCase):
         )
 
         # Create sample user profile
-        self.sample_user_profile = UserProfile.objects.create(
-            user=user,
-            username="username",
-            avatar="avatar",
-            bio="bio",
-            reputation=1,
-            created="2024-01-01",
-        )
+        self.sample_user_profile = self.user.userprofile
+
+        # Now set saved_posts and edits
+        self.sample_user_profile.saved_posts.set([self.sample_post])
+        self.sample_user_profile.edits.set([self.sample_post])
+
         # Correctly assign the edits to the user profile
         self.sample_user_profile.saved_posts.set(
-            [
-                self.sample_post,
-            ]
-        )
-        self.sample_user_profile.edits.set(
             [
                 self.sample_post,
             ]
