@@ -4,10 +4,9 @@ import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
-import React, { FormEvent, Suspense, useState } from 'react'
-import { Button, Form, Icon, LoginBlocker } from '@/components'
+import React, { FormEvent, useState } from 'react'
+import { Button, Form, Icon, LoginBlocker, Comments } from '@/components'
 import { useRouter } from 'next/navigation'
-const Comments = React.lazy(() => import('@/components/comments'))
 import {
   ActionsStyle,
   ContentStyle,
@@ -43,6 +42,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const [editPostError, setEditPostError] = useState(null)
 
   const [isCommenting, setIsCommenting] = useState(false)
+  const [comments, setComments] = useState<type.Post[]>([])
   const [commentLoading, setCommentLoading] = useState(false)
   const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
   const [commentErrors, setCommentErrors] = useState<AxiosResponse | null>(null)
@@ -98,7 +98,8 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     const formData = formDataToObj(e)
     setCommentLoading(true)
     try {
-      await createPost(formData, 'comment', post.id)
+      const res = await createPost(formData, 'comment', post.id)
+      setComments((prev) => [...prev, res.data])
       setCommentSuccess('Comment created')
       setCommentLoading(false)
       setTimeout(() => {
@@ -204,9 +205,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           )}
           {/* Comments */}
           <SectionStyle>
-            <Suspense fallback={<div>Loading comments...</div>}>
-              <Comments parentPostId={post.id} />
-            </Suspense>
+            <Comments
+              setComments={setComments}
+              comments={comments}
+              parentPostId={post.id}
+            />
             {isCommenting ? (
               <Form
                 id='comment'

@@ -1,7 +1,7 @@
 // rebuttalSubmition.tsx displays a form to submit a rebuttal
 
 'use client'
-import { Argument } from '@/types/Post'
+import type * as type from '@/types/Post'
 import { TextInput } from '@/types'
 import { createPost } from '@/api/posts'
 import { Form, Button } from '@/components'
@@ -23,10 +23,11 @@ const newRebuttalInput: TextInput[] = [
 ]
 
 type Props = {
-  argument: Argument
+  argument: type.Argument
+  setRebuttals: React.Dispatch<React.SetStateAction<type.Post[]>>
 }
 
-export default function RebuttalSubmition({ argument }: Props) {
+export default function RebuttalSubmition({ argument, setRebuttals }: Props) {
   const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState(false)
   const [apiErrors, setApiErrors] = useState(null)
@@ -39,9 +40,10 @@ export default function RebuttalSubmition({ argument }: Props) {
     const formData = formDataToObj(event)
 
     try {
-      await createPost({ ...formData }, 'rebuttal', argument.id)
+      const res = await createPost({ ...formData }, 'rebuttal', argument.id)
       setSuccess('Rebuttal submitted successfully!')
       setLoading(false)
+      setRebuttals((prev) => [res.data, ...prev])
     } catch (error: any) {
       setSuccess(null)
       setLoading(false)

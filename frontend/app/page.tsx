@@ -59,37 +59,31 @@ export default function Home() {
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
 
-  const fetchArguments = async () => {
-    try {
-      const response = await getPosts('argument')
-      setAllPosts(response)
-    } catch (error: any) {
-      console.error('# Error fetching posts: ', error)
-    }
-  }
-
   // Fetch onLoad
   useEffect(() => {
+    const fetchArguments = async () => {
+      try {
+        const response = await getPosts('argument')
+        setAllPosts(response)
+      } catch (error: any) {
+        console.error('# Error fetching posts: ', error)
+      }
+    }
     fetchArguments()
   }, [])
 
-  // re-fetch on success
-  useEffect(() => {
-    if (success) {
-      fetchArguments()
-    }
-  }, [success])
-
-  async function handleSubmitArgument(event: FormEvent<HTMLFormElement>) {
+  const handleSubmitArgument = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
     setApiErrors(null)
     const formData = formDataToObj(event)
+    console.log(`# formData :`, formData)
 
     try {
-      await createPost({ ...formData }, 'argument')
+      const res = await createPost({ ...formData }, 'argument')
       setLoading(false)
       setSuccess('Post created successfully!')
+      setAllPosts((prev) => [res.data, ...prev])
     } catch (error: any) {
       const { response } = error
       setLoading(false)

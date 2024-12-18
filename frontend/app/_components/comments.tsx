@@ -29,9 +29,16 @@ const DateStyle = styled.span`
   margin-left: 6px;
 `
 
-export default function Comments({ parentPostId }: { parentPostId: string }) {
+export default function Comments({
+  parentPostId,
+  setComments,
+  comments,
+}: {
+  parentPostId: string
+  setComments: React.Dispatch<React.SetStateAction<type.Post[]>>
+  comments: type.Post[]
+}) {
   const user = useAppSelector((state) => state.user)
-  const [comments, setComments] = useState<type.Post[]>([])
   const [commentsLoading, setCommentsLoading] = useState(false)
   const [deleteError, setDeleteError] = useState<AxiosResponse | null>(null)
   const [loadingCommentId, setLoadingCommentId] = useState<string | null>(null)
@@ -55,7 +62,7 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
       }
     }
     fetchApi()
-  }, [parentPostId])
+  }, [parentPostId, setComments])
 
   const handleDeleteComment = async (commentId: string) => {
     setLoadingCommentId(commentId)

@@ -52,7 +52,7 @@ export default function Argument(props: Props) {
             )}
           </SectionStyle>
 
-          <RebuttalSubmition argument={argument} />
+          <RebuttalSubmition setRebuttals={setRebuttals} argument={argument} />
         </>
       ) : error ? (
         <p style={{ color: 'red' }}>Error: No argument found</p>
