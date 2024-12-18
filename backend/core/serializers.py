@@ -63,13 +63,43 @@ class SuggestionSerializer(serializers.ModelSerializer):
         ]
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["username", "avatar", "bio", "reputation"]
+
+
 class PostSerializer(serializers.ModelSerializer):
+    ownerUser = serializers.SerializerMethodField()
+
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = [
+            "id",
+            "type",
+            "isPrivate",
+            "body",
+            "title",
+            "ownerUserId",
+            "parentId",
+            "created",
+            "updated",
+            "upvotes",
+            "downvotes",
+            "followers",
+            "ownerUser",
+        ]
         read_only_fields = [
             "ownerUserId",
         ]
+
+    def get_ownerUser(self, obj):
+        # Fetch the user profile based on ownerUserId
+        try:
+            user = User.objects.get(id=obj.ownerUserId)
+            return UserProfileSerializer(user.userprofile).data
+        except (User.DoesNotExist, UserProfile.DoesNotExist):
+            return None
 
 
 class ReportSerializer(serializers.ModelSerializer):
@@ -104,9 +134,3 @@ class VoteResponseSerializer(serializers.Serializer):
             },
             "post": obj["post"],
         }
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = "__all__"
