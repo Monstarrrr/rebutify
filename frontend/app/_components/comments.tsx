@@ -31,15 +31,19 @@ const DateStyle = styled.span`
 export default function Comments({ parentPostId }: { parentPostId: string }) {
   const user = useAppSelector((state) => state.user)
   const [comments, setComments] = useState<type.Post[]>([])
+  const [commentsLoading, setCommentsLoading] = useState(false)
   const [deleteError, setDeleteError] = useState<AxiosResponse | null>(null)
   const [loadingCommentId, setLoadingCommentId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchApi = async () => {
+      setCommentsLoading(true)
       try {
         const comments = await getPosts('comment', parentPostId)
         setComments(comments)
+        setCommentsLoading(false)
       } catch (error: any) {
+        setCommentsLoading(false)
         console.error(
           '# "Get comments" request failed: ',
           error.response?.data?.detail ??
@@ -75,7 +79,11 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
   return (
     <CommentSectionStyle>
       {comments.length === 0 ? (
-        <EmptySectionStyle>No comments yet</EmptySectionStyle>
+        commentsLoading ? (
+          <p>Loading comments...</p>
+        ) : (
+          <EmptySectionStyle>No comments yet</EmptySectionStyle>
+        )
       ) : (
         comments.map((comment) => (
           <div key={comment.id}>
@@ -85,8 +93,10 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
                 display: 'inline',
               }}
             >
-              <span>{comment.body}</span>
-              <AuthorStyle>- Anonymous</AuthorStyle>
+              <span>{comment?.body ?? 'Empty comment'}</span>
+              <AuthorStyle>
+                - {comment?.ownerUser?.reputation ?? 'Anonymous'}
+              </AuthorStyle>
               <DateStyle>
                 {`(${new Date(comment.created).toLocaleString('en-US', {
                   month: 'short',

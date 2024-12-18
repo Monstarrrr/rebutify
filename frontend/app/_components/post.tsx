@@ -4,9 +4,10 @@ import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
-import { FormEvent, useState } from 'react'
-import { Button, Form, Icon, Comments, LoginBlocker } from '@/components'
+import React, { FormEvent, Suspense, useState } from 'react'
+import { Button, Form, Icon, LoginBlocker } from '@/components'
 import { useRouter } from 'next/navigation'
+const Comments = React.lazy(() => import('@/components/comments'))
 import {
   ActionsStyle,
   ContentStyle,
@@ -18,6 +19,7 @@ import {
 import Link from 'next/link'
 import { formDataToObj } from '@/helpers'
 import { SectionStyle } from '@/styles'
+import { AxiosResponse } from 'axios'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -43,6 +45,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const [isCommenting, setIsCommenting] = useState(false)
   const [commentLoading, setCommentLoading] = useState(false)
   const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
+  const [commentErrors, setCommentErrors] = useState<AxiosResponse | null>(null)
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -97,13 +100,24 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     try {
       await createPost(formData, 'comment', post.id)
       setCommentSuccess('Comment created')
-      setIsCommenting(false)
       setCommentLoading(false)
+      setTimeout(() => {
+        setIsCommenting(false)
+      }, 50) // Hahahahaha
       setTimeout(() => {
         setCommentSuccess(null)
       }, 2000)
     } catch (error: any) {
       setCommentLoading(false)
+      setCommentErrors(
+        error?.response ?? {
+          data: {
+            detail:
+              'An unknown error occurred. Please try again later. If the error persists, please contact the support.',
+          },
+          status: 500,
+        },
+      )
       console.log(`❌ Create comment failed: ${error}`)
     }
   }
@@ -191,7 +205,9 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           )}
           {/* Comments */}
           <SectionStyle>
-            <Comments parentPostId={post.id} />
+            <Suspense fallback={<div>Loading comments...</div>}>
+              <Comments parentPostId={post.id} />
+            </Suspense>
             {isCommenting ? (
               <Form
                 id='comment'
@@ -203,13 +219,13 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                     label: 'Comment',
                   },
                 ]}
-                inputsErrors={null}
+                inputsErrors={commentErrors}
                 onSubmit={handleComment}
-                loading={false}
-                success={null}
+                loading={commentLoading}
+                success={commentSuccess}
                 setSuccess={setCommentSuccess}
               >
-                <Button label='Submit' />
+                <Button label='Submit' success={commentSuccess} />
                 <Button
                   transparent
                   label='Cancel'

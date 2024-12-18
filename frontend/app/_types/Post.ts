@@ -8,6 +8,12 @@ export type Post = {
   upvotes: number
   downvotes: number
   ownerUserId: string
+  ownerUser: {
+    username: string
+    avatar: string
+    bio: string
+    reputation: number
+  }
   parentId: string
   created: string
   updated: string

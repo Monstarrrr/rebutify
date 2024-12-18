@@ -77,12 +77,9 @@ export default function Form(props: FormProps) {
     }
     return () => {
       setGlobalFormErrors(null)
-    }
-  }, [formId])
-
-  useEffect(() => {
-    if (success) {
-      localStorage.removeItem(formId)
+      if (success) {
+        localStorage.removeItem(formId)
+      }
     }
   }, [formId, success])
 
