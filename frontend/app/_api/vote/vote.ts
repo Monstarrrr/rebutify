@@ -5,13 +5,13 @@ export const vote = async (
   user: UserInfo,
   type: PostType,
   postId: string,
-  direction: 'up' | 'down',
+  direction: 'up' | 'down'
 ) => {
   try {
     let undo = false
     if (!type || !postId || !direction) {
       throw new Error(
-        `❌ Missing required parameter(s): id = ${postId}, type = ${type}, direction = ${direction}`,
+        `❌ Missing required parameter(s): id = ${postId}, type = ${type}, direction = ${direction}`
       )
     }
     if (
@@ -26,13 +26,13 @@ export const vote = async (
       {},
       {
         requiresAuth: true,
-      },
+      }
     )
     return response.data
   } catch (error: any) {
     console.error(
       '❌ Vote request failed: ',
-      error?.response?.data ?? error?.response?.message ?? error,
+      error?.response?.data ?? error?.response?.message ?? error
     )
 
     throw error

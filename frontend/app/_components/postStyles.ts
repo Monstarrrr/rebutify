@@ -9,7 +9,7 @@ export const PostContainer = styled.div`
   margin-bottom: 12px;
 `
 
-export const PostInner = styled.div`
+export const InnerStyle = styled.div`
   grid-column-start: 2;
   grid-row-start: 1;
   grid-column-end: 4;
@@ -28,7 +28,7 @@ export const VoteContainer = styled.div`
   margin-right: 22px;
 `
 
-export const LoginBlockerStyle = styled.div`
+export const BottomStyle = styled.div`
   grid-row-start: 2;
   grid-column-start: 3;
   display: flex;

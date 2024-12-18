@@ -10,11 +10,11 @@ import { useRouter } from 'next/navigation'
 import {
   ActionsStyle,
   ContentStyle,
-  PostInner,
+  InnerStyle,
   PostContainer,
   VoteContainer,
   VoteValue,
-  LoginBlockerStyle,
+  BottomStyle,
 } from '@/components/postStyles'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
@@ -36,6 +36,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   })
   const [voteError, setVoteError] = useState<boolean | null>(null)
   const [prevBody, setPrevBody] = useState(post.body)
+
   const [isEditing, setIsEditing] = useState(false)
   const [editPostLoading, setEditPostLoading] = useState(false)
   const [editPostSuccess, setEditPostSuccess] = useState<string | null>(null)
@@ -141,7 +142,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             icon={<Icon label='arrow' direction='down' />}
           />
         </VoteContainer>
-        <PostInner>
+        <InnerStyle>
           <ContentStyle>
             {post.type == 'argument' && post.title && (
               <div>
@@ -246,12 +247,12 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               <LoginBlocker action={'comment'} />
             )}
           </SectionStyle>
-        </PostInner>
-        {voteError && (
-          <LoginBlockerStyle>
+        </InnerStyle>
+        <BottomStyle>
+          {voteError && (
             <LoginBlocker action={'vote'} />
-          </LoginBlockerStyle>
-        )}
+          )}
+        </BottomStyle>
       </PostContainer>
     </>
   )
