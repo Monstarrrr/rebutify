@@ -55,7 +55,8 @@ export default function Register() {
     try {
       const { data } = await register(formData)
       setIsLoading(false)
-      setFormSuccess(data.message)
+      console.log(`# data FROM REGISTER :`, data)
+      setFormSuccess("Account created, check your email.")
     } catch (error: any) {
       setIsLoading(false)
       setApiFormErrors(
