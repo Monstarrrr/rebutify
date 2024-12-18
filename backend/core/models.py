@@ -80,7 +80,7 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:  # Only create a profile for newly created users
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance, username=instance.username)
 
 
 class Vote(models.Model):
