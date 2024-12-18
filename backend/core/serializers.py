@@ -82,12 +82,6 @@ class SuggestionSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ["username", "avatar", "bio", "reputation"]
-
-
 class PostSerializer(serializers.ModelSerializer):
     ownerUser = serializers.SerializerMethodField()
 
@@ -126,6 +120,14 @@ class PostSerializer(serializers.ModelSerializer):
         except (User.DoesNotExist, UserProfile.DoesNotExist) as e:
             logger.error(f"Error fetching owner user: {e}")
             return None
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    followedPosts = PostSerializer(source="saved_posts", many=True, read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ["username", "avatar", "bio", "reputation", "followedPosts"]
 
 
 class ReportSerializer(serializers.ModelSerializer):
