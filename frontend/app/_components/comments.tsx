@@ -47,9 +47,9 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
         console.error(
           '# "Get comments" request failed: ',
           error.response?.data?.detail ??
-            error.response?.data ??
-            error.response ??
-            error,
+          error.response?.data ??
+          error.response ??
+          error,
         )
       }
     }
@@ -95,7 +95,7 @@ export default function Comments({ parentPostId }: { parentPostId: string }) {
             >
               <span>{comment?.body ?? 'Empty comment'}</span>
               <AuthorStyle>
-                - {comment?.ownerUser?.reputation ?? 'Anonymous'}
+                - {comment?.ownerUser?.username ?? 'Anonymous'}
               </AuthorStyle>
               <DateStyle>
                 {`(${new Date(comment.created).toLocaleString('en-US', {
