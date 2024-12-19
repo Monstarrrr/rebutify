@@ -4,8 +4,8 @@ import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
-import React, { FormEvent, useState } from 'react'
-import { Button, Form, Icon, LoginBlocker, Comments } from '@/components'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { Button, Form, Icon, LoginBlocker, Comments, Follow } from '@/components'
 import { useRouter } from 'next/navigation'
 import {
   ActionsStyle,
@@ -14,7 +14,6 @@ import {
   PostContainer,
   VoteContainer,
   VoteValue,
-  BottomStyle,
 } from '@/components/postStyles'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
@@ -47,6 +46,10 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const [commentLoading, setCommentLoading] = useState(false)
   const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
   const [commentErrors, setCommentErrors] = useState<AxiosResponse | null>(null)
+
+  useEffect(() => {
+    console.log('# user', user)
+  }, [user])
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     try {
@@ -184,26 +187,34 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               <p>{post.body}</p>
             )}
           </ContentStyle>
-          {user.id === post.ownerUserId && (
-            <ActionsStyle>
-              {!isEditing && (
+          {/* Actions */}
+          <ActionsStyle>
+            {user.id === post.ownerUserId && (
+              <>
+                {!isEditing && (
+                  <div>
+                    <Button
+                      label='Edit'
+                      transparent
+                      onClick={() => setIsEditing(!isEditing)}
+                    />
+                  </div>
+                )}
                 <div>
                   <Button
-                    label='Edit'
+                    label='Delete'
                     transparent
-                    onClick={() => setIsEditing(!isEditing)}
+                    onClick={() => handleDelete(post.id)}
                   />
                 </div>
-              )}
-              <div>
-                <Button
-                  label='Delete'
-                  transparent
-                  onClick={() => handleDelete(post.id)}
-                />
-              </div>
-            </ActionsStyle>
-          )}
+              </>
+            )}
+            <Follow
+              postId={post.id}
+              undo={user.followedPosts.includes(post.id) ? true : false}
+            />
+            {voteError && <LoginBlocker action={'vote'} />}
+          </ActionsStyle>
           {/* Comments */}
           <SectionStyle>
             <Comments
@@ -248,11 +259,6 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             )}
           </SectionStyle>
         </InnerStyle>
-        <BottomStyle>
-          {voteError && (
-            <LoginBlocker action={'vote'} />
-          )}
-        </BottomStyle>
       </PostContainer>
     </>
   )

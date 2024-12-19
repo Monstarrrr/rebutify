@@ -7,8 +7,9 @@ const initialState: UserInfo = {
   refresh: '',
   access: '',
   username: 'Guest',
-  upvotedPosts: '',
-  downvotedPosts: '',
+  upvotedPosts: [],
+  downvotedPosts: [],
+  followedPosts: [],
 }
 
 const userSlice = createSlice({

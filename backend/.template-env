@@ -14,7 +14,7 @@ STAGE=local
 # Path to admin panel
 DJANGO_ADMIN_PATH=admin/
 # Hostnames, comma separated
-DJANGO_HOSTS=localhost,127.0.0.1
+DJANGO_HOSTS=localhost,127.0.0.1,192.168.1.14:3000,0.0.0.0:3000
 # Name of website (not strictly a URL)
 SITE_NAME=rebutify.org
 # URL of frontend

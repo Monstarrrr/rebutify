@@ -28,7 +28,8 @@ export const VoteContainer = styled.div`
   margin-right: 22px;
 `
 
-export const BottomStyle = styled.div`
+export const ActionsStyle = styled.div`
+  margin-top: 24px;
   grid-row-start: 2;
   grid-column-start: 3;
   display: flex;
@@ -42,9 +43,4 @@ export const VoteValue = styled.div`
 
 export const ContentStyle = styled.div`
   flex: 1;
-`
-export const ActionsStyle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
 `
