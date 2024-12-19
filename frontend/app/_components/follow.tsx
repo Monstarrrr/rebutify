@@ -44,14 +44,14 @@ export default function Follow({
       setTimeout(() => {
         setSuccess(null)
       }, 2000)
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false)
-      setError('Error')
+      setError(error?.response?.data?.message ?? 'Unknown error')
       setSuccess(null)
       setTimeout(() => {
         setError(null)
       }, 20000)
-      console.error(error)
+      console.error(error?.response?.data ?? error?.response ?? error)
     }
   }
 

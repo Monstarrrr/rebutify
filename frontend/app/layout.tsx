@@ -4,6 +4,7 @@ import '@/globals.css'
 import StoreProvider from '@/store/Provider'
 import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -44,6 +45,30 @@ export default function RootLayout({ children }: PropsType) {
           >
             {children}
           </div>
+          <footer
+            style={{
+              background: '#1f1f1f',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '12px 0',
+            }}
+          >
+            <span
+              style={{
+                opacity: 0.7,
+                fontStyle: 'italic',
+                marginRight: '6px',
+                pointerEvents: 'none',
+                textAlign: 'center',
+              }}
+            >
+              Rebutify, {new Date().getFullYear()}.<br />
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/about'>About</Link>
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/contact'>Contact</Link>
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/ToS'>Terms of Service</Link>
+            </span>
+          </footer>
         </StoreProvider>
       </body>
     </html>
