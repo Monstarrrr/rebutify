@@ -98,29 +98,9 @@ export const swaggerOptions: swaggerJSDoc.Options = {
         },
       },
       responses: {
-        Ok: {
-          description:
-            'Response used for successful operations with no returned resource.',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  code: {
-                    type: 'number',
-                    example: 200,
-                  },
-                  message: {
-                    type: 'string',
-                    example: 'Success!',
-                  },
-                },
-              },
-            },
-          },
-        },
         Retrieved: {
-          description: 'Response used for successful GET operations.',
+          description:
+            'Response used for successful operations with or without returning a resource.',
           content: {
             'application/json': {
               schema: {
