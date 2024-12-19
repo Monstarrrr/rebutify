@@ -40,7 +40,7 @@ export default function RootLayout({ children }: PropsType) {
           <Header />
           <div
             style={{
-              minHeight: `calc(100dvh - 54px - 24px)`,
+              minHeight: `calc(100dvh - 51px - 24px - 48px - 24px)`,
             }}
           >
             {children}
@@ -59,14 +59,21 @@ export default function RootLayout({ children }: PropsType) {
                 opacity: 0.7,
                 fontStyle: 'italic',
                 marginRight: '6px',
-                pointerEvents: 'none',
                 textAlign: 'center',
               }}
             >
-              Rebutify, {new Date().getFullYear()}.<br />
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/about'>About</Link>
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/contact'>Contact</Link>
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/ToS'>Terms of Service</Link>
+              <span style={{ pointerEvents: 'none' }}>
+                Rebutify, {new Date().getFullYear()}.
+              </span><br />
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI'>
+                About
+              </Link>
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/https://discord.gg/QHNutWjpHy'>
+                Discord
+              </Link>
+              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/ToS'>
+                Terms of Service
+              </Link>
             </span>
           </footer>
         </StoreProvider>
