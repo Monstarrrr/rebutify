@@ -31,6 +31,13 @@ type PropsType = Readonly<{
   children: ReactNode
 }>
 
+const LinkStyle = {
+  marginLeft: '12px',
+  color: '#fff',
+  textDecoration: 'none',
+}
+const LinkLabel = { textDecoration: 'underline', fontStyle: 'normal' }
+
 export default function RootLayout({ children }: PropsType) {
   return (
     <html lang='en'>
@@ -62,17 +69,25 @@ export default function RootLayout({ children }: PropsType) {
                 textAlign: 'center',
               }}
             >
-              <span style={{ pointerEvents: 'none' }}>
-                Rebutify, {new Date().getFullYear()}.
-              </span><br />
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI'>
-                About
+              <span>Rebutify, {new Date().getFullYear()}.</span>
+              <br />
+              <Link
+                style={LinkStyle}
+                href='https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI'
+              >
+                <span style={LinkLabel}>About</span>
               </Link>
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/https://discord.gg/QHNutWjpHy'>
-                Discord
+              <Link style={LinkStyle} href='https://discord.gg/QHNutWjpHy'>
+                <span style={LinkLabel}>Discord</span>
               </Link>
-              <Link style={{ marginLeft: '6px', color: '#fff' }} href='/ToS'>
-                Terms of Service
+              <Link
+                style={LinkStyle}
+                href='https://github.com/Monstarrrr/rebutify'
+              >
+                <span style={LinkLabel}>Source Code</span>
+              </Link>
+              <Link style={LinkStyle} href='/privacy'>
+                <span style={LinkLabel}>Privacy</span>
               </Link>
             </span>
           </footer>
