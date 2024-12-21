@@ -156,7 +156,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                 followers = self.queryset.get(id=id).followers
                 # check if user follows the argument
                 if followers.filter(id=user.id).exists():
-                    code = status.HTTP_200_OK
+                    code = status.HTTP_400_BAD_REQUEST
                     message = "You already follow this argument."
                 else:
                     followers = followers.add(user.id)
@@ -187,7 +187,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                     code = status.HTTP_200_OK
                     message = "Undo follow argument successful."
                 else:
-                    code = status.HTTP_200_OK
+                    code = status.HTTP_400_BAD_REQUEST
                     message = "You do not follow this argument."
             else:
                 code = status.HTTP_401_UNAUTHORIZED
