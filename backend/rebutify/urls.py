@@ -82,4 +82,9 @@ urlpatterns = [
         name="vote",
     ),
     path("users/email/edit/", views.EditEmailView.as_view(), name="edit_email"),
+    path(
+        "activate_new_email/<uid>/<token>/",
+        views.ActivateNewEmailView.as_view(),
+        name="activate_new_email",
+    ),
 ]

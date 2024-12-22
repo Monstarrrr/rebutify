@@ -8,6 +8,7 @@ from django.core.validators import validate_email
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils import timezone
+from djoser.compat import get_user_email
 from djoser.conf import settings as djoser_settings
 from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -25,11 +26,13 @@ from rest_framework.views import APIView
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
 from .serializers import (
+    ActivationNewEmailSerializer,
     ArgumentSerializer,
     CommentSerializer,
     PostSerializer,
     RebuttalSerializer,
     ReportSerializer,
+    SendConfirmNewEmailSerializer,
     SuggestionSerializer,
     UserProfileSerializer,
     VoteResponseSerializer,
@@ -696,6 +699,7 @@ User = get_user_model()
 
 
 class EditEmailView(APIView):
+    serializer_class = SendConfirmNewEmailSerializer
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -721,6 +725,19 @@ class EditEmailView(APIView):
                     status=400,
                 )
 
+            # Check if the user already has this email
+            if User.objects.get(id=request.user.id).email == email:
+                return Response(
+                    {
+                        "code": 400,
+                        "message": "Email already in use",
+                        "errors": [
+                            "This email is already associated with this account"
+                        ],
+                    },
+                    status=400,
+                )
+
             # Check if email is already in use
             if User.objects.filter(email=email).exclude(id=request.user.id).exists():
                 return Response(
@@ -740,16 +757,15 @@ class EditEmailView(APIView):
             user.email = email
 
             try:
-                context = {"user": user}
+                context = {"user": user, "new_email": user.email}
                 to = [user.email]
 
                 logger.info(
                     f"sending activation email for {user.email} (old address: {old_address})"
                 )
-                djoser_settings.EMAIL.activation(self.request, context).send(to)
-
-                user.is_active = False
-                user.save()
+                djoser_settings.EMAIL.send_confirm_new_email(
+                    self.request, context
+                ).send(to)
             except Exception as email_error:
                 logger.error(f"Failed to send activation email: {str(email_error)}")
 
@@ -772,3 +788,28 @@ class EditEmailView(APIView):
                 },
                 status=500,
             )
+
+
+class ActivateNewEmailView(APIView):
+    serializer_class = ActivationNewEmailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user.email = request.data.get("new_email")
+        user.save()
+
+        if djoser_settings.SEND_CONFIRMATION_EMAIL:
+            context = {"user": user}
+            to = [get_user_email(user)]
+            djoser_settings.EMAIL.send_new_email_activated(self.request, context).send(
+                to
+            )
+
+        return Response(
+            {
+                "code": 200,
+                "message": "Email successfully changed.",
+            },
+            status=200,
+        )

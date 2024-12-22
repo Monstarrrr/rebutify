@@ -1,0 +1,16 @@
+{% load i18n %} {% block subject %} {% blocktrans %}Account activation on {{
+site_name }}{% endblocktrans %} {% endblock subject %} {% block html_body %}
+<p>{% trans "Please go to the following page to activate account:" %}</p>
+{% if debug %}
+<p>
+  <a href="http://localhost:3000/{{ url|safe }}?new_email={{ new_email }}"
+    >http://localhost:3000/{{ url|safe }}</a
+  >
+</p>
+{% else %}
+<p>
+  <a href="http://{{ domain }}/{{ url|safe }}?new_email={{ new_email }}"
+    >http://{{ domain }}/{{ url|safe }}?new_email={{ new_email }}</a
+  >
+</p>
+{% endif %} {% endblock html_body %}
