@@ -2,7 +2,7 @@ import { UserInfo } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: UserInfo = {
-  email: '',
+  email: '???@???.com',
   id: '0',
   refresh: '',
   access: '',

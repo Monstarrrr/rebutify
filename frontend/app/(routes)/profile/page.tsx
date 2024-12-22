@@ -178,51 +178,19 @@ export default function Profile() {
                 </tr>
                 <tr>
                   <td>
-                    <b>Email:</b>
+                    <b>Joined on:</b>
                   </td>
-                  {isEditingEmail ? (
-                    <td>
-                      <Form
-                        id='edit-email'
-                        inputsFields={[
-                          {
-                            id: 'email',
-                            label: 'Editing email',
-                            type: 'email',
-                            placeholder: 'user@email.com',
-                            value: user.email,
-                          },
-                        ]}
-                        onSubmit={handleEditEmail}
-                        success={editEmailSuccess}
-                        setSuccess={setEditEmailSuccess}
-                        loading={editEmailLoading}
-                        inputsErrors={editEmailErrors}
-                      >
-                        <Button
-                          label='Save'
-                          success={editEmailSuccess}
-                          loading={editEmailLoading}
-                        />
-                        <Button
-                          label='Cancel'
-                          onClick={(_) => setIsEditingEmail(false)}
-                          transparent
-                        />
-                      </Form>
-                    </td>
-                  ) : (
-                    <td>
-                      {user.email}
-                      <Button
-                        styles={{ marginLeft: '8px' }}
-                        label='Edit'
-                        onClick={handleIsEditingEmail}
-                        transparent
-                      />
-                      <p style={{ color: 'green' }}>{editEmailSuccess}</p>
-                    </td>
-                  )}
+                  <td style={{ opacity: 0.7, fontStyle: 'italic' }}>
+                    (coming soon...)
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <b>Success:</b>
+                  </td>
+                  <td>
+                    Prototype tester (Joined during the v0.1 of Rebutify)
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -230,6 +198,55 @@ export default function Profile() {
 
           <H2>Settings</H2>
           <H2Section>
+            <H3>
+              Change email
+            </H3>
+            <Hr />
+            <H3Section>
+              {isEditingEmail ? (
+                <>
+                  <Form
+                    id='edit-email'
+                    inputsFields={[
+                      {
+                        id: 'email',
+                        label: 'Editing email',
+                        type: 'email',
+                        placeholder: 'user@email.com',
+                        value: user.email,
+                      },
+                    ]}
+                    onSubmit={handleEditEmail}
+                    success={editEmailSuccess}
+                    setSuccess={setEditEmailSuccess}
+                    loading={editEmailLoading}
+                    inputsErrors={editEmailErrors}
+                  >
+                    <Button
+                      label='Save'
+                      success={editEmailSuccess}
+                      loading={editEmailLoading}
+                    />
+                    <Button
+                      label='Cancel'
+                      onClick={(_) => setIsEditingEmail(false)}
+                      transparent
+                    />
+                  </Form>
+                </>
+              ) : (
+                <>
+                  {user.email}
+                  <Button
+                    styles={{ marginLeft: '8px' }}
+                    label='Edit'
+                    onClick={handleIsEditingEmail}
+                    transparent
+                  />
+                  <p style={{ color: 'green' }}>{editEmailSuccess}</p>
+                </>
+              )}
+            </H3Section>
             <H3>Change password</H3>
             <Hr />
 
@@ -294,9 +311,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                          background: 'red',
-                          color: 'black',
-                        }
+                        background: 'red',
+                        color: 'black',
+                      }
                       : {}
                   }
                 />
