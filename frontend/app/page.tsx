@@ -7,14 +7,19 @@ import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
+import { mediaQuery } from '@/styles/tokens'
 
 const FirstSection = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 28px;
   justify-content: center;
   height: calc(100dvh - 54px - 24px);
   padding: 128px;
+  ${mediaQuery[1]} {
+    flex-direction: row;
+  }
 `
 
 const WelcomeContainer = styled.div`

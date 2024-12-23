@@ -12,17 +12,27 @@ import { editEmail } from '@/api/auth/editEmail'
 import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
 import { H2, H3 } from '@/styles'
+import { mediaQuery } from '@/styles/tokens'
 
 const Container = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 28px;
+  ${mediaQuery[1]} {
+    flex-wrap: initial;
+  }
 `
 
 const Left = styled.div`
   flex: 1;
+  flex-basis: initial;
+  ${mediaQuery[1]} {
+    flex-basis: 100%;
+  }
 `
 const Right = styled.div`
   flex: 1;
+  flex-basis: 100%;
 `
 
 const Title = styled.h1`
@@ -188,9 +198,7 @@ export default function Profile() {
                   <td>
                     <b>Success:</b>
                   </td>
-                  <td>
-                    Prototype tester (Joined during the v0.1 of Rebutify)
-                  </td>
+                  <td>Prototype tester (Joined during the v0.1 of Rebutify)</td>
                 </tr>
               </tbody>
             </table>
@@ -198,9 +206,7 @@ export default function Profile() {
 
           <H2>Settings</H2>
           <H2Section>
-            <H3>
-              Change email
-            </H3>
+            <H3>Change email</H3>
             <Hr />
             <H3Section>
               {isEditingEmail ? (
@@ -311,9 +317,9 @@ export default function Profile() {
                   styles={
                     !deleteAccSuccess
                       ? {
-                        background: 'red',
-                        color: 'black',
-                      }
+                          background: 'red',
+                          color: 'black',
+                        }
                       : {}
                   }
                 />

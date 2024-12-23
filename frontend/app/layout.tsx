@@ -48,9 +48,21 @@ export default function RootLayout({ children }: PropsType) {
           <div
             style={{
               minHeight: `calc(100dvh - 51px - 24px - 48px - 24px)`,
+              position: 'relative',
             }}
           >
             {children}
+            <span
+              style={{
+                position: 'absolute',
+                right: '12px',
+                opacity: 0.7,
+                fontStyle: 'italic',
+                bottom: '0',
+              }}
+            >
+              Prototype (v0.1.0)
+            </span>
           </div>
           <footer
             style={{
@@ -65,7 +77,6 @@ export default function RootLayout({ children }: PropsType) {
               style={{
                 opacity: 0.7,
                 fontStyle: 'italic',
-                marginRight: '6px',
                 textAlign: 'center',
               }}
             >
@@ -91,17 +102,6 @@ export default function RootLayout({ children }: PropsType) {
               <Link style={LinkStyle} href='/privacy'>
                 <span style={LinkLabel}>Privacy</span>
               </Link>
-
-              <span
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  opacity: 0.7,
-                  fontStyle: 'italic',
-                }}
-              >
-                Prototype (v0.1.0)
-              </span>
             </div>
           </footer>
         </StoreProvider>

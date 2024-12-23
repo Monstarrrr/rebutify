@@ -8,6 +8,7 @@ import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
 import { Button } from '@/components'
+import { mediaQuery } from '@/styles/tokens'
 
 const Nav = styled.nav`
   background: #1f1f1f;
@@ -29,12 +30,16 @@ const RightBlock = styled.div`
 `
 
 const BrandLabel = styled.span`
+  display: none;
   font-size: 34px;
   font-weight: bold;
   position: relative;
   top: 1px;
   left: -7px;
   color: #fff;
+  ${mediaQuery[0]} {
+    display: initial;
+  }
 `
 
 const LinkWrapper = styled.div`
