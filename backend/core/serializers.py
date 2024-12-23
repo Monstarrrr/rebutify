@@ -23,6 +23,54 @@ logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
 
+class UserSerializer(serializers.ModelSerializer):
+    upvotedPosts = serializers.SerializerMethodField()
+    downvotedPosts = serializers.SerializerMethodField()
+    followedPosts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "id",
+            "username",
+            "upvotedPosts",
+            "downvotedPosts",
+            "followedPosts",
+        ]
+
+    def get_upvotedPosts(self, user):
+        # Fetch the upvoted posts based on user id
+        try:
+            user = User.objects.get(id=user.id)
+            return Vote.objects.filter(type="upvote", ownerUserId=user.id).values_list(
+                "parentId", flat=True
+            )
+        except User.DoesNotExist as e:
+            logger.error(f"Error fetching user: {e}")
+            return None
+
+    def get_downvotedPosts(self, user):
+        # Fetch the downvoted posts based on user id
+        try:
+            user = User.objects.get(id=user.id)
+            return Vote.objects.filter(
+                type="downvote", ownerUserId=user.id
+            ).values_list("parentId", flat=True)
+        except User.DoesNotExist as e:
+            logger.error(f"Error fetching user: {e}")
+            return None
+
+    def get_followedPosts(self, user):
+        # Fetch the followed posts based on user id
+        try:
+            user = User.objects.get(id=user.id)
+            return Post.objects.filter(followers=user.id).values_list("id", flat=True)
+        except User.DoesNotExist as e:
+            logger.error(f"Error fetching user: {e}")
+            return None
+
+
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
