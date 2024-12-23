@@ -240,6 +240,9 @@ DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
+    "SERIALIZERS": {
+        "current_user": "core.serializers.UserSerializer",
+    },
 }
 
 SIMPLE_JWT = {
