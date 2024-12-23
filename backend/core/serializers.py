@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.models import User
+from djoser.serializers import UidAndTokenSerializer, UsernameSerializer
 from rest_framework import serializers
 
 from .models import Post, Report, UserProfile, Vote
@@ -210,3 +211,11 @@ class VoteResponseSerializer(serializers.Serializer):
             },
             "post": obj["post"],
         }
+
+
+class SendConfirmNewEmailSerializer(UsernameSerializer, UidAndTokenSerializer):
+    pass
+
+
+class ActivationNewEmailSerializer(UsernameSerializer, UidAndTokenSerializer):
+    pass

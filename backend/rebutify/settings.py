@@ -126,7 +126,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "core/templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -238,8 +238,13 @@ DEFAULT_FROM_EMAIL = EMAIL_FROM
 
 DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
+    "ACTIVATION_NEW_EMAIL_URL": "activate_new_email/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
+    "EMAIL": {
+        "send_confirm_new_email": "core.email.SendConfirmNewEmail",
+        "send_new_email_activated": "core.email.SendNewEmailActivated",
+    },
     "SERIALIZERS": {
         "current_user": "core.serializers.UserSerializer",
     },
