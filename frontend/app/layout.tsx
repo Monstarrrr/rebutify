@@ -61,7 +61,7 @@ export default function RootLayout({ children }: PropsType) {
               padding: '12px 0',
             }}
           >
-            <span
+            <div
               style={{
                 opacity: 0.7,
                 fontStyle: 'italic',
@@ -70,7 +70,9 @@ export default function RootLayout({ children }: PropsType) {
               }}
             >
               <span>Rebutify, {new Date().getFullYear()}.</span>
+
               <br />
+
               <Link
                 style={LinkStyle}
                 href='https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI'
@@ -89,7 +91,18 @@ export default function RootLayout({ children }: PropsType) {
               <Link style={LinkStyle} href='/privacy'>
                 <span style={LinkLabel}>Privacy</span>
               </Link>
-            </span>
+
+              <span
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  opacity: 0.7,
+                  fontStyle: 'italic',
+                }}
+              >
+                Prototype (v0.1.0)
+              </span>
+            </div>
           </footer>
         </StoreProvider>
       </body>

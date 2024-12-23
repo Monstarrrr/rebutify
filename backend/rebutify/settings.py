@@ -245,6 +245,9 @@ DJOSER = {
         "send_confirm_new_email": "core.email.SendConfirmNewEmail",
         "send_new_email_activated": "core.email.SendNewEmailActivated",
     },
+    "SERIALIZERS": {
+        "current_user": "core.serializers.UserSerializer",
+    },
 }
 
 SIMPLE_JWT = {
