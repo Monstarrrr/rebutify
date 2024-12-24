@@ -52,6 +52,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   }, [user])
 
   const handleVote = (direction: 'up' | 'down') => async () => {
+    if (post.ownerUserId === user.id) {
+      console.error(`❌ User tried voting on own post`)
+      setVoteError(true)
+      return
+    }
     try {
       const data = await vote(user, post.type, post.id, direction)
       setPost(data.resources.post)
@@ -213,7 +218,15 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               postId={post.id}
               undo={user.followedPosts.includes(post.id) ? true : false}
             />
-            {voteError && <LoginBlocker action={'vote'} />}
+            <br />
+            {voteError && post.ownerUserId !== user.id && (
+              <LoginBlocker action={'vote'} />
+            )}
+            {voteError && post.ownerUserId === user.id && (
+              <span style={{ color: 'red', flexBasis: '100%' }}>
+                You cannot vote on your own {post.type}{' '}
+              </span>
+            )}
           </ActionsStyle>
           {/* Comments */}
           <SectionStyle>
