@@ -239,6 +239,7 @@ DEFAULT_FROM_EMAIL = EMAIL_FROM
 DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
     "ACTIVATION_NEW_EMAIL_URL": "activate_new_email/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "confirmresetpassword?uid={uid}&token={token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
     "EMAIL": {
