@@ -1,9 +1,8 @@
 'use client'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Form, Button } from '@/components'
 import { TextInput } from '@/types'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
-import { useRouter } from 'next/navigation'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
 import { requestPasswordReset } from '@/api/auth'
@@ -23,7 +22,6 @@ export default function Forgot() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [apiErrors, setApiErrors] = useState<AxiosResponse | null>(null)
-  const router = useRouter()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

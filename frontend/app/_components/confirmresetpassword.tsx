@@ -2,7 +2,7 @@
 import { FormEvent, useState } from 'react'
 import { Form, Button } from '@/components'
 import { TextInput } from '@/types'
-import { formDataToObj, ServerErrorMessage } from '@/helpers'
+import { formDataToObj } from '@/helpers'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { SectionStyle } from '@/styles'
