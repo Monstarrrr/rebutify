@@ -564,13 +564,13 @@ class VoteView(APIView):
 
     def post(self, request, post_type, post_id, vote_type):
         if vote_type not in ["upvote", "downvote"]:
-            return Response({"formError": "Invalid vote type"}, status=400)
+            return Response({"formErrors": {"vote": ["Invalid vote type"]}}, status=400)
 
         try:
             # Verify the post exists
             post = Post.objects.get(id=post_id)
         except Post.DoesNotExist:
-            return Response({"formError": "Post not found"}, status=404)
+            return Response({"formErrors": {"post": ["Post not found"]}}, status=404)
 
         # Check for existing vote
         existing_vote = Vote.objects.filter(
@@ -648,13 +648,17 @@ class EditView(APIView):
         try:
             # Validate post type
             if post_type.lower() not in [x[1] for x in POST_TYPES]:
-                return Response({"formError": "Invalid post type"}, status=400)
+                return Response(
+                    {"formErrors": {"post": ["Invalid post type"]}}, status=400
+                )
 
             # Find the post
             try:
                 post = Post.objects.get(id=post_id, type=post_type.lower())
             except Post.DoesNotExist:
-                return Response({"formError": "Post not found"}, status=404)
+                return Response(
+                    {"formErrors": {"post": ["Post not found"]}}, status=404
+                )
 
             if post.ownerUserId != request.user.id:
                 return Response(status=401)
@@ -720,7 +724,9 @@ class EditEmailView(APIView):
                     {
                         "code": 400,
                         "message": "Invalid email format",
-                        "formErrors": ["Please provide a valid email address"],
+                        "formErrors": {
+                            "email": ["Please provide a valid email address"]
+                        },
                     },
                     status=400,
                 )
@@ -731,9 +737,11 @@ class EditEmailView(APIView):
                     {
                         "code": 400,
                         "message": "Email already in use",
-                        "formErrors": [
-                            "This email is already associated with this account"
-                        ],
+                        "formErrors": {
+                            "email": [
+                                "This email is already associated with this account"
+                            ]
+                        },
                     },
                     status=400,
                 )
@@ -744,9 +752,11 @@ class EditEmailView(APIView):
                     {
                         "code": 400,
                         "message": "Email already in use",
-                        "formErrors": [
-                            "This email is already associated with another account"
-                        ],
+                        "formErrors": {
+                            "email": [
+                                "This email is already associated with another account"
+                            ]
+                        },
                     },
                     status=400,
                 )
@@ -784,7 +794,7 @@ class EditEmailView(APIView):
                 {
                     "code": 500,
                     "message": "Internal server error",
-                    "formErrors": ["Unable to update email"],
+                    "formErrors": {"email": ["Unable to update email"]},
                 },
                 status=500,
             )
