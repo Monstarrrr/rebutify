@@ -34,6 +34,7 @@ export const ActionsStyle = styled.div`
   grid-column-start: 3;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 `
 
 export const VoteValue = styled.div`
