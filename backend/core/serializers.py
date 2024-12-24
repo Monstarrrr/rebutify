@@ -167,7 +167,7 @@ class PostSerializer(serializers.ModelSerializer):
 class UserProfileOnPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["username", "avatar", "bio", "reputation"]
+        fields = ["username", "avatar", "bio", "reputation", "created"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -175,7 +175,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ["username", "avatar", "bio", "reputation", "followedPosts"]
+        fields = ["username", "avatar", "bio", "reputation", "created", "followedPosts"]
 
 
 class ReportSerializer(serializers.ModelSerializer):
