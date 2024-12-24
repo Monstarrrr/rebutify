@@ -1,63 +1,43 @@
 'use client'
-
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Form, Button } from '@/components'
 import { TextInput } from '@/types'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { updateUser } from '@/store/slices/user'
-import { useRouter } from 'next/navigation'
-import { login, fetchUserInfo } from '@/api/auth'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
+import { requestPasswordReset } from '@/api/auth'
 
-const loginInputs: TextInput[] = [
+const forgotPasswordInputs: TextInput[] = [
   {
-    id: 'username',
-    placeholder: 'Username',
-    value: '',
-  },
-  {
-    id: 'password',
-    placeholder: 'Password',
-    type: 'password',
+    id: 'email',
+    placeholder: 'Email',
+    type: 'email',
     value: '',
   },
 ]
-const submitButtonLabel = 'Login'
 
-export default function Login() {
+const submitButtonLabel = 'Send Reset Link'
+
+export default function Forgot() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [apiErrors, setApiErrors] = useState<AxiosResponse | null>(null)
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-
-  const user = useAppSelector((state) => state.user.id)
-
-  useEffect(() => {
-    if (user) {
-      router.push('/')
-    }
-  }, [user, router])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     setApiErrors(null)
+
     const formData = formDataToObj(event)
 
     try {
-      await login(formData)
-      const userInfo = await fetchUserInfo()
-
+      // Replace with your actual API call
+      await requestPasswordReset({ email: formData.email })
       setLoading(false)
-      setSuccess(null)
-      dispatch(updateUser(userInfo))
-      router.push('/')
+      setSuccess('Password reset instructions have been sent to your email')
     } catch (error: any) {
       setLoading(false)
-      console.log(`# login error :`, error)
+      console.log(`# forgot password error:`, error)
       setApiErrors(
         error.response ?? {
           data: {
@@ -71,23 +51,28 @@ export default function Login() {
 
   return (
     <>
-      <h1 style={{ marginBottom: '12px' }}>Login</h1>
+      <h1 style={{ marginBottom: '12px' }}>Forgot Password</h1>
       <SectionStyle>
         <Form
-          id='login-form'
-          inputsFields={loginInputs}
+          id='forgot-password-form'
+          inputsFields={forgotPasswordInputs}
           inputsErrors={apiErrors}
           onSubmit={handleSubmit}
           loading={loading}
           success={success}
           setSuccess={setSuccess}
         >
-          <Button size='max' loading={loading} label={submitButtonLabel} />
+          <Button
+            size='max'
+            success={success}
+            loading={loading}
+            label={submitButtonLabel}
+          />
         </Form>
       </SectionStyle>
       <div style={{ marginTop: '8px' }}>
-        <a href='/forgot' style={{ color: 'grey' }}>
-          Forgot password
+        <a href='/login' style={{ color: 'grey' }}>
+          Back to login
         </a>
       </div>
     </>
