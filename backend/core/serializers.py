@@ -107,19 +107,18 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
     def get_ownerUser(self, obj):
-        # Fetch the user profile based on ownerUserId
         try:
             user = User.objects.get(id=obj.ownerUserId)
-            user_profile = user.userprofile
-
-            if not user_profile.username:
-                user_profile.username = user.username
-                user_profile.save()
-
-            return UserProfileSerializer(user.userprofile).data
+            return UserProfileOnPostSerializer(user.userprofile).data
         except (User.DoesNotExist, UserProfile.DoesNotExist) as e:
             logger.error(f"Error fetching owner user: {e}")
             return None
+
+
+class UserProfileOnPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["username", "avatar", "bio", "reputation"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
