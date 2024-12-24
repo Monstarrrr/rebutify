@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
+from django.db.models import F
 from django.http import HttpResponse
 from django.utils import timezone
 from djoser.compat import get_user_email
@@ -569,8 +570,21 @@ class VoteView(APIView):
         try:
             # Verify the post exists
             post = Post.objects.get(id=post_id)
+            post_owner_profile = UserProfile.objects.get(user__id=post.ownerUserId)
         except Post.DoesNotExist:
             return Response({"formErrors": {"post": ["Post not found"]}}, status=404)
+        except UserProfile.DoesNotExist:
+            return Response(
+                {"formErrors": {"user": ["Post owner profile not found"]}}, status=404
+            )
+        if post.ownerUserId == request.user.id:
+            return Response(
+                {
+                    "code": 400,
+                    "message": "Cannot vote on own post",
+                },
+                status=400,
+            )
 
         # Check for existing vote
         existing_vote = Vote.objects.filter(
@@ -586,29 +600,28 @@ class VoteView(APIView):
                     # Decrement the corresponding vote count
                     if vote_type == "upvote":
                         post.upvotes -= 1
+                        post_owner_profile.reputation = F("reputation") - 1
                     else:
                         post.downvotes -= 1
+                        post_owner_profile.reputation = F("reputation") + 1
 
                 # If voting the opposite way, remove existing vote and add new vote
                 else:
                     existing_vote.delete()
 
-                    # Decrement the previous vote count
                     if existing_vote.type == "upvote":
                         post.upvotes -= 1
+                        post.downvotes += 1
+                        post_owner_profile.reputation = F("reputation") - 2
                     else:
                         post.downvotes -= 1
+                        post.upvotes += 1
+                        post_owner_profile.reputation = F("reputation") + 2
 
                     # Create and increment new vote
                     Vote.objects.create(
                         parentId=post.id, ownerUserId=request.user.id, type=vote_type
                     )
-
-                    # Increment the new vote count
-                    if vote_type == "upvote":
-                        post.upvotes += 1
-                    else:
-                        post.downvotes += 1
 
             # No existing vote - create a new vote
             else:
@@ -619,11 +632,15 @@ class VoteView(APIView):
                 # Increment the corresponding vote count
                 if vote_type == "upvote":
                     post.upvotes += 1
+                    post_owner_profile.reputation = F("reputation") + 1
                 else:
                     post.downvotes += 1
+                    post_owner_profile.reputation = F("reputation") - 1
 
             # Save the updated post
             post.save()
+            post_owner_profile.save()
+            post_owner_profile.refresh_from_db()
 
         # Serialize and return response
         serializer = VoteResponseSerializer(
