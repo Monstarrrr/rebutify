@@ -37,7 +37,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
+const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px 8px;
@@ -122,58 +122,74 @@ export default function Form(props: FormProps) {
     }
   }
 
+  // Check for field-specific errors
   useEffect(() => {
-    console.log(`# inputsErrors :`, inputsErrors)
-    // Field errors
-    if (
-      inputsErrors?.data?.code === 422 || // schema v2
-      inputsErrors?.data?.code === 400 || // schema v2
-      inputsErrors?.status === 422 || // schema v1
-      inputsErrors?.status === 400 // schema v1
-    ) {
+    let missingFields: string[]
+
+    // Check if the API answer contains field-specific errors
+    const isFieldsError =
+      (inputsErrors?.data &&
+        Object.keys(inputsErrors.data).some((fieldErrorId) =>
+          inputsState.some((inputField) => inputField.id === fieldErrorId),
+        )) ||
+      inputsErrors?.data?.formErrors
+
+    if (isFieldsError && inputsErrors) {
       // Add error(s) to the corresponding field(s)
-      // schema v2:
-      inputsErrors.data.formErrors &&
+      if (inputsErrors?.data?.formErrors) {
+        console.log(
+          `# inputsErrors.data.formErrors :`,
+          inputsErrors.data.formErrors,
+        )
         setInputsState((prev) => {
           return prev.map((inputField) => ({
             ...inputField,
             errors: inputsErrors.data.formErrors[inputField.id],
           }))
         })
-      // schema v1:
-      setInputsState((prev) => {
-        return prev.map((inputField) => ({
-          ...inputField,
-          errors: inputsErrors.data[inputField.id],
-        }))
-      })
-
-      // Check if some fields from inputsErrors don't exist in inputsState
-      const missingFields: string[] = Object.keys(inputsErrors.data).filter(
-        (fieldErrorId) =>
-          !inputsState.some((inputField) => inputField.id === fieldErrorId),
-      )
-      if (missingFields.length > 0) {
-        console.error(
-          `❌ Fields returned by API don't exist in inputsFields: ${missingFields.join(', ')}`,
+        // Check if some fields from inputsErrors.data.formErrors don't exist in inputsState
+        missingFields = Object.keys(inputsErrors.data.formErrors).filter(
+          (fieldErrorId) =>
+            !inputsState.some((inputField) => inputField.id === fieldErrorId),
         )
+      } else {
         setInputsState((prev) => {
           return prev.map((inputField) => ({
             ...inputField,
-            errors: ['Some field is not being recognized, check logs.'],
+            errors: inputsErrors.data[inputField.id],
+          }))
+        })
+        // Check if some fields from inputsErrors.data don't exist in inputsState
+        missingFields = Object.keys(inputsErrors.data).filter(
+          (fieldErrorId) =>
+            !inputsState.some((inputField) => inputField.id === fieldErrorId),
+        )
+      }
+
+      if (missingFields.length > 0) {
+        setInputsState((prev) => {
+          return prev.map((inputField) => ({
+            ...inputField,
+            errors: [
+              `❌ Fields returned by API don't exist in inputsFields: ${missingFields.join(', ')}`,
+            ],
           }))
         })
       }
-    }
-    // Global errors
-    if (inputsErrors?.status === 401) {
-      setGlobalFormErrors(
-        inputsErrors?.data?.detail || 'Please login to perform this action.',
-      )
-    }
-    // Internal errors
-    if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
-      setGlobalFormErrors(inputsErrors?.data?.detail || ServerErrorMessage)
+
+      console.log(`# inputsErrors :`, inputsErrors)
+      console.log(`# inputsState :`, inputsState)
+    } else {
+      // Global errors
+      if (inputsErrors?.status === 401) {
+        setGlobalFormErrors(
+          inputsErrors?.data?.detail || 'Please login to perform this action.',
+        )
+      }
+      // Internal errors
+      if (inputsErrors?.status === 404 || inputsErrors?.status === 500) {
+        setGlobalFormErrors(inputsErrors?.data?.detail || ServerErrorMessage)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputsErrors])

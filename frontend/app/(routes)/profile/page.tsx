@@ -196,7 +196,7 @@ export default function Profile() {
                 </tr>
                 <tr>
                   <td>
-                    <b>Success:</b>
+                    <b>Achievements:</b>
                   </td>
                   <td>Prototype tester (Joined during the v0.1 of Rebutify)</td>
                 </tr>
