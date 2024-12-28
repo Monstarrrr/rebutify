@@ -9,7 +9,7 @@ export const breakpoints = [
 export const mediaQuery = breakpoints.map((bp) => `@media (min-width: ${bp}px)`)
 export const mediaQueries = facepaint(mediaQuery, { overlap: true })
 
-const config = {
+export const config = {
   primaryColor: 'rgba(2, 0, 71, 1)', // #020047
   primaryColorTransparent: 'rgba(10, 14, 77, 0.3)',
   secondaryColor: 'rgba(20, 122, 165, 1)', // #147aa5

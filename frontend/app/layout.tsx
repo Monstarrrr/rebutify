@@ -45,20 +45,16 @@ export default function RootLayout({ children }: PropsType) {
         <StoreProvider>
           <ClientInitializer />
           <Header />
-          <div
-            style={{
-              minHeight: `calc(100dvh - 51px - 24px - 48px - 24px)`,
-              position: 'relative',
-            }}
-          >
+          <div className='mainPage-wrapper'>
             {children}
             <span
               style={{
                 position: 'absolute',
                 right: '12px',
-                opacity: 0.7,
+                color: 'gray',
                 fontStyle: 'italic',
                 bottom: '0',
+                display: 'contents',
               }}
             >
               Prototype (v0.1.0)

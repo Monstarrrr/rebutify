@@ -1,7 +1,8 @@
 {
   "plugins": [
     "react", // eslint-plugin-react
-    "react-hooks" // eslint-plugin-react-hooks
+    "react-hooks", // eslint-plugin-react-hooks
+    "styled-jsx/babel" // eslint-plugin-styled-jsx
   ],
   // Extends is used to inherit configurations for plugins and rules
   "extends": [

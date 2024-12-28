@@ -1,7 +1,7 @@
 'use client'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
-import { Form, List, PostCard, Button } from '@/components'
+import { Form, List, PostCard, Button, Icon } from '@/components'
 import type { Post } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
@@ -10,15 +10,17 @@ import styled from 'styled-components'
 import { mediaQuery } from '@/styles/tokens'
 
 const FirstSection = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 28px;
+  height: initial;
   justify-content: center;
-  height: calc(100dvh - 54px - 24px);
-  padding: 128px;
+  padding: 38px;
   ${mediaQuery[1]} {
     flex-direction: row;
+    height: calc(100dvh - 54px - 24px);
+    padding: 128px;
   }
 `
 
@@ -46,10 +48,18 @@ const BtnLink = styled(Link)`
   text-decoration: none;
 `
 
+const MidSection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`
+
 const ListWrapper = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  padding: 38px;
 `
 
 const ListTitle = styled.h2`
@@ -147,6 +157,23 @@ export default function Home() {
           )}
         </div>
       </FirstSection>
+      <MidSection>
+        <Button
+          styles={{
+            position: 'absolute',
+            top: '-100px',
+            border: 'none',
+          }}
+          transparent
+          icon={
+            <Icon
+              size={{ width: '32px', height: '32px' }}
+              label='arrow'
+              direction='down'
+            />
+          }
+        />
+      </MidSection>
       <ListWrapper>
         <ListTitle>All arguments</ListTitle>
         <List items={allPosts} Layout={PostCard} />

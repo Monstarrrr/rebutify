@@ -1,0 +1,8 @@
+.mainPage-wrapper {
+  @media (max-width: 576px) {
+    min-height: initial;
+  }
+  @media (min-width: 576px) {
+    min-height: calc(100dvh - 51px - 24px - 48px - 24px);
+  }
+}
