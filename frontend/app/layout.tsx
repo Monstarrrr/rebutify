@@ -5,7 +5,7 @@ import StoreProvider from '@/store/Provider'
 import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
-import styles from '@/layout.module.css'
+import styles from './layout.module.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: PropsType) {
         <StoreProvider>
           <ClientInitializer />
           <Header />
-          <div className='mainPage-wrapper'>{children}</div>
+          <div className={styles.mainPageWrapper}>{children}</div>
           <footer
             className={styles.footer}
             style={{

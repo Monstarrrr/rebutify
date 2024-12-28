@@ -1,4 +1,4 @@
-.mainPage-wrapper {
+.mainPageWrapper {
   min-height: initial;
 
   @media (min-width: 576px) {

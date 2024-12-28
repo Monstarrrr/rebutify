@@ -8,6 +8,7 @@ import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
 import { mediaQuery } from '@/styles/tokens'
+import styles from './page.module.css'
 
 const FirstSection = styled.div`
   align-items: center;
@@ -167,7 +168,7 @@ export default function Home() {
       </FirstSection>
       <MidSection>
         <Button
-          className='homepage-scroll-down-button'
+          className={styles.btnScroll}
           styles={{
             position: 'absolute',
             top: '-100px',
