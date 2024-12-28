@@ -14,7 +14,7 @@
   }
 }
 
-.version-mirror {
+.versionMirror {
   display: none;
   @media (min-width: 576px) {
     display: block;

@@ -167,6 +167,7 @@ export default function Home() {
       </FirstSection>
       <MidSection>
         <Button
+          className='homepage-scroll-down-button'
           styles={{
             position: 'absolute',
             top: '-100px',

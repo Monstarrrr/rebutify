@@ -3,6 +3,7 @@ export type ButtonProps = {
 
   icon?: React.ReactNode | null
   styles?: React.CSSProperties
+  className?: string
   size?: 'min' | 'max'
   transparent?: boolean
   /* 

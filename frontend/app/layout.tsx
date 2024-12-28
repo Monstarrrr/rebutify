@@ -5,7 +5,7 @@ import StoreProvider from '@/store/Provider'
 import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
-import 'layout.css'
+import styles from '@/layout.module.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: PropsType) {
           <Header />
           <div className='mainPage-wrapper'>{children}</div>
           <footer
-            className='footer'
+            className={styles.footer}
             style={{
               background: '#1f1f1f',
               display: 'flex',
@@ -89,7 +89,7 @@ export default function RootLayout({ children }: PropsType) {
               </Link>
             </div>
 
-            <div className='version' style={{ order: 3 }}>
+            <div style={{ order: 3 }}>
               <span
                 style={{
                   color: 'gray',
@@ -101,7 +101,7 @@ export default function RootLayout({ children }: PropsType) {
             </div>
 
             <div
-              className='version-mirror'
+              className={styles.versionMirror}
               style={{ order: 1, visibility: 'hidden' }}
             >
               <span>Prototype (v0.1.0)</span>
