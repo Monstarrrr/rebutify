@@ -3,7 +3,7 @@ import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
 import { Form, List, PostCard, Button, Icon } from '@/components'
 import type { Post } from '@/types'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
@@ -68,6 +68,7 @@ const ListTitle = styled.h2`
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
+  const scrollRef = useRef<HTMLDivElement | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -104,6 +105,13 @@ export default function Home() {
       setLoading(false)
       setApiErrors(response)
     }
+  }
+
+  const handleScroll: () => void = () => {
+    scrollRef.current &&
+      scrollRef.current.scrollIntoView({
+        behavior: 'smooth',
+      })
   }
 
   return (
@@ -164,6 +172,7 @@ export default function Home() {
             top: '-100px',
             border: 'none',
           }}
+          onClick={handleScroll}
           transparent
           icon={
             <Icon
@@ -175,7 +184,7 @@ export default function Home() {
         />
       </MidSection>
       <ListWrapper>
-        <ListTitle>All arguments</ListTitle>
+        <ListTitle ref={scrollRef}>All arguments</ListTitle>
         <List items={allPosts} Layout={PostCard} />
       </ListWrapper>
     </>

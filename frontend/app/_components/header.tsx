@@ -17,10 +17,11 @@ const Nav = styled.nav`
 `
 
 const LeftBlock = styled.div`
+  align-items: start;
   flex: 1;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
 `
 const RightBlock = styled.div`
   flex: 1;

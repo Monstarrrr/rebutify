@@ -5,6 +5,7 @@ import StoreProvider from '@/store/Provider'
 import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
+import 'layout.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,7 +33,7 @@ type PropsType = Readonly<{
 }>
 
 const LinkStyle = {
-  marginLeft: '12px',
+  margin: '0 6px',
   color: '#fff',
   textDecoration: 'none',
 }
@@ -45,32 +46,20 @@ export default function RootLayout({ children }: PropsType) {
         <StoreProvider>
           <ClientInitializer />
           <Header />
-          <div className='mainPage-wrapper'>
-            {children}
-            <span
-              style={{
-                position: 'absolute',
-                right: '12px',
-                color: 'gray',
-                fontStyle: 'italic',
-                bottom: '0',
-                display: 'contents',
-              }}
-            >
-              Prototype (v0.1.0)
-            </span>
-          </div>
+          <div className='mainPage-wrapper'>{children}</div>
           <footer
+            className='footer'
             style={{
               background: '#1f1f1f',
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
+              padding: '12px',
               alignItems: 'center',
-              padding: '12px 0',
             }}
           >
             <div
               style={{
+                order: 2,
                 opacity: 0.7,
                 fontStyle: 'italic',
                 textAlign: 'center',
@@ -98,6 +87,24 @@ export default function RootLayout({ children }: PropsType) {
               <Link style={LinkStyle} href='/privacy'>
                 <span style={LinkLabel}>Privacy</span>
               </Link>
+            </div>
+
+            <div className='version' style={{ order: 3 }}>
+              <span
+                style={{
+                  color: 'gray',
+                  fontStyle: 'italic',
+                }}
+              >
+                Prototype (v0.1.0)
+              </span>
+            </div>
+
+            <div
+              className='version-mirror'
+              style={{ order: 1, visibility: 'hidden' }}
+            >
+              <span>Prototype (v0.1.0)</span>
             </div>
           </footer>
         </StoreProvider>

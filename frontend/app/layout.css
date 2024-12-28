@@ -1,8 +1,22 @@
 .mainPage-wrapper {
-  @media (max-width: 576px) {
-    min-height: initial;
-  }
+  min-height: initial;
+
   @media (min-width: 576px) {
     min-height: calc(100dvh - 51px - 24px - 48px - 24px);
+  }
+}
+
+.footer {
+  flex-direction: column;
+
+  @media (min-width: 576px) {
+    flex-direction: row;
+  }
+}
+
+.version-mirror {
+  display: none;
+  @media (min-width: 576px) {
+    display: block;
   }
 }
