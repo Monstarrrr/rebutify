@@ -15,7 +15,7 @@
   padding: 12px;
 
   @media (min-width: 576px) {
-    align-items: end;
+    align-items: flex-end;
     flex-direction: row;
   }
 }

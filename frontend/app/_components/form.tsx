@@ -1,4 +1,5 @@
 'use client'
+import { mediaQuery } from '@/styles/tokens'
 import { ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { FormProps, TextInput } from '@/types'
@@ -40,13 +41,20 @@ const Textarea = styled.textarea`
 const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
-  margin: 0 12px 8px;
-  ${({ $floating }) => $floating && 'margin: 16px 16px 0 0;'}
+  margin: 0;
+  ${({ $floating }) =>
+    $floating &&
+    `
+      margin: 16px 0 0 0;
+      ${mediaQuery[1]} {
+        margin: 16px 16px 0 0;
+      }
+    `}
 `
 
 export default function Form(props: FormProps) {
   const {
-    id,
+    id, // id must be unique accross all forms & pages as it's used as localStorage key
     inputsErrors,
     inputsFields,
     loading,
@@ -60,6 +68,11 @@ export default function Form(props: FormProps) {
   const formId = id
   const [inputsState, setInputsState] = useState(inputsFields)
   const [globalFormErrors, setGlobalFormErrors] = useState<string[] | null>(null)
+
+  useEffect(() => {
+    setSuccess(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Load cached inputs if they exist
   useEffect(() => {
@@ -194,19 +207,6 @@ export default function Form(props: FormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputsErrors])
 
-  // Clear inputs when success
-  useEffect(() => {
-    if (success) {
-      localStorage.removeItem(formId)
-      setInputsState((prev) => {
-        return prev.map((inputField) => ({
-          ...inputField,
-          value: '',
-        }))
-      })
-    }
-  }, [success, formId])
-
   return (
     <StyledForm onSubmit={onSubmit}>
       <SectionStyle>
@@ -219,6 +219,7 @@ export default function Form(props: FormProps) {
             value = '',
             errors,
             required = false,
+            className,
           }) => (
             <InputContainer key={id}>
               {label && (
@@ -237,6 +238,7 @@ export default function Form(props: FormProps) {
                   required={required || true}
                   onChange={handleChange}
                   value={value}
+                  className={className}
                 />
               ) : (
                 <Input
@@ -247,6 +249,7 @@ export default function Form(props: FormProps) {
                   onChange={handleChange}
                   value={value}
                   type={type || 'text'}
+                  className={className}
                 />
               )}
               {/* Field errors */}

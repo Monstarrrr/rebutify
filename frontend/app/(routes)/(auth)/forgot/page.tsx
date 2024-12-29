@@ -6,6 +6,7 @@ import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
 import { requestPasswordReset } from '@/api/auth'
+import Link from 'next/link'
 
 const forgotPasswordInputs: TextInput[] = [
   {
@@ -37,7 +38,6 @@ export default function Forgot() {
       setSuccess('Password reset instructions have been sent to your email')
     } catch (error: any) {
       setLoading(false)
-      console.log(`# forgot password error:`, error)
       setApiErrors(
         error.response ?? {
           data: {
@@ -71,9 +71,9 @@ export default function Forgot() {
         </Form>
       </SectionStyle>
       <div style={{ marginTop: '8px' }}>
-        <a href='/login' style={{ color: 'grey' }}>
+        <Link href='/login' style={{ color: 'grey' }}>
           Back to login
-        </a>
+        </Link>
       </div>
     </>
   )

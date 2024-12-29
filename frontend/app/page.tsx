@@ -8,8 +8,9 @@ import { createPost, getPosts } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
 import { mediaQuery } from '@/styles/tokens'
+// eslint-disable-next-line no-restricted-imports
 import styles from './page.module.css'
-import { SectionStyle } from './_styles'
+import { SectionStyle } from '@/styles'
 
 const FirstSection = styled.div`
   align-items: center;
@@ -91,7 +92,6 @@ export default function Home() {
     setLoading(true)
     setApiErrors(null)
     const formData = formDataToObj(event)
-    console.log(`# formData :`, formData)
 
     try {
       const res = await createPost({ ...formData }, 'argument')
@@ -123,7 +123,7 @@ export default function Home() {
           </Subtitle>
         </WelcomeContainer>
 
-        <div style={{ flex: 2 }}>
+        <div className={styles.formContainer}>
           {isLogged ? (
             <Form
               id='new-argument'
@@ -142,6 +142,7 @@ export default function Home() {
                     "If vegans don't eat meat, why do they eat plants? They are living beings too!",
                   type: 'textarea',
                   value: '',
+                  className: styles.argumentTextArea,
                 },
               ]}
               onSubmit={handleSubmitArgument}

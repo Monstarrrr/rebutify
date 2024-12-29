@@ -13,6 +13,7 @@ import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
 import { H2, H3 } from '@/styles'
 import { mediaQuery } from '@/styles/tokens'
+// eslint-disable-next-line no-restricted-imports
 import styles from './page.module.css'
 
 const Container = styled.div`
@@ -80,7 +81,6 @@ export default function Profile() {
   )
 
   useEffect(() => {
-    console.log(`# user  :`, user)
     if (!user.id) {
       router.push('/login')
     }

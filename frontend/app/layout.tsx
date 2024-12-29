@@ -5,6 +5,7 @@ import StoreProvider from '@/store/Provider'
 import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
+// eslint-disable-next-line no-restricted-imports
 import styles from './layout.module.css'
 
 const inter = Inter({ subsets: ['latin'] })

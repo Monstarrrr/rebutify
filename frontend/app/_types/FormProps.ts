@@ -9,7 +9,7 @@ export type FormProps = {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
 
   loading: boolean
-  success: string | null
+  success: string | null // todo: remove
   setSuccess: Dispatch<SetStateAction<string | null>> // To reset success message onChange
 
   // Children is the submit button and optional cancel button

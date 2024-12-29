@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: UserInfo = {
   email: '???@???.com',
-  id: '0',
+  id: '',
   refresh: '',
   access: '',
   username: 'Guest',

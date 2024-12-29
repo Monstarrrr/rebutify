@@ -21,7 +21,7 @@ const StyledButton = styled('button')<{
     props.disabled || props.$success ? 'not-allowed' : 'pointer'};
 
   ${(props) =>
-    props.$size === 'max' ? `min-width: 100%;` : `width: fit-content;`}
+    props.$size === 'min' ? `min-width: 100%;` : `width: fit-content;`}
 `
 
 export default function Button(props: ButtonProps) {

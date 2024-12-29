@@ -23,7 +23,13 @@ export default function ClientInitializer() {
         )
       }
     }
-    handleFetchUserInfo()
+    if (
+      // We only want to fetch the user info if they have logged in
+      localStorage.getItem('access_token') ||
+      localStorage.getItem('refresh_token')
+    ) {
+      handleFetchUserInfo()
+    }
   }, [dispatch])
   return <></>
 }

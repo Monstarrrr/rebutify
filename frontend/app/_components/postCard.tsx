@@ -4,6 +4,7 @@
 import type { Post } from '@/types'
 import Link from 'next/link'
 import 'globals.css'
+// eslint-disable-next-line no-restricted-imports
 import styles from './postCard.module.css'
 
 const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({

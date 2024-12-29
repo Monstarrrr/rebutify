@@ -36,11 +36,11 @@
     "no-restricted-imports": [
       "error",
       {
+        "paths": [],
         "patterns": [
           {
             "group": ["./", "../"],
-            "message": "Relative imports are not allowed.",
-            "exceptions": ["*.css"]
+            "message": "Relative imports are not allowed."
           },
           {
             "group": ["@/_*"],
