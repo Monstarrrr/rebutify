@@ -47,16 +47,7 @@ export default function RootLayout({ children }: PropsType) {
           <ClientInitializer />
           <Header />
           <div className={styles.mainPageWrapper}>{children}</div>
-          <footer
-            className={styles.footer}
-            style={{
-              background: '#1f1f1f',
-              display: 'flex',
-              justifyContent: 'space-between',
-              padding: '12px',
-              alignItems: 'end',
-            }}
-          >
+          <footer className={styles.footer}>
             <div
               style={{
                 order: 2,

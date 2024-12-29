@@ -7,9 +7,15 @@
 }
 
 .footer {
+  align-items: center;
+  background: #1f1f1f;
+  display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
 
   @media (min-width: 576px) {
+    align-items: end;
     flex-direction: row;
   }
 }
