@@ -4,7 +4,7 @@ import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import * as type from '@/types'
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import { Button, Form, Icon, LoginBlocker, Comments, Follow } from '@/components'
 import { useRouter } from 'next/navigation'
 import {
@@ -37,19 +37,15 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const [prevBody, setPrevBody] = useState(post.body)
 
   const [isEditing, setIsEditing] = useState(false)
-  const [editPostLoading, setEditPostLoading] = useState(false)
-  const [editPostSuccess, setEditPostSuccess] = useState<string | null>(null)
-  const [editPostError, setEditPostError] = useState(null)
+  const [editBodyLoading, setEditBodyLoading] = useState(false)
+  const [editBodySuccess, setEditBodySuccess] = useState<string | null>(null)
+  const [editBodyError, setEditBodyError] = useState(null)
 
   const [isCommenting, setIsCommenting] = useState(false)
   const [comments, setComments] = useState<type.Post[]>([])
   const [commentLoading, setCommentLoading] = useState(false)
   const [commentSuccess, setCommentSuccess] = useState<string | null>(null)
   const [commentErrors, setCommentErrors] = useState<AxiosResponse | null>(null)
-
-  useEffect(() => {
-    console.log('# user', user)
-  }, [user])
 
   const handleVote = (direction: 'up' | 'down') => async () => {
     if (post.ownerUserId === user.id) {
@@ -80,19 +76,23 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     }
   }
 
-  const handleEditPost = async (e: FormEvent<HTMLFormElement>) => {
+  const handleEditPostBody = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setEditPostLoading(true)
+    setEditBodyLoading(true)
     const { title, body } = formDataToObj(e)
     try {
-      const res = await editPost(post.type, post.id, { title: title, body: body })
-      console.log(`# Edit post - response :`, res)
+      await editPost(post.type, post.id, { title: title, body: body })
       setPrevBody(body)
-      setEditPostLoading(false)
+      setEditBodyLoading(false)
       setIsEditing(false)
+      setEditBodySuccess('Post edited successfully!')
+      setTimeout(() => {
+        setEditBodySuccess(null)
+      }, 1000)
+      setPost({ ...post, body })
     } catch (error: any) {
-      setEditPostLoading(false)
-      setEditPostError(error?.response)
+      setEditBodyLoading(false)
+      setEditBodyError(error?.response)
       console.log(`❌ Edit post failed: ${error}`)
     }
   }
@@ -160,26 +160,26 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             {isEditing ? (
               <SectionStyle>
                 <Form
-                  id='editPost'
+                  id={`editPost-${post.id}`}
                   inputsFields={[
                     {
                       type: 'textarea',
                       label: `Editing ${post.type}`,
-                      id: 'editPostBody',
+                      id: 'body',
                       value: post.body,
                       placeholder: 'Plants feel pain',
                     },
                   ]}
-                  inputsErrors={editPostError}
-                  onSubmit={handleEditPost}
-                  loading={editPostLoading}
-                  success={editPostSuccess}
-                  setSuccess={setEditPostSuccess}
+                  inputsErrors={editBodyError}
+                  onSubmit={handleEditPostBody}
+                  loading={editBodyLoading}
+                  success={editBodySuccess}
+                  setSuccess={setEditBodySuccess}
                 >
                   <Button
                     label='Save'
-                    success={editPostSuccess}
-                    loading={editPostLoading}
+                    success={editBodySuccess}
+                    loading={editBodyLoading}
                   />
                   <Button
                     label='Cancel'

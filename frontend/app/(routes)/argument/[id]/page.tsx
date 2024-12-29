@@ -1,20 +1,19 @@
 'use client'
 import api from '@/api/api'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RebuttalSubmition, List, Post } from '@/components'
 import * as type from '@/types/Post'
 import { getPosts } from '@/api/posts'
 import { SectionStyle, EmptySectionStyle, H2 } from '@/styles'
 
 type Props = {
-  params: {
-    id: string
-  }
+  params: Promise<{ id: string }>
   searchParams: Record<string, string>
 }
 
 export default function Argument(props: Props) {
-  const argumentId = props.params.id
+  const { id } = React.use(props.params)
+  const argumentId = id
 
   const [argument, setArgument] = useState<null | type.Argument>(null)
   const [rebuttals, setRebuttals] = useState<type.Post[]>([])

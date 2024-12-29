@@ -15,7 +15,7 @@ type PropsType = Readonly<{
   provide it to the children for use in the app
 */
 export default function StoreProvider({ children }: PropsType) {
-  const storeRef = useRef<AppStore>()
+  const storeRef = useRef<AppStore>(undefined)
   // Making sure we only create the store once
   if (!storeRef.current) {
     storeRef.current = makeStore()

@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
 import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
+import Link from 'next/link'
 
 const loginInputs: TextInput[] = [
   {
@@ -86,9 +87,9 @@ export default function Login() {
         </Form>
       </SectionStyle>
       <div style={{ marginTop: '8px' }}>
-        <a href='/forgot' style={{ color: 'grey' }}>
+        <Link href='/forgot' style={{ color: 'grey' }}>
           Forgot password
-        </a>
+        </Link>
       </div>
     </>
   )

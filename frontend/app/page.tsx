@@ -91,7 +91,6 @@ export default function Home() {
     setLoading(true)
     setApiErrors(null)
     const formData = formDataToObj(event)
-    console.log(`# formData :`, formData)
 
     try {
       const res = await createPost({ ...formData }, 'argument')

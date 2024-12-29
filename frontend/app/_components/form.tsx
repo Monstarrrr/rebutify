@@ -2,7 +2,7 @@
 import { ServerErrorMessage } from '@/helpers'
 import { SectionStyle } from '@/styles'
 import { FormProps, TextInput } from '@/types'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const StyledForm = styled.form`
@@ -37,7 +37,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px 8px;
@@ -46,7 +46,7 @@ const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
 
 export default function Form(props: FormProps) {
   const {
-    id,
+    id, // id must be unique accross all forms & pages as it's used as localStorage key
     inputsErrors,
     inputsFields,
     loading,
@@ -69,20 +69,29 @@ export default function Form(props: FormProps) {
         prevInputs.map(
           (input): TextInput => ({
             ...input,
-            value: Object.keys(cachedInputs).includes(input.id)
-              ? cachedInputs[input.id]
-              : input.value,
+            value:
+              Object.keys(cachedInputs).includes(input.id) ||
+                Object.keys(cachedInputs).includes(input.id)
+                ? cachedInputs[input.id]
+                : input.value,
           }),
         ),
       )
     }
-    return () => {
-      setGlobalFormErrors(null)
-      if (success) {
-        localStorage.removeItem(formId)
-      }
+  }, [formId])
+
+  useLayoutEffect(() => {
+    setGlobalFormErrors(null)
+    if (success) {
+      localStorage.removeItem(formId)
     }
-  }, [formId, success])
+  }, [success])
+
+  useEffect(() => {
+    if (inputsErrors) {
+      console.log(`# test :`)
+    }
+  }, []);
 
   // Currently, only reason we update the state is to cache the fields values
   const handleChange = (

@@ -14,7 +14,7 @@
   grid-row-start: 2;
   grid-column-start: 3;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   color: #8b8b8b;
 }
 

@@ -14,7 +14,7 @@ export default function ClientInitializer() {
         const userInfo = await fetchUserInfo()
         dispatch(updateUser(userInfo))
       } catch (error: any) {
-        console.error(
+        console.warn(
           'ClientInitializer error:',
           error?.response?.data?.detail ??
             error?.response?.data ??
@@ -23,7 +23,12 @@ export default function ClientInitializer() {
         )
       }
     }
-    handleFetchUserInfo()
+    if (
+      localStorage.getItem('access_token') ||
+      localStorage.getItem('refresh_token')
+    ) {
+      handleFetchUserInfo()
+    }
   }, [dispatch])
   return <></>
 }

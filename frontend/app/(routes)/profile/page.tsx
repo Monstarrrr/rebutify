@@ -80,7 +80,6 @@ export default function Profile() {
   )
 
   useEffect(() => {
-    console.log(`# user  :`, user)
     if (!user.id) {
       router.push('/login')
     }
