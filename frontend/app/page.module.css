@@ -4,3 +4,12 @@
     display: block;
   }
 }
+
+.list {
+  width: 100%;
+  @media screen and (min-width: 768px) {
+    width: auto;
+    max-width: max-content;
+    min-width: 700px;
+  }
+}

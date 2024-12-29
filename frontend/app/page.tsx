@@ -67,6 +67,10 @@ const ListTitle = styled.h2`
   margin: 0 auto 28px;
 `
 
+const ListStyles = {
+  width: '100%',
+}
+
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -187,7 +191,12 @@ export default function Home() {
       </MidSection>
       <ListWrapper>
         <ListTitle ref={scrollRef}>All arguments</ListTitle>
-        <List items={allPosts} Layout={PostCard} />
+        <List
+          items={allPosts}
+          Layout={PostCard}
+          styles={ListStyles}
+          className={styles.list}
+        />
       </ListWrapper>
     </>
   )

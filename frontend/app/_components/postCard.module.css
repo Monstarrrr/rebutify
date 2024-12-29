@@ -1,0 +1,35 @@
+.vote-count {
+  min-width: 100px;
+  grid-column-start: 1;
+  grid-row-start: 2;
+}
+
+.title {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  grid-column-end: 4;
+}
+
+.date {
+  grid-row-start: 2;
+  grid-column-start: 3;
+  display: flex;
+  justify-content: end;
+  color: #8b8b8b;
+}
+
+.sectionStyleOverride {
+  padding: 18px 24px;
+  transition: all 0.15s ease-in-out;
+}
+
+.link {
+  text-decoration: none;
+  color: #fff;
+  margin-bottom: 12px;
+  display: block;
+}
+.link:hover .sectionStyleOverride {
+  background-color: var(--color-secondary-light);
+  transition: all 0.15s ease-in-out;
+}

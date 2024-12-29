@@ -54,7 +54,7 @@ export default function RootLayout({ children }: PropsType) {
               display: 'flex',
               justifyContent: 'space-between',
               padding: '12px',
-              alignItems: 'center',
+              alignItems: 'end',
             }}
           >
             <div
