@@ -19,6 +19,7 @@
 }
 
 .sectionStyleOverride {
+  background-color: var(--color-secondary-light);
   padding: 18px 24px;
   transition: all 0.15s ease-in-out;
 }
@@ -30,6 +31,6 @@
   display: block;
 }
 .link:hover .sectionStyleOverride {
-  background-color: var(--color-secondary-light);
+  background-color: var(--color-secondary);
   transition: all 0.15s ease-in-out;
 }

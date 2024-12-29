@@ -5,11 +5,17 @@
   }
 }
 
-.list {
+.sectionStyleOverride {
   width: 100%;
   @media screen and (min-width: 768px) {
     width: auto;
     max-width: max-content;
     min-width: 700px;
   }
+}
+
+.h2 {
+  margin: 0 auto 28px;
+  text-align: center;
+  margin-top: 12px;
 }

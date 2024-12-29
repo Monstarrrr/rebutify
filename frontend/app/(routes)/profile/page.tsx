@@ -13,6 +13,7 @@ import { removeUser } from '@/store/slices/user'
 import { Button, Form, List, PostCard } from '@/components'
 import { H2, H3 } from '@/styles'
 import { mediaQuery } from '@/styles/tokens'
+import styles from './page.module.css'
 
 const Container = styled.div`
   display: flex;
@@ -335,7 +336,11 @@ export default function Profile() {
                 No posts yet
               </p>
             ) : (
-              <List items={argumentsList} Layout={PostCard} />
+              <List
+                items={argumentsList}
+                Layout={PostCard}
+                layoutClassName={styles.postCard}
+              />
             )}
           </H2Section>
         </Right>

@@ -9,6 +9,7 @@ import { formDataToObj } from '@/helpers'
 import styled from 'styled-components'
 import { mediaQuery } from '@/styles/tokens'
 import styles from './page.module.css'
+import { SectionStyle } from './_styles'
 
 const FirstSection = styled.div`
   align-items: center;
@@ -62,14 +63,6 @@ const ListWrapper = styled.div`
   flex-direction: column;
   padding: 38px;
 `
-
-const ListTitle = styled.h2`
-  margin: 0 auto 28px;
-`
-
-const ListStyles = {
-  width: '100%',
-}
 
 export default function Home() {
   const isLogged = useAppSelector((state) => !!state.user.username)
@@ -189,14 +182,11 @@ export default function Home() {
           }
         />
       </MidSection>
-      <ListWrapper>
-        <ListTitle ref={scrollRef}>All arguments</ListTitle>
-        <List
-          items={allPosts}
-          Layout={PostCard}
-          styles={ListStyles}
-          className={styles.list}
-        />
+      <ListWrapper ref={scrollRef}>
+        <SectionStyle className={styles.sectionStyleOverride}>
+          <h2 className={styles.h2}>All arguments</h2>
+          <List items={allPosts} Layout={PostCard} className={styles.list} />
+        </SectionStyle>
       </ListWrapper>
     </>
   )

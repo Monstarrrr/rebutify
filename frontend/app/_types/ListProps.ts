@@ -6,7 +6,8 @@ export type ListProps<T extends Identifiable> = {
   items: T[]
   // We require passing an item, but don't need to specify the key used as prop to map
   // as react does not pass the key to the layout component
-  Layout: React.ComponentType<{ item: T }>
+  Layout: React.ComponentType<{ item: T; layoutClassName?: string }>
   styles?: React.CSSProperties
   className?: string
+  layoutClassName?: string
 }
