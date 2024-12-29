@@ -39,7 +39,8 @@
         "patterns": [
           {
             "group": ["./", "../"],
-            "message": "Relative imports are not allowed."
+            "message": "Relative imports are not allowed.",
+            "exceptions": ["*.css"]
           },
           {
             "group": ["@/_*"],
