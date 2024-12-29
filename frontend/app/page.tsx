@@ -5,9 +5,9 @@ import { Form, List, PostCard, Button, Icon } from '@/components'
 import type { Post } from '@/types'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { createPost, getPosts } from '@/api/posts'
-import { formDataToObj } from '@/helpers'
+import { formDataToObj, useMediaQuery } from '@/helpers'
 import styled from 'styled-components'
-import { mediaQuery } from '@/styles/tokens'
+import { breakpoints, mediaQuery } from '@/styles/tokens'
 // eslint-disable-next-line no-restricted-imports
 import styles from './page.module.css'
 import { SectionStyle } from '@/styles'
@@ -73,6 +73,7 @@ export default function Home() {
   const [success, setSuccess] = useState<string | null>(null)
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
+  const isDesktop = useMediaQuery(breakpoints[1])
 
   // Fetch onLoad
   useEffect(() => {
@@ -155,6 +156,7 @@ export default function Home() {
                 label={'Submit argument'}
                 loading={loading}
                 success={success}
+                size={isDesktop ? 'min' : 'max'}
               />
             </Form>
           ) : (

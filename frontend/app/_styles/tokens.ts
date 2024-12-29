@@ -1,10 +1,10 @@
 import facepaint from 'facepaint'
 
 export const breakpoints = [
-  576, // 0
-  768, // 1
-  1024, // 2
-  1280, // 3
+  '576', // 0
+  '768', // 1
+  '1024', // 2
+  '1280', // 3
 ]
 export const mediaQuery = breakpoints.map((bp) => `@media (min-width: ${bp}px)`)
 export const mediaQueries = facepaint(mediaQuery, { overlap: true })
