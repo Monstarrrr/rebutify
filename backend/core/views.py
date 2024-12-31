@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import HttpResponse
 from django.utils import timezone
 from djoser.compat import get_user_email
@@ -428,13 +428,28 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             queryset = Post.objects.all()
 
+        if type == "argument":
+            if not self.request.user.is_authenticated:
+                # If user is not authenticated, only show non-shadow posts
+                queryset = queryset.filter(isShadow=False)
+            else:
+                # For arguments, show non-shadow posts plus user's shadow posts
+                queryset = queryset.filter(
+                    Q(isShadow=False)
+                    | Q(isShadow=True, ownerUserId=self.request.user.id)
+                )
+
         if parentId:
             queryset = queryset.filter(parentId=parentId)
 
         return queryset
 
     def perform_create(self, serializer):
-        post: Post = serializer.save(ownerUserId=self.request.user.id)
+        is_shadow = serializer.validated_data.get("type") == "argument"
+
+        post: Post = serializer.save(
+            ownerUserId=self.request.user.id, isShadow=is_shadow
+        )
 
         # Get or create user profile
         user_profile, created = UserProfile.objects.get_or_create(
