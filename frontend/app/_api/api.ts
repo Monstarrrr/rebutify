@@ -59,6 +59,7 @@ api.interceptors.request.use(
         req.headers['authorization'] = `Bearer ${newAccessToken}`
       } catch (error: any) {
         store.dispatch(removeUser())
+        localStorage.removeItem('refresh_token')
         return req
       }
     }
@@ -72,10 +73,10 @@ api.interceptors.request.use(
       error?.reponse?.data?.detail ??
         error?.response?.data ??
         error?.response ??
-        error,
+        error
     )
     return Promise.reject(error)
-  },
+  }
 )
 
 // On response
@@ -94,7 +95,7 @@ api.interceptors.response.use(
     if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',
-        res.headers['authorization'].split(' ')[1],
+        res.headers['authorization'].split(' ')[1]
       )
     }
 
@@ -107,9 +108,9 @@ api.interceptors.response.use(
       error?.reponse?.data?.detail ??
         error?.response?.data ??
         error?.response ??
-        error,
+        error
     )
     return Promise.reject(error)
-  },
+  }
 )
 export default api
