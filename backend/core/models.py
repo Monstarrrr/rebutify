@@ -47,6 +47,7 @@ class Post(models.Model):
     followers: models.ManyToManyField = models.ManyToManyField(
         User, related_name="followers", blank=True
     )
+    isShadow: models.BooleanField = models.BooleanField(default=False)
 
 
 class Report(models.Model):

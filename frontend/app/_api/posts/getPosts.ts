@@ -13,6 +13,7 @@ export const getPosts = async (
         parentId,
         type,
       },
+      requiresAuth: true,
     })
     return response.data.results
   } catch (error: any) {
