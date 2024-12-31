@@ -10,6 +10,11 @@
   grid-column-end: 4;
 }
 
+.tag {
+  grid-row-start: 1;
+  grid-column-start: 3;
+}
+
 .date {
   grid-row-start: 2;
   grid-column-start: 3;

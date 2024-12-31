@@ -15,6 +15,7 @@ export type Post = {
     reputation: number
   }
   parentId: string
+  isPending: boolean
   created: string
   updated: string
 }

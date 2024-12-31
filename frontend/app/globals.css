@@ -82,7 +82,7 @@ h6 {
 /* Custom CSS */
 .sectionStyle {
   display: grid;
-  grid-template-columns: 64px 1fr 162px;
+  grid-template-columns: 64px 1fr auto;
   grid-template-rows: auto auto;
   gap: 12px;
   background-color: #353535;
