@@ -6,7 +6,7 @@ export const editEmail = async (formData: { email: string }) => {
       `users/email/edit/`,
       { email: formData },
       {
-        requiresAuth: true,
+        withAuth: true,
       },
     )
     return response.data

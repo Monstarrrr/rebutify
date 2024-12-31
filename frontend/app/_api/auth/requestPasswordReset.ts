@@ -6,7 +6,7 @@ export const requestPasswordReset = async (formData: { email: string }) => {
       '/auth/users/reset_password/',
       { email: formData.email },
       {
-        requiresAuth: false,
+        withAuth: false,
       },
     )
     return response.data

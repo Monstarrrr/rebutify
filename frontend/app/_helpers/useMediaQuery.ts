@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false)
 
-  const formattedQuery = `(max-width: ${query}px)`
+  const formattedQuery = `(min-width: ${query}px)`
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(formattedQuery)

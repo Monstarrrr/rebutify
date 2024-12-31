@@ -11,7 +11,7 @@ export const followPost = async (
       endpoint,
       {}, // no data sent
       {
-        requiresAuth: true,
+        withAuth: true,
       },
     )
     return response.data

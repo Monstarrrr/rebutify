@@ -73,12 +73,13 @@ export default function Home() {
   const [success, setSuccess] = useState<string | null>(null)
 
   const [allPosts, setAllPosts] = useState<Post[]>([])
-  const isDesktop = useMediaQuery(breakpoints[1]);
+  const isDesktop = useMediaQuery(breakpoints[1])
 
   // Fetch onLoad
   useEffect(() => {
     const fetchArguments = async () => {
       try {
+        console.log(`getting all posts`)
         const response = await getPosts('argument')
         setAllPosts(response)
       } catch (error: any) {
@@ -191,7 +192,10 @@ export default function Home() {
           <List items={allPosts} Layout={PostCard} className={styles.list} />
         </SectionStyle>
       </ListWrapper>
-      <Link href='https://testingTheDeadLinkGithubHook.com' style={{ visibility: 'hidden' }} />
+      <Link
+        href='https://testingTheDeadLinkGithubHook.com'
+        style={{ visibility: 'hidden' }}
+      />
     </>
   )
 }

@@ -41,7 +41,7 @@ const Textarea = styled.textarea`
 const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
-  margin: 0;
+  margin: 0 12px;
   ${({ $floating }) =>
     $floating &&
     `

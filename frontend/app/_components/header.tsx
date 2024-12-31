@@ -55,12 +55,12 @@ export default function Header() {
   const pathName = usePathname()
 
   const links: NavLink[] = [
-    { href: '/profile', label: user.username, requiresAuth: true },
-    { href: '/login', label: 'Login', requiresAuth: false, requiresNoAuth: true },
+    { href: '/profile', label: user.username, withAuth: true },
+    { href: '/login', label: 'Login', withAuth: false, requiresNoAuth: true },
     {
       href: '/register',
       label: 'Register',
-      requiresAuth: false,
+      withAuth: false,
       requiresNoAuth: true,
     },
   ]
@@ -90,8 +90,8 @@ export default function Header() {
         </LeftBlock>
 
         <RightBlock>
-          {links.map(({ href, label, requiresAuth, requiresNoAuth }) => {
-            if (requiresAuth && !user.id) return null
+          {links.map(({ href, label, withAuth, requiresNoAuth }) => {
+            if (withAuth && !user.id) return null
             if (requiresNoAuth && user.id) return null
             return (
               <LinkWrapper key={`${href}-${label}`}>

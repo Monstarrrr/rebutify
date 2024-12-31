@@ -20,8 +20,7 @@ const StyledButton = styled('button')<{
   cursor: ${(props) =>
     props.disabled || props.$success ? 'not-allowed' : 'pointer'};
 
-  ${(props) =>
-    props.$size === 'min' ? `min-width: 100%;` : `width: fit-content;`}
+  ${(props) => (props.$size === 'max' ? `width: 100%;` : `width: fit-content;`)}
 `
 
 export default function Button(props: ButtonProps) {

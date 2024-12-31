@@ -1,6 +1,6 @@
 export type NavLink = {
   label: string
   href: string
-  requiresAuth: boolean
+  withAuth: boolean
   requiresNoAuth?: boolean
 }

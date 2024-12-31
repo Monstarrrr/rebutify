@@ -6,14 +6,14 @@ export const getPosts = async (
 ) => {
   try {
     if (type !== 'argument' && parentId === undefined) {
-      console.error(`parentId is required for getting ${type}s`)
+      throw new Error(`parentId is required for getting ${type}s`)
     }
     const response = await api.get(`api/posts/`, {
       params: {
         parentId,
         type,
       },
-      requiresAuth: true,
+      withAuth: true,
     })
     return response.data.results
   } catch (error: any) {

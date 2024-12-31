@@ -7,7 +7,7 @@ export const editPost = async (
 ) => {
   try {
     const response = await api.post(`${postType}/${postId}/edit/`, formData, {
-      requiresAuth: true,
+      withAuth: true,
     })
     return response.data
   } catch (error: any) {

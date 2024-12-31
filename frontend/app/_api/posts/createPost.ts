@@ -17,7 +17,7 @@ export const createPost = async (
         parentId,
       },
       {
-        requiresAuth: true,
+        withAuth: true,
       },
     )
     return res

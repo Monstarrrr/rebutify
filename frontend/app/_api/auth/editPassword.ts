@@ -15,7 +15,7 @@ export const editPassword = async (
         current_password: currentPassword,
       },
       {
-        requiresAuth: true,
+        withAuth: true,
       },
     )
     return res
