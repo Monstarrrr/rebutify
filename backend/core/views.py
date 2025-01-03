@@ -431,12 +431,12 @@ class PostViewSet(viewsets.ModelViewSet):
         if type == "argument":
             if not self.request.user.is_authenticated:
                 # If user is not authenticated, only show non-shadow posts
-                queryset = queryset.filter(isShadow=False)
+                queryset = queryset.filter(isPending=False)
             else:
                 # For arguments, show non-shadow posts plus user's shadow posts
                 queryset = queryset.filter(
-                    Q(isShadow=False)
-                    | Q(isShadow=True, ownerUserId=self.request.user.id)
+                    Q(isPending=False)
+                    | Q(isPending=True, ownerUserId=self.request.user.id)
                 )
 
         if parentId:
@@ -445,10 +445,10 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        is_shadow = serializer.validated_data.get("type") == "argument"
+        is_pending = serializer.validated_data.get("type") == "argument"
 
         post: Post = serializer.save(
-            ownerUserId=self.request.user.id, isShadow=is_shadow
+            ownerUserId=self.request.user.id, isPending=is_pending
         )
 
         # Get or create user profile

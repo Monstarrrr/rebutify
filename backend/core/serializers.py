@@ -149,6 +149,7 @@ class PostSerializer(serializers.ModelSerializer):
             "upvotes",
             "downvotes",
             "followers",
+            "isPending",
             "ownerUser",
         ]
         read_only_fields = [
