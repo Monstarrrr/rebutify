@@ -146,11 +146,6 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             icon={<Icon label='arrow' />}
           />
           <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
-          <Button
-            onClick={handleVote('down')}
-            styles={{ background: 'transparent' }}
-            icon={<Icon label='arrow' direction='down' />}
-          />
         </VoteContainer>
         <InnerStyle>
           <ContentStyle>
