@@ -10,13 +10,7 @@ export default function List<T extends type.Identifiable>({
   styles,
   className,
   layoutClassName,
-}: type.ListProps<T & { updated?: string }>) {
-  const sortedItems = [...items].sort((a, b) => {
-    if (a.updated && b.updated) {
-      return new Date(b.updated).getTime() - new Date(a.updated).getTime()
-    }
-    return 0 // Keep the items order unchanged if "updated" is missing
-  })
+}: type.ListProps<T>) {
   return (
     <ul
       style={{
@@ -27,7 +21,7 @@ export default function List<T extends type.Identifiable>({
       }}
       className={className}
     >
-      {sortedItems.map((item) => (
+      {items.map((item) => (
         <Layout layoutClassName={layoutClassName} key={item.id} item={item} />
       ))}
     </ul>

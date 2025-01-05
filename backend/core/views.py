@@ -442,6 +442,8 @@ class PostViewSet(viewsets.ModelViewSet):
         if parentId:
             queryset = queryset.filter(parentId=parentId)
 
+        queryset = queryset.order_by("-created")
+
         return queryset
 
     def perform_create(self, serializer):
