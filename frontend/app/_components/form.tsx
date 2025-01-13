@@ -38,7 +38,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
+const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px;
@@ -89,12 +89,22 @@ export default function Form(props: FormProps) {
         ),
       )
     }
+  }, [formId])
+
+  // Reset form on success
+  useEffect(() => {
+    if (success) {
+      localStorage.removeItem(formId)
+      setInputsState(inputsFields)
+    }
     return () => {
       setGlobalFormErrors(null)
       if (success) {
         localStorage.removeItem(formId)
+        setInputsState(inputsFields)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, success])
 
   // Currently, only reason we update the state is to cache the fields values

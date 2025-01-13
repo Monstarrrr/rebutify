@@ -88,7 +88,7 @@ export default function RootLayout({ children }: PropsType) {
                   fontStyle: 'italic',
                 }}
               >
-                Prototype (v0.1.0)
+                Prototype (v0.1)
               </span>
             </div>
 
@@ -96,7 +96,7 @@ export default function RootLayout({ children }: PropsType) {
               className={styles.versionMirror}
               style={{ order: 1, visibility: 'hidden' }}
             >
-              <span>Prototype (v0.1.0)</span>
+              <span>Prototype (v0.1)</span>
             </div>
           </footer>
         </StoreProvider>
