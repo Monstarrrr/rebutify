@@ -27,6 +27,7 @@ api.interceptors.request.use(
     if (req.withAuth) {
       const accessToken = localStorage.getItem('access_token')
       const refreshToken = localStorage.getItem('refresh_token')
+
       if (
         accessToken &&
         accessToken !== 'null' &&
@@ -73,10 +74,10 @@ api.interceptors.request.use(
       error?.reponse?.data?.detail ??
         error?.response?.data ??
         error?.response ??
-        error,
+        error
     )
     return Promise.reject(error)
-  },
+  }
 )
 
 // On response
@@ -95,7 +96,7 @@ api.interceptors.response.use(
     if (res.headers['authorization']?.includes('Bearer')) {
       localStorage.setItem(
         'access_token',
-        res.headers['authorization'].split(' ')[1],
+        res.headers['authorization'].split(' ')[1]
       )
     }
 
@@ -108,9 +109,9 @@ api.interceptors.response.use(
       error?.reponse?.data?.detail ??
         error?.response?.data ??
         error?.response ??
-        error,
+        error
     )
     return Promise.reject(error)
-  },
+  }
 )
 export default api
