@@ -8,16 +8,6 @@ export default function isTokenExpired(token: string): boolean {
 
   if (!decoded.exp) {
     throw new Error('Token has no expiration date')
-  } else {
-    // log only the minutes and seconds of the current date and the expiration date
-    console.log(
-      'Current time: ',
-      new Date(currentTime * 1000).toISOString().substr(14, 5),
-    )
-    console.log(
-      'Token expiration: ',
-      new Date(decoded.exp * 1000).toISOString().substr(14, 5),
-    )
   }
   return currentTime > decoded.exp
 }

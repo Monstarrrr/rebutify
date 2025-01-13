@@ -38,7 +38,7 @@ const Textarea = styled.textarea`
   ${InputStyles}
 `
 
-const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
+const ButtonWrapper = styled('div') <{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
   margin: 0 12px;
