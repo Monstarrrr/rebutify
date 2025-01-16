@@ -3,7 +3,8 @@ import { FormEvent, useState } from 'react'
 import { Form, Button } from '@/components'
 import { TextInput } from '@/types'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
-import { SectionStyle } from '@/styles'
+// eslint-disable-next-line no-restricted-imports
+import styles from './page.module.scss'
 import { AxiosResponse } from 'axios'
 import { requestPasswordReset } from '@/api/auth'
 import Link from 'next/link'
@@ -11,7 +12,8 @@ import Link from 'next/link'
 const forgotPasswordInputs: TextInput[] = [
   {
     id: 'email',
-    placeholder: 'Email',
+    placeholder: 'your@email.com',
+    label: 'Email',
     type: 'email',
     value: '',
   },
@@ -52,7 +54,7 @@ export default function Forgot() {
   return (
     <>
       <h1 style={{ marginBottom: '12px' }}>Forgot Password</h1>
-      <SectionStyle>
+      <div className={styles.container}>
         <Form
           id='forgot-password-form'
           inputsFields={forgotPasswordInputs}
@@ -67,9 +69,10 @@ export default function Forgot() {
             success={success}
             loading={loading}
             label={submitButtonLabel}
+            className={styles.button}
           />
         </Form>
-      </SectionStyle>
+      </div>
       <div style={{ marginTop: '8px' }}>
         <Link href='/login' style={{ color: 'grey' }}>
           Back to login

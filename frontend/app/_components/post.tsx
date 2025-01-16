@@ -1,23 +1,17 @@
 'use client'
+import * as type from '@/types'
+import React, { FormEvent, useState } from 'react'
 import { vote } from '@/api/vote'
 import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
-import * as type from '@/types'
-import React, { FormEvent, useState } from 'react'
 import { Button, Form, Icon, LoginBlocker, Comments, Follow } from '@/components'
 import { useRouter } from 'next/navigation'
-import {
-  ActionsStyle,
-  ContentStyle,
-  InnerStyle,
-  PostContainer,
-  VoteContainer,
-  VoteValue,
-} from '@/components/postStyles'
+import { ContentStyle, VoteValue } from '@/components/postStyles'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
-import { SectionStyle } from '@/styles'
 import { AxiosResponse } from 'axios'
+// eslint-disable-next-line no-restricted-imports
+import styles from './post.module.scss'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -138,16 +132,16 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   }
   return (
     <>
-      <PostContainer>
-        <VoteContainer>
+      <div className={styles.postContainer}>
+        <div className={styles.leftContainer}>
           <Button
             onClick={handleVote('up')}
             styles={{ background: 'transparent' }}
             icon={<Icon label='arrow' />}
           />
           <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
-        </VoteContainer>
-        <InnerStyle>
+        </div>
+        <div className={styles.rightContainer}>
           <ContentStyle>
             {post.type == 'argument' && post.title && (
               <div>
@@ -155,7 +149,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               </div>
             )}
             {isEditingBody ? (
-              <SectionStyle>
+              <div className={styles.editPost}>
                 <Form
                   id={`editPost-${post.id}`}
                   inputsFields={[
@@ -184,51 +178,51 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                     transparent
                   />
                 </Form>
-              </SectionStyle>
+              </div>
             ) : (
               <p>{post.body}</p>
             )}
           </ContentStyle>
           {/* Actions */}
-          <ActionsStyle>
-            {user.id === post.ownerUserId && (
-              <>
-                {!isEditingBody && (
+          {user.id && (
+            <div className={styles.actionsContainer}>
+              {user.id === post.ownerUserId && (
+                <>
+                  {!isEditingBody && (
+                    <div>
+                      <Button
+                        label='Edit'
+                        transparent
+                        onClick={() => setIsEditingBody(!isEditingBody)}
+                      />
+                    </div>
+                  )}
                   <div>
                     <Button
-                      label='Edit'
+                      label='Delete'
                       transparent
-                      onClick={() => setIsEditingBody(!isEditingBody)}
+                      onClick={() => handleDelete(post.id)}
                     />
                   </div>
-                )}
-                <div>
-                  <Button
-                    label='Delete'
-                    transparent
-                    onClick={() => handleDelete(post.id)}
-                  />
-                </div>
-              </>
-            )}
-            {user.id && (
+                </>
+              )}
               <Follow
                 postId={post.id}
                 undo={user.followedPosts.includes(post.id) ? true : false}
               />
-            )}
-            <br />
-            {voteError && post.ownerUserId !== user.id && (
-              <LoginBlocker action={'vote'} />
-            )}
-            {voteError && post.ownerUserId === user.id && (
-              <span style={{ color: 'red', flexBasis: '100%' }}>
-                You cannot vote on your own {post.type}{' '}
-              </span>
-            )}
-          </ActionsStyle>
+              <br />
+              {voteError && post.ownerUserId !== user.id && (
+                <LoginBlocker action={'vote'} />
+              )}
+              {voteError && post.ownerUserId === user.id && (
+                <span style={{ color: 'red', flexBasis: '100%' }}>
+                  You cannot vote on your own {post.type}{' '}
+                </span>
+              )}
+            </div>
+          )}
           {/* Comments */}
-          <SectionStyle>
+          <div className={styles.commentsContainer}>
             <Comments
               setComments={setComments}
               comments={comments}
@@ -269,9 +263,9 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             ) : (
               <LoginBlocker action={'comment'} />
             )}
-          </SectionStyle>
-        </InnerStyle>
-      </PostContainer>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

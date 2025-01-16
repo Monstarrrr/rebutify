@@ -1,0 +1,18 @@
+.label {
+  display: block;
+  color: var(--color-accent);
+  margin-bottom: 4px;
+}
+.input {
+  background-color: var(--color-primary-weak);
+  border: 2px solid var(--color-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--color-secondary-weaker);
+    font-style: italic;
+  }
+}

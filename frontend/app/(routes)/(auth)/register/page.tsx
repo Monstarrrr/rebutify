@@ -8,8 +8,10 @@ import { register } from '@/api/auth/register'
 import { useAppSelector } from '@/store/hooks'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/button'
-import { SectionStyle } from '@/styles'
+// eslint-disable-next-line no-restricted-imports
+import styles from './page.module.scss'
 import { AxiosResponse } from 'axios'
+import Link from 'next/link'
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -56,7 +58,7 @@ export default function Register() {
       const { data } = await register(formData)
       setIsLoading(false)
       console.log(`# data FROM REGISTER :`, data)
-      setFormSuccess("Account created, check your email.")
+      setFormSuccess('Account created, check your email.')
     } catch (error: any) {
       setIsLoading(false)
       setApiFormErrors(
@@ -73,7 +75,7 @@ export default function Register() {
   return (
     <>
       <h1 style={{ marginBottom: '12px' }}>Register</h1>
-      <SectionStyle>
+      <div className={styles.container}>
         <Form
           id='register-form'
           loading={isLoading}
@@ -88,9 +90,15 @@ export default function Register() {
             label={'Register'}
             success={formSuccess}
             loading={isLoading}
+            className={styles.button}
           />
         </Form>
-      </SectionStyle>
+      </div>
+      <div style={{ marginTop: '8px' }}>
+        <Link href='/login' style={{ color: 'grey' }}>
+          Already have an account?
+        </Link>
+      </div>
     </>
   )
 }

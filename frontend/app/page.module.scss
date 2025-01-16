@@ -1,0 +1,77 @@
+.outerContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+
+  @media screen and (min-width: 768px) {
+    max-width: max-content;
+    padding: 38px;
+    min-width: 700px;
+    width: auto;
+  }
+}
+.innerContainer {
+  border-radius: 0%;
+  padding: 12px;
+
+  @media screen and (min-width: 768px) {
+    border-radius: 14px;
+  }
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0;
+}
+
+.formContainer {
+  padding: 12px;
+}
+
+.title {
+  margin: 0 16px 24px;
+}
+
+.hintText {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.search {
+  margin: 0 12px;
+  padding: 0 0 24px 0;
+  border-bottom: 2px solid var(--color-secondary-transparent);
+}
+
+.createBtn {
+  margin: 0 0 12px 0;
+}
+.cancelBtn {
+  margin: 12px 0;
+}
+
+.resultsInfoContainer {
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsCounter {
+  color: var(--color-secondary-weak);
+  font-size: 16px;
+}
+
+.h2 {
+  margin: 0 auto 28px;
+  margin-top: 12px;
+}
+
+.argumentTextArea {
+  min-height: 100px;
+  @media screen and (min-width: 768px) {
+    min-height: auto;
+  }
+}

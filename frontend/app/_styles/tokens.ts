@@ -10,25 +10,31 @@ export const mediaQuery = breakpoints.map((bp) => `@media (min-width: ${bp}px)`)
 export const mediaQueries = facepaint(mediaQuery, { overlap: true })
 
 export const config = {
-  primaryColor: 'rgba(2, 0, 71, 1)', // #020047
-  primaryColorTransparent: 'rgba(10, 14, 77, 0.3)',
-  secondaryColor: 'rgba(20, 122, 165, 1)', // #147aa5
-  secondaryColorTransparent: 'rgba(20,122,165, 0.35)',
-  accentColorStrong: '#15f1ff',
-  accentColorWeak: '#205088',
-  accentColorTransparent: 'rgba(21, 241, 255, 0.4)',
+  primary: 'rgb(66, 66, 66)',
+  primaryWeak: 'rgb(34, 34, 34)',
+  primaryWeaker: 'rgb(8, 8, 8)',
+  primaryTransparent: '',
+  primaryContrast: '',
+  primaryContrastWeak: '',
 
-  lightContrastColor: '#F2F2F2',
-  lightContrastColorWeak: '#bbbbbb',
-  darkContrastColor: '#0e1014',
-  lightTransparentColor: `rgba(255, 255, 255, 0.1)`,
-  semiLightTransparentColor: `rgba(255, 255, 255, 0.2)`,
+  secondary: 'rgb(236, 236, 236)',
+  secondaryWeaker: 'rgb(172, 172, 172)',
+  secondaryTransparent: '',
+  secondaryContrast: '',
+  secondaryContrastWeak: '',
 
-  successColor: '#198754',
-  infoColor: '#141270',
-  inactiveColor: '#9d9ccc',
-  warningColor: '#ffc107',
-  errorColor: '#dc3545',
+  accent: 'rgb(164, 252, 0)',
+  accentWeak: '',
+  accentTransparent: '',
+
+  transparent: `rgba(255, 255, 255, 0.1)`,
+  transparentWeak: `rgba(255, 255, 255, 0.2)`,
+
+  success: 'rgb(164, 252, 0)',
+  info: '#141270',
+  inactive: '#9d9ccc',
+  warning: '#ffc107',
+  error: '#dc3545',
 
   xsFontsize: '14px',
   smFontsize: '16px',
@@ -62,30 +68,36 @@ export const config = {
 export const tokens = {
   color: {
     // GENERAL
-    primary: `${config.primaryColor}`,
-    primaryTransparent: `${config.primaryColorTransparent}`,
-    secondary: `${config.secondaryColor}`,
-    secondaryTransparent: `${config.secondaryColorTransparent}`,
-    accentStrong: `${config.accentColorStrong}`,
-    accentWeak: `${config.accentColorWeak}`,
-    accentTransparent: `${config.accentColorTransparent}`,
+    primary: `${config.primary}`,
+    primaryWeak: `${config.primaryWeak}`,
+    primaryWeaker: `${config.primaryWeaker}`,
+    primaryTransparent: `${config.primaryTransparent}`,
+    primaryContrast: `${config.primaryContrast}`,
+    primaryContrastWeak: `${config.primaryContrastWeak}`,
 
-    contrastLight: `${config.lightContrastColor}`,
-    contrastLightWeak: `${config.lightContrastColorWeak}`,
-    contrastDark: `${config.darkContrastColor}`,
-    transparentLight: `${config.lightTransparentColor}`,
-    semiTransparentLight: `${config.semiLightTransparentColor}`,
-    transparent: `rgba(0, 0, 0, 0)`,
+    secondary: `${config.secondary}`,
+    secondaryWeak: `${config.secondaryWeaker}`,
+    secondaryTransparent: `${config.secondaryTransparent}`,
+    accent: `${config.accent}`,
 
-    success: `${config.successColor}`,
-    info: `${config.infoColor}`,
-    inactive: `${config.inactiveColor}`,
-    warning: `${config.warningColor}`,
-    error: `${config.errorColor}`,
+    accentWeak: `${config.accentWeak}`,
+    accentTransparent: `${config.accentTransparent}`,
+
+    contrastDark: `${config.secondaryContrast}`,
+    contrastDarkWeak: `${config.secondaryContrastWeak}`,
+
+    transparentLight: `${config.transparent}`,
+    semiTransparentLight: `${config.transparentWeak}`,
+
+    success: `${config.success}`,
+    info: `${config.info}`,
+    inactive: `${config.inactive}`,
+    warning: `${config.warning}`,
+    error: `${config.error}`,
 
     // SPECIFIC
-    titleColor: `${config.lightContrastColor}`,
-    paragraphColor: `${config.lightTransparentColor}`,
+    title: `${config.primaryContrast}`,
+    paragraph: `${config.primaryContrastWeak}`,
   },
 
   spacing: {

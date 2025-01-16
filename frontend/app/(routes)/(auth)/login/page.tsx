@@ -8,7 +8,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
 import { useRouter } from 'next/navigation'
 import { login, fetchUserInfo } from '@/api/auth'
-import { SectionStyle } from '@/styles'
+// eslint-disable-next-line no-restricted-imports
+import styles from './page.module.scss'
 import { AxiosResponse } from 'axios'
 import Link from 'next/link'
 
@@ -16,12 +17,14 @@ const loginInputs: TextInput[] = [
   {
     id: 'username',
     placeholder: 'Username',
+    inputClassName: styles.input,
     value: '',
   },
   {
     id: 'password',
     placeholder: 'Password',
     type: 'password',
+    inputClassName: styles.input,
     value: '',
   },
 ]
@@ -73,7 +76,7 @@ export default function Login() {
   return (
     <>
       <h1 style={{ marginBottom: '12px' }}>Login</h1>
-      <SectionStyle>
+      <div className={styles.container}>
         <Form
           id='login-form'
           inputsFields={loginInputs}
@@ -83,9 +86,14 @@ export default function Login() {
           success={success}
           setSuccess={setSuccess}
         >
-          <Button size='max' loading={loading} label={submitButtonLabel} />
+          <Button
+            size='max'
+            loading={loading}
+            label={submitButtonLabel}
+            className={styles.button}
+          />
         </Form>
-      </SectionStyle>
+      </div>
       <div style={{ marginTop: '8px' }}>
         <Link href='/forgot' style={{ color: 'grey' }}>
           Forgot password

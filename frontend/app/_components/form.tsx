@@ -1,10 +1,11 @@
 'use client'
-import { mediaQuery } from '@/styles/tokens'
+import { mediaQuery, tokens } from '@/styles/tokens'
 import { ServerErrorMessage } from '@/helpers'
-import { SectionStyle } from '@/styles'
 import { FormProps, TextInput } from '@/types'
 import { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
+// eslint-disable-next-line no-restricted-imports
+import styles from './form.module.scss'
 
 const StyledForm = styled.form`
   width: 100%;
@@ -13,7 +14,7 @@ const StyledForm = styled.form`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   &:last-child {
     margin-bottom: 0;
   }
@@ -22,32 +23,15 @@ const Label = styled.label`
   margin-bottom: 4px;
 `
 
-const InputStyles = `
-  background-color: #1f1f1f;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  padding: 12px 20px;
-`
-
-const Input = styled.input`
-  ${InputStyles}
-`
-
-const Textarea = styled.textarea`
-  ${InputStyles}
-`
-
 const ButtonWrapper = styled('div')<{ $floating?: boolean }>`
   display: flex;
   gap: 8px;
-  margin: 0 12px;
   ${({ $floating }) =>
     $floating &&
     `
       margin: 16px 0 0 0;
       ${mediaQuery[1]} {
-        margin: 16px 16px 0 0;
+        margin: 16px 0 0 0;
       }
     `}
 `
@@ -219,7 +203,7 @@ export default function Form(props: FormProps) {
 
   return (
     <StyledForm onSubmit={onSubmit}>
-      <SectionStyle>
+      <div className={styles.inputsContainer}>
         {inputsState.map(
           ({
             id,
@@ -229,29 +213,33 @@ export default function Form(props: FormProps) {
             value = '',
             errors,
             required = false,
-            className,
+            inputClassName,
           }) => (
             <InputContainer key={id}>
               {label && (
                 <Label htmlFor={id}>
-                  <span style={{ marginRight: '4px', color: '#acacac' }}>
+                  <span
+                    style={{ marginRight: '3px', color: tokens.color.accent }}
+                  >
                     {label || placeholder}
                   </span>
-                  <span style={{ color: 'red' }}>{required ? '*' : ''}</span>
+                  <span style={{ color: tokens.color.accent }}>
+                    {required ? '*' : ''}
+                  </span>
                 </Label>
               )}
               {type === 'textarea' ? (
-                <Textarea
+                <textarea
                   disabled={loading}
                   name={id}
                   placeholder={placeholder}
                   required={required || true}
                   onChange={handleChange}
                   value={value}
-                  className={className}
+                  className={`${styles.textarea} ${inputClassName ?? ''}`}
                 />
               ) : (
-                <Input
+                <input
                   disabled={loading}
                   name={id}
                   placeholder={placeholder}
@@ -259,7 +247,7 @@ export default function Form(props: FormProps) {
                   onChange={handleChange}
                   value={value}
                   type={type || 'text'}
-                  className={className}
+                  className={`${styles.input} ${inputClassName ?? ''}`}
                 />
               )}
               {/* Field errors */}
@@ -289,7 +277,7 @@ export default function Form(props: FormProps) {
               </>
             ))
           ))}
-      </SectionStyle>
+      </div>
       <ButtonWrapper
         onClick={() => setGlobalFormErrors(null)}
         $floating={floating}

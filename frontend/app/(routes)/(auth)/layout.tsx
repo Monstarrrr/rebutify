@@ -1,18 +1,7 @@
 import React from 'react'
+// eslint-disable-next-line no-restricted-imports
+import styles from './layout.module.scss'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'calc(100dvh - 51px - 24px - 48px - 24px)',
-        background: '#1f1f1f',
-      }}
-    >
-      {children}
-    </div>
-  )
+  return <div className={styles.container}>{children}</div>
 }

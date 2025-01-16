@@ -5,7 +5,8 @@ import { TextInput } from '@/types'
 import { formDataToObj } from '@/helpers'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
-import { SectionStyle } from '@/styles'
+// eslint-disable-next-line no-restricted-imports
+import styles from './confirmresetpassword.module.scss'
 import api from '@/api/api'
 
 const resetPasswordInputs: TextInput[] = [
@@ -66,7 +67,7 @@ export default function ConfirmResetPassword() {
   return (
     <>
       <h1 style={{ marginBottom: '12px' }}>Reset Password</h1>
-      <SectionStyle>
+      <div className={styles.container}>
         {error ? (
           <div style={{ color: 'red' }}>{error}</div>
         ) : (
@@ -82,7 +83,7 @@ export default function ConfirmResetPassword() {
             <Button size='max' loading={loading} label='Reset Password' />
           </Form>
         )}
-      </SectionStyle>
+      </div>
     </>
   )
 }

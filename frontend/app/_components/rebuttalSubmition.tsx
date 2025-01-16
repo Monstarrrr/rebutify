@@ -7,16 +7,18 @@ import { createPost } from '@/api/posts'
 import { Form, Button } from '@/components'
 import { useState } from 'react'
 import { formDataToObj } from '@/helpers'
-import { H2, SectionStyle } from '@/styles'
+import { H2 } from '@/styles'
 import { useAppSelector } from '@/store/hooks'
 import { LoginBlocker } from '@/components'
+// eslint-disable-next-line no-restricted-imports
+import styles from './rebuttalSubmition.module.scss'
 
 const newRebuttalInput: TextInput[] = [
   {
     id: 'body',
     label: '',
     placeholder:
-      'There is nothing so special about human existence that animals should have to die for us to exist ...',
+      'What makes it wrong to hurt cats but not cows, pigs, or chickens?',
     type: 'textarea',
     value: '',
   },
@@ -57,9 +59,9 @@ export default function RebuttalSubmition({ argument, setRebuttals }: Props) {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <H2>Your rebuttal</H2>
-      <SectionStyle>
+      <div className={styles.wrapper}>
         {user.id ? (
           <Form
             id='new-rebuttal'
@@ -70,12 +72,17 @@ export default function RebuttalSubmition({ argument, setRebuttals }: Props) {
             success={success}
             setSuccess={setSuccess}
           >
-            <Button loading={loading} label={'Submit'} success={success} />
+            <Button
+              loading={loading}
+              label={'Submit'}
+              className={styles.submitBtn}
+              success={success}
+            />
           </Form>
         ) : (
           <LoginBlocker action={'submit a rebuttal'} />
         )}
-      </SectionStyle>
+      </div>
     </div>
   )
 }

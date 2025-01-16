@@ -6,7 +6,7 @@ import { Header, ClientInitializer } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 // eslint-disable-next-line no-restricted-imports
-import styles from './layout.module.css'
+import styles from './layout.module.scss'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -33,17 +33,12 @@ type PropsType = Readonly<{
   children: ReactNode
 }>
 
-const LinkStyle = {
-  margin: '0 6px',
-  color: '#fff',
-  textDecoration: 'none',
-}
 const LinkLabel = { textDecoration: 'underline', fontStyle: 'normal' }
 
 export default function RootLayout({ children }: PropsType) {
   return (
     <html lang='en'>
-      <body className={inter.className} style={{ background: '#0f0f0f' }}>
+      <body className={inter.className}>
         <StoreProvider>
           <ClientInitializer />
           <Header />
@@ -62,21 +57,21 @@ export default function RootLayout({ children }: PropsType) {
               <br />
 
               <Link
-                style={LinkStyle}
+                className={styles.link}
                 href='https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI'
               >
                 <span style={LinkLabel}>About</span>
               </Link>
-              <Link style={LinkStyle} href='https://discord.gg/QHNutWjpHy'>
+              <Link className={styles.link} href='https://discord.gg/QHNutWjpHy'>
                 <span style={LinkLabel}>Discord</span>
               </Link>
               <Link
-                style={LinkStyle}
+                className={styles.link}
                 href='https://github.com/Monstarrrr/rebutify'
               >
                 <span style={LinkLabel}>Source Code</span>
               </Link>
-              <Link style={LinkStyle} href='/privacy'>
+              <Link className={styles.link} href='/privacy'>
                 <span style={LinkLabel}>Privacy</span>
               </Link>
             </div>

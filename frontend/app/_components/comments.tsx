@@ -8,13 +8,8 @@ import { useAppSelector } from '@/store/hooks'
 import { Button } from '@/components'
 import { AxiosResponse } from 'axios'
 import { ServerErrorMessage } from '@/helpers'
-
-const CommentSectionStyle = styled.div`
-  background-color: #353535;
-  border-radius: 14px;
-  padding: 8px;
-  margin-bottom: 8px;
-`
+// eslint-disable-next-line no-restricted-imports
+import styles from './comments.module.scss'
 
 const AuthorStyle = styled.span`
   opacity: 0.7;
@@ -85,7 +80,7 @@ export default function Comments({
   }
 
   return (
-    <CommentSectionStyle>
+    <div className={styles.container}>
       {comments.length === 0 ? (
         commentsLoading ? (
           <p>Loading comments...</p>
@@ -131,6 +126,6 @@ export default function Comments({
           </div>
         ))
       )}
-    </CommentSectionStyle>
+    </div>
   )
 }

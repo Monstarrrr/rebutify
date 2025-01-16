@@ -1,0 +1,12 @@
+.container {
+  background: var(--color-primary-weak);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100dvh - 51px - 24px - 48px - 38px);
+
+  @media (min-width: 576px) {
+    height: calc(100dvh - 51px - 24px - 48px - 18px);
+  }
+}

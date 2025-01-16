@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react'
 import { RebuttalSubmition, List, Post } from '@/components'
 import * as type from '@/types/Post'
 import { getPosts } from '@/api/posts'
-import { SectionStyle, EmptySectionStyle, H2 } from '@/styles'
+import { EmptySectionStyle, H2 } from '@/styles'
+// eslint-disable-next-line no-restricted-imports
+import styles from './page.module.scss'
 
 type Props = {
   params: {
@@ -43,14 +45,16 @@ export default function Argument(props: Props) {
         <>
           <Post item={argument} />
 
-          <H2>Rebuttals</H2>
-          <SectionStyle>
-            {rebuttals.length === 0 ? (
-              <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>
-            ) : (
-              <List items={rebuttals} Layout={Post} />
-            )}
-          </SectionStyle>
+          <div className={styles.rebuttalsContainer}>
+            <H2>Rebuttals</H2>
+            <div className={styles.rebuttalsWrapper}>
+              {rebuttals.length === 0 ? (
+                <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>
+              ) : (
+                <List items={rebuttals} Layout={Post} />
+              )}
+            </div>
+          </div>
 
           <RebuttalSubmition setRebuttals={setRebuttals} argument={argument} />
         </>

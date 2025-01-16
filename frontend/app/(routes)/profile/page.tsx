@@ -14,7 +14,7 @@ import { Button, Form, List, PostCard } from '@/components'
 import { H2, H3 } from '@/styles'
 import { mediaQuery } from '@/styles/tokens'
 // eslint-disable-next-line no-restricted-imports
-import styles from './page.module.css'
+import styles from './page.module.scss'
 
 const Container = styled.div`
   display: flex;
@@ -41,12 +41,6 @@ const Title = styled.h1`
   font-size: 3.51rem;
 `
 
-const H2Section = styled.div`
-  background-color: #353535;
-  border-radius: 14px;
-  padding: 24px;
-`
-
 const H3Section = styled.div`
   padding-bottom: 34px;
 
@@ -64,6 +58,7 @@ export default function Profile() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user)
   const [argumentsList, setArgumentsList] = useState<Post[]>([])
+  const [rebuttalsList, setRebuttalsList] = useState<Post[]>([])
 
   const [deleteAccError, setDeleteAccError] = useState<AxiosResponse | null>(null)
   const [deleteAccLoading, setDeleteAccLoading] = useState(false)
@@ -93,6 +88,10 @@ export default function Profile() {
         response = response.filter((post: Post) => post.ownerUserId === user.id)
         console.log(`# response :`, response)
         setArgumentsList(response)
+
+        let rebuttals = await getPosts('rebuttal')
+        rebuttals = rebuttals.filter((post: Post) => post.ownerUserId === user.id)
+        setRebuttalsList(rebuttals)
       } catch (error: any) {
         console.error(
           '# Error fetching posts: ',
@@ -178,7 +177,7 @@ export default function Profile() {
       <Container>
         <Left>
           <H2>My info</H2>
-          <H2Section>
+          <div className={styles.userInfoContainer}>
             <table>
               <tbody>
                 <tr>
@@ -203,10 +202,10 @@ export default function Profile() {
                 </tr>
               </tbody>
             </table>
-          </H2Section>
+          </div>
 
           <H2>Settings</H2>
-          <H2Section>
+          <div className={styles.settingsContainer}>
             <H3>Change email</H3>
             <Hr />
             <H3Section>
@@ -326,23 +325,52 @@ export default function Profile() {
                 />
               </Form>
             </H3Section>
-          </H2Section>
+          </div>
         </Left>
         <Right>
           <H2>My posts</H2>
-          <H2Section>
+          <div className={styles.resultsInfoContainer}>
+            <p>
+              <b>Rebuttals:</b> {rebuttalsList.length}
+            </p>
+            <p>
+              <b>Arguments:</b> {argumentsList.length}
+            </p>
+          </div>
+          <div className={styles.postsContainer}>
             {argumentsList.length === 0 ? (
               <p style={{ textAlign: 'center', fontStyle: 'italic' }}>
                 No posts yet
               </p>
             ) : (
-              <List
-                items={argumentsList}
-                Layout={PostCard}
-                layoutClassName={styles.postCard}
-              />
+              <>
+                {rebuttalsList.length !== 0 && (
+                  <div>
+                    <h3 style={{ marginBottom: '6px', marginLeft: '12px' }}>
+                      Rebuttals
+                    </h3>
+                    <List
+                      items={rebuttalsList}
+                      Layout={PostCard}
+                      layoutClassName={styles.postCard}
+                    />
+                  </div>
+                )}
+                {argumentsList.length !== 0 && (
+                  <div>
+                    <h3 style={{ marginBottom: '6px', marginLeft: '12px' }}>
+                      Arguments
+                    </h3>
+                    <List
+                      items={argumentsList}
+                      Layout={PostCard}
+                      layoutClassName={styles.postCard}
+                    />
+                  </div>
+                )}
+              </>
             )}
-          </H2Section>
+          </div>
         </Right>
       </Container>
     </>

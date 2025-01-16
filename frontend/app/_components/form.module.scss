@@ -1,0 +1,23 @@
+.inputsContainer {
+  border-radius: 14px;
+  padding: 0;
+
+  @media screen and (min-width: 768px) {
+    padding: 12px;
+  }
+}
+
+.input,
+.textarea {
+  background-color: var(--color-primary-weak);
+  border: 2px solid var(--color-primary);
+  color: var(--color-secondary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+
+  &::placeholder {
+    color: var(--color-secondary-weaker);
+    font-style: italic;
+  }
+}

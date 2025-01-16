@@ -7,5 +7,5 @@ export type TextInput = {
   required?: boolean
   type?: 'text' | 'textarea' | 'password' | 'email'
   styles?: React.CSSProperties
-  className?: string
+  inputClassName?: string
 }

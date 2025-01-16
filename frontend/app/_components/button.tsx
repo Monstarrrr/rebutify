@@ -1,5 +1,6 @@
 'use client'
 
+import { tokens } from '@/styles/tokens'
 import { ButtonProps } from '@/types'
 import styled from 'styled-components'
 
@@ -11,9 +12,15 @@ const StyledButton = styled('button')<{
   disabled: boolean | string | null
 }>`
   background-color: ${(props) =>
-    props.$success ? '#4CAF50' : props.$transparent ? 'transparent' : '#2196F3'};
-  border: ${(props) => (props.$transparent ? '1px solid #2196F3' : 'none')};
-  color: #fff;
+    props.$success
+      ? tokens.color.success
+      : props.$transparent
+        ? 'transparent'
+        : tokens.color.accent};
+  border: ${(props) =>
+    props.$transparent ? `1px solid ${tokens.color.accent}` : 'none'};
+  color: ${(props) =>
+    props.$transparent ? tokens.color.accent : tokens.color.primaryWeaker};
   font-size: 1rem;
   padding: ${(props) => (props.$icon ? '4px 8px' : '6px 20px;')};
   border-radius: 99px;

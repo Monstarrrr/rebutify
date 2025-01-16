@@ -8,12 +8,18 @@ import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
 import { Button } from '@/components'
-import { mediaQuery } from '@/styles/tokens'
+import { mediaQuery, tokens } from '@/styles/tokens'
+// eslint-disable-next-line no-restricted-imports
+import styles from './header.module.scss'
 
 const Nav = styled.nav`
-  background: #1f1f1f;
+  background: ${tokens.color.primaryWeak};
   display: flex;
-  padding: 12px 32px;
+  padding: 12px 16px;
+
+  ${(mediaQuery[0], mediaQuery[1])} {
+    padding: 12px 32px;
+  }
 `
 
 const LeftBlock = styled.div`
@@ -41,10 +47,6 @@ const BrandLabel = styled.span`
   ${mediaQuery[0]} {
     display: initial;
   }
-`
-
-const LinkWrapper = styled.div`
-  margin: 0 8px;
 `
 
 export default function Header() {
@@ -94,7 +96,7 @@ export default function Header() {
             if (withAuth && !user.id) return null
             if (requiresNoAuth && user.id) return null
             return (
-              <LinkWrapper key={`${href}-${label}`}>
+              <div className={styles.linksWrapper} key={`${href}-${label}`}>
                 <Link href={href}>
                   <Button
                     label={label}
@@ -105,7 +107,7 @@ export default function Header() {
                     transparent={href === '/login' || href === '/profile'}
                   />
                 </Link>
-              </LinkWrapper>
+              </div>
             )
           })}
           {user.id && (

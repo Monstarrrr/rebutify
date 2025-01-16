@@ -1,14 +1,20 @@
 .mainPageWrapper {
-  min-height: initial;
+  min-height: calc(100dvh - 51px - 24px - 48px - 38px);
 
-  @media (min-width: 576px) {
-    min-height: calc(100dvh - 51px - 24px - 48px - 24px);
+  @media (min-width: 768px) {
+    min-height: calc(100dvh - 51px - 24px - 48px - 18px);
   }
+}
+
+.link {
+  margin: 0 6px;
+  color: var(--color-secondary-weak);
+  text-decoration: none;
 }
 
 .footer {
   align-items: center;
-  background: #1f1f1f;
+  background: var(--color-primary-weak);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
