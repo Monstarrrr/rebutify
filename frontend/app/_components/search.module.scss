@@ -3,13 +3,25 @@
   color: var(--color-accent);
   margin-bottom: 4px;
 }
+
+.inputContainer {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+}
+
 .input {
   color: var(--color-secondary);
   background-color: var(--color-primary-weak);
   border: 2px solid var(--color-primary);
-  padding: 8px 12px;
   border-radius: 8px;
   margin-bottom: 12px;
+  padding: 8px 12px;
+  padding-left: 38px;
   width: 100%;
 
   &::placeholder {
