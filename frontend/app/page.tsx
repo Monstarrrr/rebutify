@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { Button, Form, List, PostCard, Search } from '@/components'
 import type { Post } from '@/types'
 import { FormEvent, useEffect, useState } from 'react'
@@ -7,19 +6,11 @@ import { createPost, getPosts } from '@/api/posts'
 // eslint-disable-next-line no-restricted-imports
 import styles from './page.module.scss'
 import { formDataToObj } from '@/helpers'
-
-// const BtnLink = styled(Link)`
-//   background-color: #3d6aff;
-//   border: none;
-//   color: #fff;
-//   font-size: 1.1rem;
-//   padding: 12px 20px;
-//   border-radius: 99px;
-//   cursor: pointer;
-//   text-decoration: none;
-// `
+import { useAppSelector } from '@/store/hooks'
+import Link from 'next/link'
 
 export default function Home() {
+  const user = useAppSelector((state) => state.user)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -113,13 +104,23 @@ export default function Home() {
               ) : (
                 <p className={styles.hintText}>Can&apos;t find it?</p>
               )}
-              <Button
-                label={isFormActive ? 'Cancel' : 'Create argument'}
-                transparent={isFormActive}
-                size='max'
-                className={isFormActive ? styles.cancelBtn : styles.createBtn}
-                onClick={handleToggleForm}
-              />
+              {user.id ? (
+                <Button
+                  label={isFormActive ? 'Cancel' : 'Create argument'}
+                  transparent={isFormActive}
+                  size='max'
+                  className={isFormActive ? styles.cancelBtn : styles.createBtn}
+                  onClick={handleToggleForm}
+                />
+              ) : (
+                <Link className={styles.loginBtn} href={'/login'}>
+                  <Button
+                    label={'Create argument'}
+                    size='max'
+                    className={styles.createBtn}
+                  />
+                </Link>
+              )}
             </div>
           </div>
           <div className={styles.resultsInfoContainer}>
@@ -130,10 +131,6 @@ export default function Home() {
           <List items={allPosts} Layout={PostCard} />
         </div>
       </div>
-      <Link
-        href='https://testingTheDeadLinkGithubHook.com'
-        style={{ visibility: 'hidden' }}
-      />
     </>
   )
 }
