@@ -112,7 +112,7 @@ export default function Header() {
           })}
           {user.id && (
             <Button
-              styles={{ fontSize: '18px' }}
+              styles={{ fontSize: '18px', marginLeft: '12px' }}
               onClick={handleLogout}
               label='Logout'
             />
