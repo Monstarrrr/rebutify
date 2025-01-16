@@ -6,7 +6,7 @@ import { formDataToObj } from '@/helpers'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 // eslint-disable-next-line no-restricted-imports
-import styles from './confirmresetpassword.module.scss'
+import styles from './confirmResetPassword.module.scss'
 import api from '@/api/api'
 
 const resetPasswordInputs: TextInput[] = [
@@ -59,7 +59,7 @@ export default function ConfirmResetPassword() {
       setLoading(false)
       setError(
         error.response?.data?.detail ||
-          'Password reset failed. The link may have expired. Please try requesting a new reset link.',
+        'Password reset failed. The link may have expired. Please try requesting a new reset link.',
       )
     }
   }
