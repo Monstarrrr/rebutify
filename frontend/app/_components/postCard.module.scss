@@ -3,6 +3,12 @@
   color: #fff;
   margin: 0 12px;
   display: block;
+
+  &:last-of-type {
+    .wrapper {
+      border-bottom: 2px solid var(--color-primary);
+    }
+  }
 }
 
 .wrapper {
