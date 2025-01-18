@@ -25,6 +25,8 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.typesense.client import client
+
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
 from .serializers import (
     ActivationNewEmailSerializer,
@@ -130,6 +132,34 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    # search arguments
+    @action(detail=False, methods=["get"], url_path="search")
+    def search(self, request, *args, **kwargs):
+        query = request.GET.get("q", "")
+        if not query:
+            return Response(
+                {"error": "No search query provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            # Typesense search
+            search_results = client.collections["posts"].documents.search(
+                {
+                    "q": query,
+                    "query_by": "title,body",  # Search in title and body
+                    "filter_by": "type:argument",
+                }
+            )
+
+            # Return the search results as a response (DRF automatically handles the JSON serialization)
+            return Response(search_results, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     # get followers of the argument
     @action(detail=True, methods=["get"])
