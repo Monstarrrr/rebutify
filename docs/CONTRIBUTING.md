@@ -8,7 +8,7 @@ Please take a moment to review this document to understand how you can contribut
 - [Contributing to Our Project 🤝](#contributing-to-our-project-)
   - [Table of Content](#table-of-content)
   - [Ways to Contribute 🚀](#ways-to-contribute-)
-  - [Code of Conduct 🤝](#code-of-conduct-)
+  - [Code of Conduct 📜](#code-of-conduct-)
   - [Getting Started 🏁](#getting-started-)
     - [1. Installing `pre-commit` hooks](#1-installing-pre-commit-hooks)
       - [1.1. Download dependencies using Python:](#11-download-dependencies-using-python)
@@ -16,12 +16,18 @@ Please take a moment to review this document to understand how you can contribut
       - [1.3. Verify install](#13-verify-install)
       - [1.4. Skip pre-commit](#14-skip-pre-commit)
     - [2. Running Django](#2-running-django)
-    - [3. Conventions](#3-conventions)
-    - [4. Nuances](#4-nuances)
+      - [2.1 OpenAPI Spec](#21-openapi-spec)
+    - [3. Running Typesense](#3-running-typesense)
+      - [3.1 Install Docker](#31-install-docker)
+      - [3.2 Install typesense image with docker](#32-install-typesense-image-with-docker)
+      - [3.3 Start typesense server](#33-start-typesense-server)
+    - [4. Conventions](#4-conventions)
+      - [4.1 Database table and column names](#41-database-table-and-column-names)
+    - [5. Nuances](#5-nuances)
 
 ## Ways to Contribute 🚀
 
-There are several ways you can contribute to our project:
+There are several ways you can contribute to our project codebase:
 
 - **Reporting Bugs:** If you find a bug, please open an issue and include as much detail as possible.
 - **Suggesting Enhancements:** Have an idea to improve the project? Open an issue and share your suggestions!
@@ -100,13 +106,31 @@ Access the OpenAPI spec in three ways while running the django server:
 - Use Swagger UI at `/api/schema/swagger-ui/`
 - Use Redoc UI at `/api/schema/redoc-ui/`
 
-### 3. Conventions
+### 3. Running Typesense
 
-#### 3.1 Database table and column names
+#### 3.1 Install Docker
+
+https://www.docker.com/
+
+#### 3.2 Install typesense image with docker
+
+```bash
+docker pull typesense/typesense:28.0.rc35-amd64
+```
+
+#### 3.3 Start typesense server
+
+```bash
+docker run -d -p 8108:8108 -v ./typesense-data:/data typesense/typesense:28.0.rc35-amd64 --data-dir /data --api-key=your_secret_key
+```
+
+### 4. Conventions
+
+#### 4.1 Database table and column names
 
 We use camelCase for our database tables and column names defined in `models.py`.
 
-### 4. Nuances
+### 5. Nuances
 
 Current issues that affect development are listed here for transparency.
 
