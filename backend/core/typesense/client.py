@@ -65,12 +65,6 @@ def create_collection():
         except Exception as e:
             print(f"Error creating collection: {e}")
 
-    try:
-        client.collections.create(collection_schema)
-        print("Collection 'posts' created successfully!")
-    except Exception as e:
-        print(f"Error creating collection: {e}")
-
 
 # Does not execute on import, only when we explicitly call it.
 if __name__ == "__main__":
