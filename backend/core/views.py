@@ -176,7 +176,7 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             # Sync all posts
             sync_all_posts_with_typesense(self, sender=self)
         except Exception as e:
-            print(f"❌ Error syncing posts with Typesense: {e}")
+            logger.error(f"❌ Error syncing posts with Typesense: {e}")
 
         try:
             print("🔎 Starting Typesense search for query:", query[0:20])
@@ -194,10 +194,9 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             return Response(search_results, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print(
-                "❌ Typesense search failed with exception type:",
+            logger.error(
+                "❌ Typesense search failed with exception type: %s and value: %s",
                 type(e).__name__,
-                "and value:",
                 str(e),
             )
 
@@ -206,14 +205,10 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                 stats = client.collections["posts"].status()
                 print("Collection status:", stats)
             except Exception as e:
-                print(f"❌ Error retrieving collection status: {e}")
+                logger.error(f"❌ Error retrieving collection status: {e}")
 
             return Response(
-                {
-                    "error": f"Search failed: {str(e)}",
-                    "error_type": type(e).__name__,
-                    "query": query,
-                },
+                {"error": "An internal error has occurred. Please try again later."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
