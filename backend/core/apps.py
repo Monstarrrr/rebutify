@@ -10,7 +10,3 @@ class CoreConfig(AppConfig):
 
         print("🚀 Core app is ready!")
         create_posts_collections()
-        # # When server starts
-        # signals.post_migrate.connect(self.sync_all_posts_with_typesense, sender=self)
-        # # When creating or updating a post
-        # signals.post_save.connect(self.sync_individual_post, sender=Post)
