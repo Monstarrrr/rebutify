@@ -25,7 +25,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.typesense.client import client
+from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
 from .serializers import (
@@ -110,6 +110,31 @@ class CursorPaginationViewSet(CursorPagination):
     page_size_query_param = "page_size"
 
 
+@action(detail=False, methods=["get"], url_path="debug")
+def debug_posts(self, request):
+    from core.models import Post
+
+    # Get all posts
+    all_posts = Post.objects.all()
+    posts_count = all_posts.count()
+
+    # Get arguments specifically
+    argument_posts = Post.objects.filter(type="argument")
+    arguments_count = argument_posts.count()
+
+    # Get sample post details
+    sample_posts = Post.objects.all()[:3].values("id", "title", "type")
+
+    return Response(
+        {
+            "total_posts": posts_count,
+            "argument_posts": arguments_count,
+            "sample_posts": list(sample_posts),
+            "raw_query": str(all_posts.query),
+        }
+    )
+
+
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
@@ -136,6 +161,10 @@ class ArgumentViewSet(viewsets.ModelViewSet):
     # search arguments
     @action(detail=False, methods=["get"], url_path="search")
     def search(self, request, *args, **kwargs):
+        from core.typesense.posts.sync import sync_all_posts_with_typesense
+
+        client = get_client()
+
         query = request.GET.get("q", "")
         if not query:
             return Response(
@@ -144,21 +173,48 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            # Typesense search
-            search_results = client.collections["posts"].documents.search(
-                {
-                    "q": query,
-                    "query_by": "title,body",  # Search in title and body
-                    "filter_by": "type:argument",
-                }
-            )
+            # Sync all posts
+            sync_all_posts_with_typesense(self, sender=self)
+        except Exception as e:
+            print(f"❌ Error syncing posts with Typesense: {e}")
 
+        try:
+            print("🔎 Starting Typesense search for query:", query[0:20])
+
+            search_params = {
+                "q": query,
+                "query_by": "title,body",  # Search in title and body
+                "filter_by": "type:argument",
+            }
+            print("Search parameters:", search_params)
+            search_results = client.collections["posts"].documents.search(search_params)
+
+            print("✅ Typesense search completed.")
             # Return the search results as a response (DRF automatically handles the JSON serialization)
             return Response(search_results, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print(
+                "❌ Typesense search failed with exception type:",
+                type(e).__name__,
+                "and value:",
+                str(e),
+            )
+
+            # Try to get collection status
+            try:
+                stats = client.collections["posts"].status()
+                print("Collection status:", stats)
+            except Exception as e:
+                print(f"❌ Error retrieving collection status: {e}")
+
             return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "error": f"Search failed: {str(e)}",
+                    "error_type": type(e).__name__,
+                    "query": query,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
     # get followers of the argument
