@@ -17,16 +17,21 @@ export default function Home() {
 
   const [isFormActive, setIsFormActive] = useState<boolean>(false)
 
+  const [loadingArguments, setLoadingArguments] = useState<boolean>(false)
   const [allPosts, setAllPosts] = useState<Post[]>([])
 
   // Fetch onLoad
   useEffect(() => {
     const fetchArguments = async () => {
       try {
+        setLoadingArguments(true)
         console.log(`getting all posts`)
+        // Simulate network delay
         const response = await getPosts('argument')
         setAllPosts(response)
+        setLoadingArguments(false)
       } catch (error: any) {
+        setLoadingArguments(false)
         console.error('# Error fetching posts: ', error)
       }
     }
@@ -125,7 +130,9 @@ export default function Home() {
           </div>
           <div className={styles.resultsInfoContainer}>
             <p className={styles.resultsCounter}>
-              {allPosts.length} {allPosts.length === 1 ? 'post' : 'posts'} found
+              {loadingArguments
+                ? `Loading posts...`
+                : `${allPosts.length} ${allPosts.length === 1 ? 'post' : 'posts'} found`}
             </p>
           </div>
           <List items={allPosts} Layout={PostCard} />
