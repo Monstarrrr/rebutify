@@ -1,64 +1,61 @@
-'use client'
-import { Button, Form, List, PostCard, Search } from '@/components'
-import type { Post } from '@/types'
-import { FormEvent, useEffect, useState } from 'react'
-import { createPost, getPosts } from '@/api/posts'
+import { List, PostCard, Search } from '@/components'
 // eslint-disable-next-line no-restricted-imports
 import styles from './page.module.scss'
-import { formDataToObj } from '@/helpers'
-import { useAppSelector } from '@/store/hooks'
-import Link from 'next/link'
+import { fetchPosts } from '@/api/posts'
+// import { formDataToObj } from '@/helpers'
 
-export default function Home() {
-  const user = useAppSelector((state) => state.user)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [apiErrors, setApiErrors] = useState(null)
-  const [success, setSuccess] = useState<string | null>(null)
+export default async function Home() {
+  // const user = useAppSelector((state) => state.user)
 
-  const [isFormActive, setIsFormActive] = useState<boolean>(false)
+  // const [loading, setLoading] = useState<boolean>(false)
+  // const [apiErrors, setApiErrors] = useState(null)
+  // const [success, setSuccess] = useState<string | null>(null)
 
-  const [loadingArguments, setLoadingArguments] = useState<boolean>(false)
-  const [allPosts, setAllPosts] = useState<Post[]>([])
+  // const [isFormActive, setIsFormActive] = useState<boolean>(false)
 
+  // const [loadingArguments, setLoadingArguments] = useState<boolean>(false)
+  // const [allPosts, setAllPosts] = useState<Post[]>([])
+
+  const allArguments = await fetchPosts('argument')
+  console.log(`# allArguments :`, allArguments)
   // Fetch onLoad
-  useEffect(() => {
-    const fetchArguments = async () => {
-      try {
-        setLoadingArguments(true)
-        console.log(`getting all posts`)
-        // Simulate network delay
-        const response = await getPosts('argument')
-        setAllPosts(response)
-        setLoadingArguments(false)
-      } catch (error: any) {
-        setLoadingArguments(false)
-        console.error('# Error fetching posts: ', error)
-      }
-    }
-    fetchArguments()
-  }, [])
+  // useEffect(() => {
+  //   const fetchArguments = async () => {
+  //     try {
+  //       setLoadingArguments(true)
+  //       console.log(`getting all posts`)
+  //       const response = await getPosts('argument')
+  //       setAllPosts(response)
+  //       setLoadingArguments(false)
+  //     } catch (error: any) {
+  //       setLoadingArguments(false)
+  //       console.error('# Error fetching posts: ', error)
+  //     }
+  //   }
+  //   fetchArguments()
+  // }, [])
 
-  const handleToggleForm = () => {
-    setIsFormActive(!isFormActive)
-  }
+  // const handleToggleForm = () => {
+  //   setIsFormActive(!isFormActive)
+  // }
 
-  const handleSubmitArgument = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setLoading(true)
-    setApiErrors(null)
-    const formData = formDataToObj(event)
+  // const handleSubmitArgument = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault()
+  //   setLoading(true)
+  //   setApiErrors(null)
+  //   // const formData = formDataToObj(event)
 
-    try {
-      const res = await createPost({ ...formData }, 'argument')
-      setLoading(false)
-      setSuccess('Post created successfully!')
-      setAllPosts((prev) => [res.data, ...prev])
-    } catch (error: any) {
-      const { response } = error
-      setLoading(false)
-      setApiErrors(response)
-    }
-  }
+  //   try {
+  //     // const res = await createPost({ ...formData }, 'argument')
+  //     setLoading(false)
+  //     setSuccess('Post created successfully!')
+  //     // setAllPosts((prev) => [res.data, ...prev])
+  //   } catch (error: any) {
+  //     const { response } = error
+  //     setLoading(false)
+  //     setApiErrors(response)
+  //   }
+  // }
 
   return (
     <>
@@ -70,7 +67,7 @@ export default function Home() {
               placeholder='e.g. "Plants feel pain tho"'
               className={styles.search}
             />
-            <div className={styles.formContainer}>
+            {/* <div className={styles.formContainer}>
               {isFormActive ? (
                 <Form
                   id='new-argument'
@@ -126,16 +123,16 @@ export default function Home() {
                   />
                 </Link>
               )}
-            </div>
+            </div> */}
           </div>
           <div className={styles.resultsInfoContainer}>
             <p className={styles.resultsCounter}>
-              {loadingArguments
+              {/* {loadingArguments
                 ? `Loading posts...`
-                : `${allPosts.length} ${allPosts.length === 1 ? 'post' : 'posts'} found`}
+                : `${allArguments.length} ${allArguments.length === 1 ? 'post' : 'posts'} found`} */}
             </p>
           </div>
-          <List items={allPosts} Layout={PostCard} />
+          <List items={allArguments} Layout={PostCard} />
         </div>
       </div>
     </>
