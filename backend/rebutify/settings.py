@@ -34,9 +34,9 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = bool(os.getenv("DJANGO_DEBUG", "True") == "True")
 
 ALLOWED_HOSTS: List[str] = (
-    os.getenv("DJANGO_HOSTS", "localhost,127.0.0.1").split(",")
+    os.getenv("DJANGO_HOSTS", "localhost,127.0.0.1,192.168.1.14").split(",")
     if STAGE != "local"
-    else ["localhost", "127.0.0.1"]
+    else ["localhost", "127.0.0.1", "192.168.1.14"]
 )
 
 # Name of website used in activation, password reset emails, etc.
