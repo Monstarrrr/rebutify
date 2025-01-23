@@ -11,6 +11,10 @@ export default function List<T extends type.Identifiable>({
   className,
   layoutClassName,
 }: type.ListProps<T>) {
+  if (!items || items.length === 0) {
+    return null
+  }
+
   return (
     <ul
       style={{
