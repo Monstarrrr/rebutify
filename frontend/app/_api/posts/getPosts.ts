@@ -27,3 +27,15 @@ export const getPosts = async (
     throw error
   }
 }
+
+export async function fetchPosts(type: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`,
+    )
+    const data = await response.json()
+    return data.results
+  } catch (error: any) {
+    console.error('❌ Error fetching posts: ', error)
+  }
+}

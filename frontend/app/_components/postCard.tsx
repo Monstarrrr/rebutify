@@ -1,6 +1,5 @@
 // postCard.tsx displays a single clickable post preview
 
-'use client'
 import type { Post } from '@/types'
 import Link from 'next/link'
 import 'globals.css'

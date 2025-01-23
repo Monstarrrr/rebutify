@@ -1,0 +1,22 @@
+.formContainer {
+  padding: 12px;
+}
+
+.argumentTextArea {
+  min-height: 100px;
+  @media screen and (min-width: 768px) {
+    min-height: auto;
+  }
+}
+
+.hintText {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.createBtn {
+  margin: 0 0 12px 0;
+}
+.cancelBtn {
+  margin: 12px 0;
+}
