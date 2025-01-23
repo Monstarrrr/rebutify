@@ -3,7 +3,6 @@ import { List, PostCard, Search, ArgumentCreation } from '@/components'
 import styles from './page.module.scss'
 import { fetchPosts } from '@/api/posts'
 import { Suspense } from 'react'
-// import { formDataToObj } from '@/helpers'
 
 export default async function Home() {
   const allArguments = await fetchPosts('argument')

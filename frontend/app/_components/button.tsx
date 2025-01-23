@@ -54,7 +54,11 @@ export default function Button(props: ButtonProps) {
       className={className}
     >
       <span>
-        {icon ?? (loading ? 'Loading...' : success ? `${success} ✅` : label)}
+        {/* Linear logic (only one condition will be true at a time) to prevent hydration errors */}
+        {icon ||
+          (loading && 'Loading...') ||
+          (success && `${success} ✅`) ||
+          label}
       </span>
     </StyledButton>
   )
