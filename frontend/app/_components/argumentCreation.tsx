@@ -5,6 +5,9 @@ import { FormEvent, useState } from 'react'
 import { Form, Button } from '@/components'
 import Link from 'next/link'
 import { useAppSelector } from '@/store/hooks'
+import { formDataToObj } from '@/helpers'
+import { createPost } from '@/api/posts'
+import { revalidatePosts } from '@/pageActions'
 
 export default function ArgumentCreation() {
   const user = useAppSelector((state) => state.user)
@@ -21,13 +24,13 @@ export default function ArgumentCreation() {
     event.preventDefault()
     setLoading(true)
     setApiErrors(null)
-    // const formData = formDataToObj(event)
+    const formData = formDataToObj(event)
 
     try {
-      // const res = await createPost({ ...formData }, 'argument')
+      await createPost({ ...formData }, 'argument')
       setLoading(false)
       setSuccess('Post created successfully!')
-      // setAllPosts((prev) => [res.data, ...prev])
+      await revalidatePosts()
     } catch (error: any) {
       const { response } = error
       setLoading(false)
