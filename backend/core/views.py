@@ -110,31 +110,6 @@ class CursorPaginationViewSet(CursorPagination):
     page_size_query_param = "page_size"
 
 
-@action(detail=False, methods=["get"], url_path="debug")
-def debug_posts(self, request):
-    from core.models import Post
-
-    # Get all posts
-    all_posts = Post.objects.all()
-    posts_count = all_posts.count()
-
-    # Get arguments specifically
-    argument_posts = Post.objects.filter(type="argument")
-    arguments_count = argument_posts.count()
-
-    # Get sample post details
-    sample_posts = Post.objects.all()[:3].values("id", "title", "type")
-
-    return Response(
-        {
-            "total_posts": posts_count,
-            "argument_posts": arguments_count,
-            "sample_posts": list(sample_posts),
-            "raw_query": str(all_posts.query),
-        }
-    )
-
-
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
@@ -508,6 +483,9 @@ class PostViewSet(viewsets.ModelViewSet):
             queryset = Post.objects.filter(type=type)
         else:
             queryset = Post.objects.all()
+
+        print("Queryset:", queryset)
+        print("self.request.user.is_authenticated:", self.request.user.is_authenticated)
 
         if type == "argument":
             if not self.request.user.is_authenticated:

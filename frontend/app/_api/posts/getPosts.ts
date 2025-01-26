@@ -1,8 +1,9 @@
 import api from '@/api/api'
 
+// client side
 export const getPosts = async (
   type: 'argument' | 'rebuttal' | 'comment',
-  parentId?: string
+  parentId?: string,
 ) => {
   try {
     if (type !== 'argument' && parentId === undefined) {
@@ -22,21 +23,23 @@ export const getPosts = async (
       error.response?.data?.detail ??
         error.response?.data ??
         error.response ??
-        error
+        error,
     )
     throw error
   }
 }
 
+// server side
 export async function fetchPosts(type: string) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`,
       {
+        cache: 'no-store',
         next: {
           tags: ['posts'],
         },
-      }
+      },
     )
     const data = await response.json()
     return data.results

@@ -2,15 +2,16 @@
 // eslint-disable-next-line no-restricted-imports
 import styles from './argumentCreation.module.scss'
 import { FormEvent, useState } from 'react'
-import { Form, Button } from '@/components'
+import { Button, Form } from '@/components'
 import Link from 'next/link'
 import { useAppSelector } from '@/store/hooks'
 import { formDataToObj } from '@/helpers'
 import { createPost } from '@/api/posts'
-import { revalidatePosts } from '@/pageActions'
+import { useRouter } from 'next/navigation'
 
 export default function ArgumentCreation() {
   const user = useAppSelector((state) => state.user)
+  const router = useRouter()
   const [isFormActive, setIsFormActive] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
@@ -27,10 +28,17 @@ export default function ArgumentCreation() {
     const formData = formDataToObj(event)
 
     try {
+      console.log(`test debug boop bip 1`)
       await createPost({ ...formData }, 'argument')
       setLoading(false)
+      console.log(`test debug boop bip 2`)
       setSuccess('Post created successfully!')
-      await revalidatePosts()
+      try {
+        router.refresh()
+        console.log(`test debug boop bip 3`)
+      } catch (error) {
+        console.log(`error refreshing page with router`, error)
+      }
     } catch (error: any) {
       const { response } = error
       setLoading(false)

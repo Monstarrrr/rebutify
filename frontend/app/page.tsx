@@ -3,7 +3,6 @@ import { List, PostCard, Search, ArgumentCreation } from '@/components'
 import styles from './page.module.scss'
 import { fetchPosts } from '@/api/posts'
 import { Suspense } from 'react'
-// import { formDataToObj } from '@/helpers'
 
 export default async function Home() {
   const allArguments = await fetchPosts('argument')
@@ -19,13 +18,6 @@ export default async function Home() {
               className={styles.search}
             />
             <ArgumentCreation />
-          </div>
-          <div className={styles.resultsInfoContainer}>
-            <p className={styles.resultsCounter}>
-              {`
-                ${allArguments.length} ${allArguments.length === 1 ? 'post' : 'posts'} found
-              `}
-            </p>
           </div>
           {/* PostCard must be server component or be called directly as a node to avoid hydration errors */}
           <List items={allArguments || []} Layout={PostCard} />

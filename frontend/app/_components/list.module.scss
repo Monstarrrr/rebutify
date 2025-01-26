@@ -1,0 +1,10 @@
+.resultsInfoContainer {
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsCounter {
+  color: var(--color-secondary-weak);
+  font-size: 16px;
+}
