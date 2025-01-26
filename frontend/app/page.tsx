@@ -4,8 +4,15 @@ import styles from './page.module.scss'
 import { fetchPosts } from '@/api/posts'
 import { Suspense } from 'react'
 
-export default async function Home() {
-  const allArguments = await fetchPosts('argument')
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: {
+    q?: string
+  }
+}) {
+  const query = searchParams?.q || ''
+  const allArguments = await fetchPosts('argument', query)
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

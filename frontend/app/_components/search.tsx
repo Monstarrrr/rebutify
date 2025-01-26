@@ -4,7 +4,7 @@ import Icon from '@/components/icon'
 import styles from './search.module.scss'
 import { tokens } from '@/styles/tokens'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 
 type SearchProps = {
   className?: string
@@ -15,6 +15,8 @@ export default function Search({ className, placeholder }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const searchParams = useSearchParams()
   const q = searchParams.get('q')
+  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     if (q) {
@@ -26,12 +28,27 @@ export default function Search({ className, placeholder }: SearchProps) {
     setSearchQuery(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    try {
-    } catch (error) {
-      console.error(error)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSubmit()
     }
+  }
+
+  const handleSubmit = () => {
+    const params = new URLSearchParams(searchParams)
+    console.log(`# params :`, params)
+    console.log(`# searchQuery :`, searchQuery)
+    if (searchQuery) {
+      params.set('q', searchQuery)
+    } else {
+      params.delete('q')
+    }
+
+    // Reset to first page when searching
+    // params.set('page', '1')
+
+    router.replace(`${pathname}?${params.toString()}`)
   }
 
   return (
@@ -39,6 +56,7 @@ export default function Search({ className, placeholder }: SearchProps) {
       <label className={styles.label} htmlFor='search'>
         Search
       </label>
+      {/* Todo: switch to custom <Form> */}
       <form className={styles.inputContainer} onSubmit={handleSubmit}>
         <Icon
           name='search'
@@ -52,6 +70,7 @@ export default function Search({ className, placeholder }: SearchProps) {
           className={styles.input}
           value={searchQuery}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
       </form>
     </div>

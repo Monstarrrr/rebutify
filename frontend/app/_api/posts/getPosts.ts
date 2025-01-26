@@ -30,18 +30,21 @@ export const getPosts = async (
 }
 
 // server side
-export async function fetchPosts(type: string) {
+export async function fetchPosts(type: string, query?: string) {
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`
+  if (query) {
+    url = `${process.env.NEXT_PUBLIC_API_URL}/api/arguments/search/?q=${query}`
+  }
+  console.log(`# url :`, url)
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`,
-      {
-        cache: 'no-store',
-        next: {
-          tags: ['posts'],
-        },
+    const response = await fetch(url, {
+      cache: 'no-store',
+      next: {
+        tags: ['posts'],
       },
-    )
+    })
     const data = await response.json()
+    console.log(`# data :`, data)
     return data.results
   } catch (error: any) {
     console.error('❌ Error fetching posts: ', error)

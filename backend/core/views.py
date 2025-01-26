@@ -484,9 +484,6 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             queryset = Post.objects.all()
 
-        print("Queryset:", queryset)
-        print("self.request.user.is_authenticated:", self.request.user.is_authenticated)
-
         if type == "argument":
             if not self.request.user.is_authenticated:
                 # If user is not authenticated, only show non-shadow posts
