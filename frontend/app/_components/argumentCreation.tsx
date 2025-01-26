@@ -28,14 +28,11 @@ export default function ArgumentCreation() {
     const formData = formDataToObj(event)
 
     try {
-      console.log(`test debug boop bip 1`)
       await createPost({ ...formData }, 'argument')
       setLoading(false)
-      console.log(`test debug boop bip 2`)
       setSuccess('Post created successfully!')
       try {
         router.refresh()
-        console.log(`test debug boop bip 3`)
       } catch (error) {
         console.log(`error refreshing page with router`, error)
       }
