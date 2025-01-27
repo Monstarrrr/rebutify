@@ -35,6 +35,7 @@ export default function ArgumentCreation() {
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [allPosts, setAllPosts] = useState<Post[]>([])
 
   const handleToggleForm = () => {
     setIsFormActive(!isFormActive)
@@ -65,6 +66,7 @@ export default function ArgumentCreation() {
 
   return (
     <div className={styles.formContainer}>
+      <pre>{JSON.stringify(allPosts, null, 2)}</pre>
       {isFormActive ? (
         <Form
           id='new-argument'
@@ -86,7 +88,7 @@ export default function ArgumentCreation() {
       ) : (
         <p className={styles.hintText}>Can&apos;t find it?</p>
       )}
-      {user.id ? (
+      {user?.id ? (
         <Button
           label={isFormActive ? 'Cancel' : 'Create argument'}
           transparent={isFormActive}
