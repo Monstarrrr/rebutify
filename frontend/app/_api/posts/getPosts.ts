@@ -44,8 +44,7 @@ export async function fetchPosts(type: string, query?: string) {
       },
     })
     const data = await response.json()
-    console.log(`# data :`, data)
-    return data.results
+    return (query && data.hits) || data.results
   } catch (error: any) {
     console.error('❌ Error fetching posts: ', error)
   }

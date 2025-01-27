@@ -7,7 +7,6 @@ def sync_individual_post(self, sender, instance, created, **kwargs):
 
     client = get_client()
 
-    print(f"⏳ Syncing *single* post {instance.id} with Typesense...")
     if created or instance.updated:
         post = Post.objects.get(id=instance.id)
         document = {
@@ -26,7 +25,6 @@ def sync_individual_post(self, sender, instance, created, **kwargs):
         # Index the document into Typesense
         try:
             client.collections["posts"].documents.upsert(document)
-            print(f"✅ Indexed post {post.id} successfully!")
         except Exception as e:
             print(f"❌ Error indexing post {post.id}: {e}")
 
@@ -34,8 +32,6 @@ def sync_individual_post(self, sender, instance, created, **kwargs):
 # Sync all posts
 def sync_all_posts_with_typesense(self, sender, **kwargs):
     from core.models import Post
-
-    print("⏳ Syncing *all* posts with Typesense...")
 
     posts = Post.objects.all()
 
@@ -45,6 +41,5 @@ def sync_all_posts_with_typesense(self, sender, **kwargs):
     for post in posts:
         sync_individual_post(self, sender, instance=post, created=False, **kwargs)
         successCount += 1
-        print(f"✅ Indexed post {post.id} with Typesense.")
 
     print(f"✅ Synced {successCount}/{totalCount} posts with Typesense.")

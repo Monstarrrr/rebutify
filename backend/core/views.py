@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -159,14 +160,38 @@ class ArgumentViewSet(viewsets.ModelViewSet):
             search_params = {
                 "q": query,
                 "query_by": "title,body",  # Search in title and body
-                "filter_by": "type:argument",
+                "filter_by": "type:argument",  # Only search in arguments
+                "sort_by": "_text_match:desc",  # Sort by text match
             }
-            print("Search parameters:", search_params)
             search_results = client.collections["posts"].documents.search(search_params)
-
             print("✅ Typesense search completed.")
-            # Return the search results as a response (DRF automatically handles the JSON serialization)
-            return Response(search_results, status=status.HTTP_200_OK)
+
+            # We format the results
+            results = []
+            for hit in search_results.get("hits", []):
+                document = hit["document"]
+
+                transformed_item = {
+                    "id": int(document["id"]),
+                    "type": document["type"],
+                    "body": document["body"],
+                    "title": document["title"],
+                    "ownerUserId": document["ownerUserId"],
+                    "parentId": document.get("parentId")
+                    if "parentId" in document
+                    else None,
+                    "created": datetime.fromtimestamp(document["created"]).isoformat(),
+                    "updated": datetime.fromtimestamp(document["updated"]).isoformat(),
+                    "upvotes": document.get("upvotes", 0),
+                    "downvotes": document.get("downvotes", 0),
+                }
+
+                # Order results by score
+                results.append(transformed_item)
+                formattedResults = {
+                    "results": results,
+                }
+            return Response(formattedResults, status=status.HTTP_200_OK)
 
         except Exception as e:
             logger.error(
