@@ -161,7 +161,8 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                 "q": query,
                 "query_by": "title,body",  # Search in title and body
                 "filter_by": "type:argument",  # Only search in arguments
-                "sort_by": "_text_match:desc",  # Sort by text match
+                "sort_by": "_text_match:desc",
+                "text_match_type": "max_weight",
             }
             search_results = client.collections["posts"].documents.search(search_params)
             print("✅ Typesense search completed.")

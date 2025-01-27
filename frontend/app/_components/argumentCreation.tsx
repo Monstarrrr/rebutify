@@ -8,10 +8,29 @@ import { useAppSelector } from '@/store/hooks'
 import { formDataToObj } from '@/helpers'
 import { createPost } from '@/api/posts'
 import { useRouter } from 'next/navigation'
+import { TextInput } from '@/types'
 
 export default function ArgumentCreation() {
   const user = useAppSelector((state) => state.user)
   const router = useRouter()
+  const [inputsFields, setInputsFields] = useState<TextInput[]>([
+    {
+      id: 'title',
+      label: 'Title',
+      placeholder: 'e.g. "Plants are alive too!"',
+      required: true,
+      value: '',
+    },
+    {
+      id: 'body',
+      label: 'Argument',
+      placeholder: `e.g. "If vegans don't eat meat, why do they eat plants? They are living beings too!"`,
+      type: 'textarea',
+      value: '',
+      required: true,
+      inputClassName: styles.argumentTextArea,
+    },
+  ])
   const [isFormActive, setIsFormActive] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
@@ -31,6 +50,7 @@ export default function ArgumentCreation() {
       await createPost({ ...formData }, 'argument')
       setLoading(false)
       setSuccess('Post created successfully!')
+      setInputsFields(inputsFields.map((input) => ({ ...input, value: '' })))
       try {
         router.refresh()
       } catch (error) {
@@ -49,24 +69,7 @@ export default function ArgumentCreation() {
         <Form
           id='new-argument'
           inputsErrors={apiErrors}
-          inputsFields={[
-            {
-              id: 'title',
-              label: 'Title',
-              placeholder: 'e.g. "Plants are alive too!"',
-              required: true,
-              value: '',
-            },
-            {
-              id: 'body',
-              label: 'Argument',
-              placeholder: `e.g. "If vegans don't eat meat, why do they eat plants? They are living beings too!"`,
-              type: 'textarea',
-              value: '',
-              required: true,
-              inputClassName: styles.argumentTextArea,
-            },
-          ]}
+          inputsFields={inputsFields}
           onSubmit={handleSubmitArgument}
           loading={loading}
           success={success}
