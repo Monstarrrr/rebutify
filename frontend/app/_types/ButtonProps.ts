@@ -5,6 +5,9 @@ export type ButtonProps = {
   styles?: React.CSSProperties
   className?: string
   size?: 'min' | 'max'
+
+  disabled?: boolean
+  outlined?: boolean
   transparent?: boolean
   /* 
     Within forms, 'onClick' is 'onSubmit', but

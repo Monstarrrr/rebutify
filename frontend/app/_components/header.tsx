@@ -100,11 +100,8 @@ export default function Header() {
                 <Link href={href}>
                   <Button
                     label={label}
-                    styles={{
-                      opacity: pathName === href ? 0.6 : 1,
-                      pointerEvents: pathName === href ? 'none' : 'auto',
-                    }}
-                    transparent={href === '/login' || href === '/profile'}
+                    disabled={pathName === href}
+                    outlined={href === '/login' || href === '/profile'}
                   />
                 </Link>
               </div>

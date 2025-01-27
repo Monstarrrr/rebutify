@@ -192,7 +192,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                     <div>
                       <Button
                         label='Edit'
-                        transparent
+                        outlined
                         onClick={() => setIsEditingBody(!isEditingBody)}
                       />
                     </div>
@@ -256,7 +256,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               <Button
                 loading={commentLoading}
                 success={commentSuccess}
-                transparent
+                outlined
                 label='Add a comment'
                 onClick={() => handleCommentsVisibility(true)}
               />

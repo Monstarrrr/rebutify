@@ -86,7 +86,7 @@ export default function ArgumentCreation() {
       {user?.id ? (
         <Button
           label={isFormActive ? 'Cancel' : 'Create argument'}
-          transparent={isFormActive}
+          outlined={isFormActive}
           size='max'
           className={isFormActive ? styles.cancelBtn : styles.createBtn}
           onClick={handleToggleForm}

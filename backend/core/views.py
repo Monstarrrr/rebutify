@@ -106,6 +106,7 @@ DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
 class CursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
+    ordering = "-isPending", "-updated", "-created"
 
 
 class ArgumentViewSet(viewsets.ModelViewSet):
@@ -423,10 +424,11 @@ class PostViewSet(viewsets.ModelViewSet):
             self.kwargs.get("page_size", DEFAULT_PAGE_SIZE)
         )
         queryset = None
+
         if type:
             queryset = Post.objects.filter(type=type)
         else:
-            queryset = Post.objects.all()
+            return Post.objects.all()
 
         if type == "argument":
             if not self.request.user.is_authenticated:
