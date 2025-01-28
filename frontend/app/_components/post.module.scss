@@ -7,14 +7,13 @@
 }
 .leftContainer {
   padding-top: 12px;
+  margin-right: 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .rightContainer {
-  padding: 12px;
-  padding-right: 0;
-  margin-left: 12px;
+  padding: 12px 0;
   grid-column-start: 2;
   grid-row-start: 1;
   grid-column-end: 4;
@@ -32,7 +31,6 @@
 }
 
 .actionsContainer {
-  margin-top: 24px;
   grid-row-start: 2;
   grid-column-start: 3;
   display: flex;

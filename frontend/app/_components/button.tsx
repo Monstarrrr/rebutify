@@ -10,6 +10,7 @@ const StyledButton = styled('button')<{
   $success: string | null
   $outlined: boolean
   $transparent: boolean
+  $iconOnly: boolean
   $disabled: boolean | string | null
 }>`
   background-color: ${(props) => props.$color};
@@ -52,12 +53,19 @@ const StyledButton = styled('button')<{
     `
     width: 100%;
   `}
+  ${(props) =>
+    props.$iconOnly &&
+    `
+    padding: 0;
+  `}
 `
 
 export default function Button(props: ButtonProps) {
   const {
     label,
     size,
+    icon = null,
+    iconOnly = (icon && true) || false,
     disabled = false,
     loading = false,
     success = null,
@@ -74,6 +82,7 @@ export default function Button(props: ButtonProps) {
       style={styles}
       $color={color}
       $size={size}
+      $iconOnly={iconOnly}
       onClick={onClick}
       $disabled={loading || success || disabled}
       $success={success}
@@ -82,10 +91,9 @@ export default function Button(props: ButtonProps) {
       className={className}
     >
       {/* Linear logic (only one condition will be true at a time) to prevent hydration errors */}
-      {children ||
-        (loading && 'Loading...') ||
-        (success && `${success} ✅`) ||
-        label}
+      {(loading && 'Loading...') || (success && `${success} ✅`) || label}
+      {icon}
+      {children}
     </StyledButton>
   )
 }

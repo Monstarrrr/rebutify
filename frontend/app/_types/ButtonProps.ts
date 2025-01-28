@@ -5,6 +5,7 @@ export type ButtonProps = React.PropsWithChildren<{
   label: string | ''
 
   icon?: ReactNode
+  iconOnly?: boolean
   styles?: React.CSSProperties
   className?: string
   size?: 'min' | 'max'
