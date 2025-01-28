@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { removeUser } from '@/store/slices/user'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
@@ -55,6 +55,7 @@ export default function Header() {
   const dispatch = useAppDispatch()
   const [user, setUser] = useState(userStore)
   const pathName = usePathname()
+  const router = useRouter()
 
   const links: NavLink[] = [
     { href: '/profile', label: user.username, withAuth: true },
@@ -75,6 +76,7 @@ export default function Header() {
     dispatch(removeUser())
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
+    router.push('/')
   }
   return (
     <>

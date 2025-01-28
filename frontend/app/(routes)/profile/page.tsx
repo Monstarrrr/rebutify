@@ -76,12 +76,6 @@ export default function Profile() {
   )
 
   useEffect(() => {
-    if (!user.id) {
-      router.push('/login')
-    }
-  }, [user, router])
-
-  useEffect(() => {
     let fetchApi = async () => {
       try {
         let allPosts = await getPosts()

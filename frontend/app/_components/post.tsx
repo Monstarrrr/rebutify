@@ -204,13 +204,15 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                       onClick={() => setIsEditingBody(!isEditingBody)}
                     />
                   </div>
-                  <div>
-                    <Button
-                      label='Delete'
-                      transparent
-                      onClick={() => handleDelete(post.id)}
-                    />
-                  </div>
+                  {post.type !== 'argument' && (
+                    <div>
+                      <Button
+                        label='Delete'
+                        transparent
+                        onClick={() => handleDelete(post.id)}
+                      />
+                    </div>
+                  )}
                 </>
               )}
               <Follow
