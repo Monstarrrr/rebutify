@@ -197,15 +197,13 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             <div className={styles.actionsContainer}>
               {user.id === post.ownerUserId && (
                 <>
-                  {!isEditingBody && (
-                    <div>
-                      <Button
-                        label='Edit'
-                        outlined
-                        onClick={() => setIsEditingBody(!isEditingBody)}
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <Button
+                      label='Edit'
+                      outlined
+                      onClick={() => setIsEditingBody(!isEditingBody)}
+                    />
+                  </div>
                   <div>
                     <Button
                       label='Delete'
