@@ -90,7 +90,6 @@ export default function Header() {
             <BrandLabel>ebutify</BrandLabel>
           </Link>
         </LeftBlock>
-
         <RightBlock>
           {links.map(({ href, label, withAuth, requiresNoAuth }) => {
             if (withAuth && !user.id) return null
@@ -101,7 +100,9 @@ export default function Header() {
                   <Button
                     label={label}
                     disabled={pathName === href}
-                    color={tokens.color.secondary}
+                    color={
+                      (user.id && tokens.color.secondary) || tokens.color.accent
+                    }
                     outlined={href === '/login' || href === '/profile'}
                   />
                 </Link>
