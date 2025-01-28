@@ -193,7 +193,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             )}
           </ContentStyle>
           {/* Actions */}
-          {user.id && (
+          {user.id && !isEditingBody && (
             <div className={styles.actionsContainer}>
               {user.id === post.ownerUserId && (
                 <>
