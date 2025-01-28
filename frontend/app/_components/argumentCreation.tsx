@@ -8,7 +8,6 @@ import { useAppSelector } from '@/store/hooks'
 import dynamic from 'next/dynamic'
 import { createPost } from '@/api/posts'
 import { formDataToObj } from '@/helpers'
-import { Post } from '@/types'
 
 const Button = dynamic(() => import('@/components/button'), { ssr: false })
 
@@ -18,7 +17,6 @@ export default function ArgumentCreation() {
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [allPosts, setAllPosts] = useState<Post[]>([])
 
   const handleToggleForm = () => {
     setIsFormActive(!isFormActive)
@@ -31,10 +29,9 @@ export default function ArgumentCreation() {
     const formData = formDataToObj(event)
 
     try {
-      const res = await createPost({ ...formData }, 'argument')
+      await createPost({ ...formData }, 'argument')
       setLoading(false)
       setSuccess('Post created successfully!')
-      setAllPosts((prev) => [res.data, ...prev])
     } catch (error: any) {
       const { response } = error
       setLoading(false)
@@ -44,7 +41,6 @@ export default function ArgumentCreation() {
 
   return (
     <div className={styles.formContainer}>
-      <pre>{JSON.stringify(allPosts, null, 2)}</pre>
       {isFormActive ? (
         <Form
           id='new-argument'

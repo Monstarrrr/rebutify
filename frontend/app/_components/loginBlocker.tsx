@@ -9,7 +9,10 @@ export default function LoginBlocker({ action }: { action: string }) {
       }}
     >
       <Link href='/login'>
-        <Button label={'Login'} />
+        <Button
+          label={'Login'}
+          outlined
+        />
       </Link>
       <span
         style={{
