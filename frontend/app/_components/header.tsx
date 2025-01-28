@@ -13,7 +13,7 @@ import { mediaQuery, tokens } from '@/styles/tokens'
 import styles from './header.module.scss'
 
 const Nav = styled.nav`
-  background: ${tokens.color.primaryWeak};
+  background: ${tokens.color.primaryWeaker};
   display: flex;
   padding: 12px 16px;
 

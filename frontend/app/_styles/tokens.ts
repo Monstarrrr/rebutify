@@ -16,6 +16,7 @@ export const config = {
   primaryTransparent: '',
   primaryContrast: '',
   primaryContrastWeak: '',
+  primaryBorder: 'rgb(88, 88, 88)',
 
   secondary: 'rgb(215,212,207)',
   secondaryWeak: 'rgb(172, 172, 172)',
@@ -75,6 +76,7 @@ export const tokens = {
     primaryTransparent: `${config.primaryTransparent}`,
     primaryContrast: `${config.primaryContrast}`,
     primaryContrastWeak: `${config.primaryContrastWeak}`,
+    primaryBorder: `${config.primaryBorder}`,
 
     secondary: `${config.secondary}`,
     secondaryWeak: `${config.secondaryWeak}`,

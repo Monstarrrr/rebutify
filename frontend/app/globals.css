@@ -15,6 +15,7 @@
   --color-primary-transparent: ;
   --color-primary-contrast: '';
   --color-primary-contrast-weak: '';
+  --color-primary-border: rgb(88, 88, 88);
 
   --color-secondary: rgb(215, 212, 207);
   --color-secondary-weak: rgb(172, 172, 172);
