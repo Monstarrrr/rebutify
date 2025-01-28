@@ -12,7 +12,9 @@ export default async function Home() {
       <div className={styles.outerContainer}>
         <div className={styles.innerContainer}>
           <div className={styles.topContainer}>
-            <h2 className={styles.title}>Which argument are you looking for ?</h2>
+            <h2 className={styles.title}>
+              Find an argument, see its rebuttals, and create your owns !
+            </h2>
             <Search
               placeholder='e.g. "Plants feel pain tho"'
               className={styles.search}

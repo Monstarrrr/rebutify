@@ -71,18 +71,20 @@ export default function ArgumentCreation() {
         >
           <Button
             label={'Submit argument'}
+            outlined
             loading={loading}
             success={success}
             size={'max'}
           />
         </Form>
       ) : (
-        <p className={styles.hintText}>Can&apos;t find it?</p>
+        <p className={styles.hintText}>Argument not listed yet?</p>
       )}
       {user?.id ? (
         <Button
-          label={isFormActive ? 'Cancel' : 'Create argument'}
-          outlined={isFormActive}
+          label={isFormActive ? 'Cancel' : 'Add argument'}
+          outlined={!isFormActive}
+          transparent={isFormActive}
           size='max'
           className={isFormActive ? styles.cancelBtn : styles.createBtn}
           onClick={handleToggleForm}
@@ -90,7 +92,8 @@ export default function ArgumentCreation() {
       ) : (
         <Link href={'/login'}>
           <Button
-            label={'Create argument'}
+            outlined
+            label={'Add argument'}
             size='max'
             className={styles.createBtn}
           />

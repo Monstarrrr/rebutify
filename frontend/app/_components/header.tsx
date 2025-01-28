@@ -101,6 +101,7 @@ export default function Header() {
                   <Button
                     label={label}
                     disabled={pathName === href}
+                    color={tokens.color.secondary}
                     outlined={href === '/login' || href === '/profile'}
                   />
                 </Link>
@@ -109,9 +110,11 @@ export default function Header() {
           })}
           {user.id && (
             <Button
-              styles={{ fontSize: '18px', marginLeft: '12px' }}
+              styles={{ marginLeft: '12px' }}
               onClick={handleLogout}
               label='Logout'
+              color={tokens.color.secondary}
+              transparent
             />
           )}
           <br />

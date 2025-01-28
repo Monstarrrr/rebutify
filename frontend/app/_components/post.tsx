@@ -135,6 +135,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
       <div className={styles.postContainer}>
         <div className={styles.leftContainer}>
           <Button
+            label=''
             onClick={handleVote('up')}
             styles={{ background: 'transparent' }}
             icon={<Icon name='arrow' />}

@@ -1,7 +1,10 @@
-export type ButtonProps = {
-  label?: string
+import { ReactNode } from 'react'
 
-  icon?: React.ReactNode | null
+export type ButtonProps = React.PropsWithChildren<{
+  color?: string
+  label: string | ''
+
+  icon?: ReactNode
   styles?: React.CSSProperties
   className?: string
   size?: 'min' | 'max'
@@ -21,4 +24,4 @@ export type ButtonProps = {
 
   loading?: boolean
   success?: string | null
-}
+}>

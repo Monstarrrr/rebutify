@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import styles from './form.module.scss'
 
 const StyledForm = styled.form`
+  position: relative;
   width: 100%;
 `
 
@@ -219,11 +220,11 @@ export default function Form(props: FormProps) {
               {label && (
                 <Label htmlFor={id}>
                   <span
-                    style={{ marginRight: '3px', color: tokens.color.accent }}
+                    style={{ marginRight: '3px', color: tokens.color.secondary }}
                   >
                     {label || placeholder}
                   </span>
-                  <span style={{ color: tokens.color.accent }}>
+                  <span style={{ color: tokens.color.error }}>
                     {required ? '*' : ''}
                   </span>
                 </Label>
