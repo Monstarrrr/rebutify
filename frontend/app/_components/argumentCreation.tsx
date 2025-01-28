@@ -35,7 +35,6 @@ export default function ArgumentCreation() {
   const [loading, setLoading] = useState<boolean>(false)
   const [apiErrors, setApiErrors] = useState(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [allPosts, setAllPosts] = useState<Post[]>([])
 
   const handleToggleForm = () => {
     setIsFormActive(!isFormActive)
@@ -66,7 +65,6 @@ export default function ArgumentCreation() {
 
   return (
     <div className={styles.formContainer}>
-      <pre>{JSON.stringify(allPosts, null, 2)}</pre>
       {isFormActive ? (
         <Form
           id='new-argument'
