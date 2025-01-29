@@ -1,4 +1,5 @@
 'use client'
+import { tokens } from '@/styles/tokens'
 import { followPost } from '@/api/posts/followPost'
 import { Button } from '@/components'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -59,6 +60,7 @@ export default function Follow({
     <>
       <Button
         label={undo ? 'Unfollow' : 'Follow'}
+        color={tokens.color.secondary}
         loading={loading}
         success={success}
         onClick={handleFollow}

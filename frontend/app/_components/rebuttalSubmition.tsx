@@ -16,7 +16,7 @@ import styles from './rebuttalSubmition.module.scss'
 const newRebuttalInput: TextInput[] = [
   {
     id: 'body',
-    label: '',
+    label: 'Rebuttal',
     placeholder:
       'What makes it wrong to hurt cats but not cows, pigs, or chickens?',
     type: 'textarea',

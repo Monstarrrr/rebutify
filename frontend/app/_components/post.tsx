@@ -12,6 +12,7 @@ import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { AxiosResponse } from 'axios'
 // eslint-disable-next-line no-restricted-imports
 import styles from './post.module.scss'
+import { tokens } from '@/styles/tokens'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   const dispatch = useAppDispatch()
@@ -202,6 +203,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                       label='Edit'
                       outlined
                       onClick={() => setIsEditingBody(!isEditingBody)}
+                      color={tokens.color.secondary}
                     />
                   </div>
                   {post.type !== 'argument' && (
@@ -210,6 +212,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                         label='Delete'
                         transparent
                         onClick={() => handleDelete(post.id)}
+                        color={tokens.color.secondary}
                       />
                     </div>
                   )}
