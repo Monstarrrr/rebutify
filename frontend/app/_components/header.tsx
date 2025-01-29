@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { removeUser } from '@/store/slices/user'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
@@ -13,7 +13,7 @@ import { mediaQuery, tokens } from '@/styles/tokens'
 import styles from './header.module.scss'
 
 const Nav = styled.nav`
-  background: ${tokens.color.primaryWeak};
+  background: ${tokens.color.primaryWeaker};
   display: flex;
   padding: 12px 16px;
 
@@ -55,6 +55,7 @@ export default function Header() {
   const dispatch = useAppDispatch()
   const [user, setUser] = useState(userStore)
   const pathName = usePathname()
+  const router = useRouter()
 
   const links: NavLink[] = [
     { href: '/profile', label: user.username, withAuth: true },
@@ -75,6 +76,7 @@ export default function Header() {
     dispatch(removeUser())
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
+    router.push('/')
   }
   return (
     <>
@@ -90,7 +92,6 @@ export default function Header() {
             <BrandLabel>ebutify</BrandLabel>
           </Link>
         </LeftBlock>
-
         <RightBlock>
           {links.map(({ href, label, withAuth, requiresNoAuth }) => {
             if (withAuth && !user.id) return null
@@ -100,11 +101,11 @@ export default function Header() {
                 <Link href={href}>
                   <Button
                     label={label}
-                    styles={{
-                      opacity: pathName === href ? 0.6 : 1,
-                      pointerEvents: pathName === href ? 'none' : 'auto',
-                    }}
-                    transparent={href === '/login' || href === '/profile'}
+                    disabled={pathName === href}
+                    color={
+                      (user.id && tokens.color.secondary) || tokens.color.accent
+                    }
+                    outlined={href === '/login' || href === '/profile'}
                   />
                 </Link>
               </div>
@@ -112,9 +113,11 @@ export default function Header() {
           })}
           {user.id && (
             <Button
-              styles={{ fontSize: '18px', marginLeft: '12px' }}
+              styles={{ marginLeft: '12px' }}
               onClick={handleLogout}
               label='Logout'
+              color={tokens.color.secondary}
+              transparent
             />
           )}
           <br />

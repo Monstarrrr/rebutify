@@ -133,14 +133,23 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   return (
     <>
       <div className={styles.postContainer}>
-        <div className={styles.leftContainer}>
-          <Button
-            onClick={handleVote('up')}
-            styles={{ background: 'transparent' }}
-            icon={<Icon name='arrow' />}
-          />
-          <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
-        </div>
+        {post.type !== 'argument' && (
+          <div className={styles.leftContainer}>
+            <Button
+              label=''
+              onClick={handleVote('up')}
+              styles={{ background: 'transparent' }}
+              icon={<Icon name='arrow' />}
+            />
+            <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
+            <Button
+              label=''
+              onClick={handleVote('down')}
+              styles={{ background: 'transparent' }}
+              icon={<Icon name='arrow' direction='down' />}
+            />
+          </div>
+        )}
         <div className={styles.rightContainer}>
           <ContentStyle>
             {post.type == 'argument' && post.title && (
@@ -184,26 +193,26 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             )}
           </ContentStyle>
           {/* Actions */}
-          {user.id && (
+          {user.id && !isEditingBody && (
             <div className={styles.actionsContainer}>
               {user.id === post.ownerUserId && (
                 <>
-                  {!isEditingBody && (
+                  <div>
+                    <Button
+                      label='Edit'
+                      outlined
+                      onClick={() => setIsEditingBody(!isEditingBody)}
+                    />
+                  </div>
+                  {post.type !== 'argument' && (
                     <div>
                       <Button
-                        label='Edit'
+                        label='Delete'
                         transparent
-                        onClick={() => setIsEditingBody(!isEditingBody)}
+                        onClick={() => handleDelete(post.id)}
                       />
                     </div>
                   )}
-                  <div>
-                    <Button
-                      label='Delete'
-                      transparent
-                      onClick={() => handleDelete(post.id)}
-                    />
-                  </div>
                 </>
               )}
               <Follow
@@ -256,7 +265,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               <Button
                 loading={commentLoading}
                 success={commentSuccess}
-                transparent
+                outlined
                 label='Add a comment'
                 onClick={() => handleCommentsVisibility(true)}
               />

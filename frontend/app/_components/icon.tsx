@@ -7,6 +7,7 @@ type IconProps = {
   className?: string
   direction?: 'left' | 'right' | 'down'
   size?: { width: string; height: string }
+  viewBox?: string
 }
 
 export default function Icon({
@@ -14,7 +15,8 @@ export default function Icon({
   color,
   className,
   direction,
-  size = { width: '24px', height: '32px' },
+  size = icons[name].size,
+  viewBox = icons[name].viewBox,
 }: IconProps) {
   let rotation = 'rotate(0deg)'
   if (direction === 'down') {
@@ -38,7 +40,7 @@ export default function Icon({
       width={size.width}
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      viewBox={icons[name].viewBox}
+      viewBox={viewBox}
       xmlSpace='preserve'
     >
       <path d={icons[name].path} fillRule='evenodd' clipRule='evenodd' />

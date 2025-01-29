@@ -1,17 +1,18 @@
 'use client'
-import Icon from '@/components/icon'
+import { Button, Icon } from '@/components'
 // eslint-disable-next-line no-restricted-imports
 import styles from './search.module.scss'
-import { tokens } from '@/styles/tokens'
 import { useEffect, useState } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { tokens } from '@/styles/tokens'
 
 type SearchProps = {
   className?: string
   placeholder?: string
+  label?: string
 }
 
-export default function Search({ className, placeholder }: SearchProps) {
+export default function Search({ className, placeholder, label }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const searchParams = useSearchParams()
   const q = searchParams.get('q')
@@ -53,15 +54,16 @@ export default function Search({ className, placeholder }: SearchProps) {
 
   return (
     <div className={`${styles.container} ${className ?? ''}`}>
-      <label className={styles.label} htmlFor='search'>
-        Search
-      </label>
-      {/* Todo: switch to custom <Form> */}
+      {label && (
+        <label className={styles.label} htmlFor='search'>
+          {label}
+        </label>
+      )}
       <form className={styles.inputContainer} onSubmit={handleSubmit}>
         <Icon
           name='search'
           className={styles.icon}
-          color={tokens.color.secondaryWeak}
+          color={tokens.color.secondaryWeaker}
         />
         <input
           type='text'
@@ -72,6 +74,9 @@ export default function Search({ className, placeholder }: SearchProps) {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />
+        <div className={styles.inputButtonContainer}>
+          <Button label='Search' className={styles.inputButton} />
+        </div>
       </form>
     </div>
   )

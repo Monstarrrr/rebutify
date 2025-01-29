@@ -5,61 +5,95 @@ import { ButtonProps } from '@/types'
 import styled from 'styled-components'
 
 const StyledButton = styled('button')<{
+  $color: string
   $size: 'min' | 'max' | undefined
   $success: string | null
-  $icon: boolean
+  $outlined: boolean
   $transparent: boolean
-  disabled: boolean | string | null
+  $iconOnly: boolean
+  $disabled: boolean | string | null
 }>`
-  background-color: ${(props) =>
-    props.$success
-      ? tokens.color.success
-      : props.$transparent
-        ? 'transparent'
-        : tokens.color.accent};
-  border: ${(props) =>
-    props.$transparent ? `1px solid ${tokens.color.accent}` : 'none'};
-  color: ${(props) =>
-    props.$transparent ? tokens.color.accent : tokens.color.primaryWeaker};
+  background-color: ${(props) => props.$color};
+  border: none;
+  color: ${tokens.color.primaryWeaker};
+  cursor: pointer;
   font-size: 1rem;
-  padding: ${(props) => (props.$icon ? '4px 8px' : '6px 20px;')};
+  padding: 6px 20px;
   border-radius: 99px;
-  cursor: ${(props) =>
-    props.disabled || props.$success ? 'not-allowed' : 'pointer'};
+  width: fit-content;
 
-  ${(props) => (props.$size === 'max' ? `width: 100%;` : `width: fit-content;`)}
+  ${(props) =>
+    props.$outlined &&
+    `
+    background-color: transparent;
+    border: 1px solid ${props.$color};
+    color: ${props.$color};
+  `}
+  ${(props) =>
+    props.$transparent &&
+    `
+    background-color: transparent;
+    color: ${props.$color};
+    padding: 0 6px;
+  `}
+  ${(props) =>
+    props.$success &&
+    `
+    background-color: ${tokens.color.accent};
+    color: ${tokens.color.primaryWeaker};
+  `}
+  ${(props) =>
+    props.$disabled &&
+    `
+    cursor: not-allowed;
+    opacity: 0.5;
+  `}
+  ${(props) =>
+    props.$size === 'max' &&
+    `
+    width: 100%;
+  `}
+  ${(props) =>
+    props.$iconOnly &&
+    `
+    padding: 0;
+  `}
 `
 
 export default function Button(props: ButtonProps) {
   const {
     label,
     size,
+    icon = null,
+    iconOnly = (icon && true) || false,
+    disabled = false,
     loading = false,
     success = null,
     onClick,
     styles,
     className,
-    icon = null,
+    color = tokens.color.accent,
+    children,
+    outlined = false,
     transparent = false,
   } = props
   return (
     <StyledButton
       style={styles}
+      $color={color}
       $size={size}
+      $iconOnly={iconOnly}
       onClick={onClick}
-      disabled={loading || success}
+      $disabled={loading || success || disabled}
       $success={success}
-      $icon={!!icon}
+      $outlined={outlined}
       $transparent={transparent}
       className={className}
     >
-      <span>
-        {/* Linear logic (only one condition will be true at a time) to prevent hydration errors */}
-        {icon ||
-          (loading && 'Loading...') ||
-          (success && `${success} ✅`) ||
-          label}
-      </span>
+      {/* Linear logic (only one condition will be true at a time) to prevent hydration errors */}
+      {(loading && 'Loading...') || (success && `${success} ✅`) || label}
+      {icon}
+      {children}
     </StyledButton>
   )
 }

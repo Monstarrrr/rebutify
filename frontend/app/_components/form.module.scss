@@ -9,11 +9,11 @@
 
 .input,
 .textarea {
-  background-color: var(--color-primary-weak);
-  border: 2px solid var(--color-primary);
+  background-color: transparent;
+  border: 1px solid var(--color-primary-border);
   color: var(--color-secondary);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 24px;
   margin-bottom: 12px;
 
   &::placeholder {

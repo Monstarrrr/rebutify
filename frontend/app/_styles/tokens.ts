@@ -11,14 +11,16 @@ export const mediaQueries = facepaint(mediaQuery, { overlap: true })
 
 export const config = {
   primary: 'rgb(66, 66, 66)',
-  primaryWeak: 'rgb(34, 34, 34)',
-  primaryWeaker: 'rgb(8, 8, 8)',
+  primaryWeak: 'rgb(40,44,47)',
+  primaryWeaker: 'rgb(20,22,24)',
   primaryTransparent: '',
   primaryContrast: '',
   primaryContrastWeak: '',
+  primaryBorder: 'rgb(88, 88, 88)',
 
-  secondary: 'rgb(236, 236, 236)',
-  secondaryWeaker: 'rgb(172, 172, 172)',
+  secondary: 'rgb(215,212,207)',
+  secondaryWeak: 'rgb(172, 172, 172)',
+  secondaryWeaker: 'rgb(138, 138, 138)',
   secondaryTransparent: '',
   secondaryContrast: '',
   secondaryContrastWeak: '',
@@ -74,9 +76,11 @@ export const tokens = {
     primaryTransparent: `${config.primaryTransparent}`,
     primaryContrast: `${config.primaryContrast}`,
     primaryContrastWeak: `${config.primaryContrastWeak}`,
+    primaryBorder: `${config.primaryBorder}`,
 
     secondary: `${config.secondary}`,
-    secondaryWeak: `${config.secondaryWeaker}`,
+    secondaryWeak: `${config.secondaryWeak}`,
+    secondaryWeaker: `${config.secondaryWeaker}`,
     secondaryTransparent: `${config.secondaryTransparent}`,
     accent: `${config.accent}`,
 

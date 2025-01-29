@@ -76,22 +76,20 @@ export default function Profile() {
   )
 
   useEffect(() => {
-    if (!user.id) {
-      router.push('/login')
-    }
-  }, [user, router])
-
-  useEffect(() => {
     let fetchApi = async () => {
       try {
-        let response = await getPosts('argument')
-        response = response.filter((post: Post) => post.ownerUserId === user.id)
-        console.log(`# response :`, response)
-        setArgumentsList(response)
-
-        let rebuttals = await getPosts('rebuttal')
-        rebuttals = rebuttals.filter((post: Post) => post.ownerUserId === user.id)
-        setRebuttalsList(rebuttals)
+        let allPosts = await getPosts()
+        const allOwnPosts = allPosts.filter(
+          (post: Post) => post.ownerUserId === user.id,
+        )
+        const selfRebuttals = allOwnPosts.filter(
+          (post: Post) => post.type === 'rebuttal',
+        )
+        const selfArguments = allOwnPosts.filter(
+          (post: Post) => post.type === 'argument',
+        )
+        setArgumentsList(selfArguments)
+        setRebuttalsList(selfRebuttals)
       } catch (error: any) {
         console.error(
           '# Error fetching posts: ',
@@ -236,7 +234,7 @@ export default function Profile() {
                     <Button
                       label='Cancel'
                       onClick={(_) => setIsEditingEmail(false)}
-                      transparent
+                      outlined
                     />
                   </Form>
                 </>
@@ -247,7 +245,7 @@ export default function Profile() {
                     styles={{ marginLeft: '8px' }}
                     label='Edit'
                     onClick={handleIsEditingEmail}
-                    transparent
+                    outlined
                   />
                   <p style={{ color: 'green' }}>{editEmailSuccess}</p>
                 </>
@@ -329,14 +327,6 @@ export default function Profile() {
         </Left>
         <Right>
           <H2>My posts</H2>
-          <div className={styles.resultsInfoContainer}>
-            <p>
-              <b>Rebuttals:</b> {rebuttalsList.length}
-            </p>
-            <p>
-              <b>Arguments:</b> {argumentsList.length}
-            </p>
-          </div>
           <div className={styles.postsContainer}>
             {argumentsList.length === 0 ? (
               <p style={{ textAlign: 'center', fontStyle: 'italic' }}>
@@ -345,9 +335,9 @@ export default function Profile() {
             ) : (
               <>
                 {rebuttalsList.length !== 0 && (
-                  <div>
+                  <div className={styles.postListContainer}>
                     <h3 style={{ marginBottom: '6px', marginLeft: '12px' }}>
-                      Rebuttals
+                      Your rebuttals ({rebuttalsList.length}) :
                     </h3>
                     <List
                       items={rebuttalsList}
@@ -357,9 +347,9 @@ export default function Profile() {
                   </div>
                 )}
                 {argumentsList.length !== 0 && (
-                  <div>
+                  <div className={styles.postListContainer}>
                     <h3 style={{ marginBottom: '6px', marginLeft: '12px' }}>
-                      Arguments
+                      Your arguments ({argumentsList.length}) :
                     </h3>
                     <List
                       items={argumentsList}

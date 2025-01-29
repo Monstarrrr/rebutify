@@ -1,10 +1,17 @@
-export type ButtonProps = {
-  label?: string
+import { ReactNode } from 'react'
 
-  icon?: React.ReactNode | null
+export type ButtonProps = React.PropsWithChildren<{
+  color?: string
+  label: string | ''
+
+  icon?: ReactNode
+  iconOnly?: boolean
   styles?: React.CSSProperties
   className?: string
   size?: 'min' | 'max'
+
+  disabled?: boolean
+  outlined?: boolean
   transparent?: boolean
   /* 
     Within forms, 'onClick' is 'onSubmit', but
@@ -18,4 +25,4 @@ export type ButtonProps = {
 
   loading?: boolean
   success?: string | null
-}
+}>
