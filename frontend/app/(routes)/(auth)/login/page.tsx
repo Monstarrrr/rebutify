@@ -16,13 +16,15 @@ import Link from 'next/link'
 const loginInputs: TextInput[] = [
   {
     id: 'username',
-    placeholder: 'Username',
+    label: 'Username',
+    placeholder: 'JohnDoe',
     inputClassName: styles.input,
     value: '',
   },
   {
     id: 'password',
-    placeholder: 'Password',
+    label: 'Password',
+    placeholder: '**************',
     type: 'password',
     inputClassName: styles.input,
     value: '',

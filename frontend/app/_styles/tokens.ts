@@ -21,6 +21,7 @@ export const config = {
   secondary: 'rgb(215,212,207)',
   secondaryWeak: 'rgb(172, 172, 172)',
   secondaryWeaker: 'rgb(138, 138, 138)',
+  secondaryWeakest: 'rgb(120, 120, 120)',
   secondaryTransparent: '',
   secondaryContrast: '',
   secondaryContrastWeak: '',
@@ -81,6 +82,7 @@ export const tokens = {
     secondary: `${config.secondary}`,
     secondaryWeak: `${config.secondaryWeak}`,
     secondaryWeaker: `${config.secondaryWeaker}`,
+    secondaryWeakest: `${config.secondaryWeakest}`,
     secondaryTransparent: `${config.secondaryTransparent}`,
     accent: `${config.accent}`,
 

@@ -169,6 +169,13 @@ export default function Profile() {
     }
   }
 
+  const handleLogout = () => {
+    dispatch(removeUser())
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    router.push('/')
+  }
+
   return (
     <>
       <Title>Profile</Title>
@@ -322,6 +329,12 @@ export default function Profile() {
                   }
                 />
               </Form>
+            </H3Section>
+
+            <H3>Sign off</H3>
+            <Hr />
+            <H3Section>
+              <Button onClick={handleLogout} label='Logout' />
             </H3Section>
           </div>
         </Left>

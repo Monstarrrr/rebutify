@@ -13,19 +13,19 @@
   color: var(--color-secondary);
   background-color: transparent;
   border: 1px solid var(--color-primary);
-  border-radius: 999px;
+  border-radius: 24px;
   padding: 8px 100px 8px 46px;
   width: 100%;
 
   &::placeholder {
-    color: var(--color-secondary-weaker);
+    color: var(--color-secondary-weakest);
     font-style: italic;
   }
 }
 
 .icon {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 6px;
 }
 
@@ -33,17 +33,21 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  // padding: 0 16px 0 24px;
   position: absolute;
   right: 0;
   top: 0;
+
+  & button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    padding: 7px 20px 7px 18px;
+  }
 }
 
 .inputButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 20px !important; // find better way to do this later
 }
 
 .buttonLabel {

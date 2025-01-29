@@ -7,6 +7,7 @@ const initialState: UserInfo = {
   refresh: '',
   access: '',
   username: 'Guest',
+  reputation: 0,
   upvotedPosts: [],
   downvotedPosts: [],
   followedPosts: [],
