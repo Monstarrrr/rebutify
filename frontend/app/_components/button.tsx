@@ -47,6 +47,22 @@ const StyledButton = styled('button')<{
     `
     cursor: not-allowed;
     opacity: 0.5;
+    background-color: ${tokens.color.secondary};
+    ${
+      props.$outlined &&
+      `
+      background-color: transparent;
+      border-color: ${tokens.color.secondary};
+      color: ${tokens.color.secondary};  
+    `
+    }
+    ${
+      props.$transparent &&
+      `
+      background-color: transparent;
+      color: ${tokens.color.secondary};
+    `
+    }
   `}
   ${(props) =>
     props.$size === 'max' &&

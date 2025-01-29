@@ -214,6 +214,7 @@ export default function Form(props: FormProps) {
             value = '',
             errors,
             required = false,
+            disabled = false,
             inputClassName,
           }) => (
             <InputContainer key={id}>
@@ -231,7 +232,7 @@ export default function Form(props: FormProps) {
               )}
               {type === 'textarea' ? (
                 <textarea
-                  disabled={loading}
+                  disabled={loading || disabled}
                   name={id}
                   placeholder={placeholder}
                   required={required || true}
@@ -241,7 +242,7 @@ export default function Form(props: FormProps) {
                 />
               ) : (
                 <input
-                  disabled={loading}
+                  disabled={loading || disabled}
                   name={id}
                   placeholder={placeholder}
                   required={required || true}

@@ -31,6 +31,12 @@
 
   --color-transparent: `rgba(255, 255, 255, 0.1) `;
   --color-transparent-weak: `rgba(255, 255, 255, 0.2) `;
+
+  --color-warning: rgb(255, 207, 75);
+  --color-info: #141270;
+  --color-inactive: #9d9ccc;
+  --color-success: rgb(185, 252, 0);
+  --color-error: #dc3545;
 }
 
 /*

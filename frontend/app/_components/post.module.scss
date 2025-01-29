@@ -23,6 +23,15 @@
   gap: 12px;
 }
 
+.contentStyle {
+  flex: 1;
+}
+
+.voteValue {
+  font-size: 18px;
+  margin: 0 8px;
+}
+
 .editPost,
 .commentsContainer {
   background-color: var(--color-primary-weak);
@@ -49,4 +58,8 @@
   flex-direction: column;
   align-items: center;
   margin-right: 22px;
+}
+
+.reputationBlockerContainer {
+  padding: 6px;
 }

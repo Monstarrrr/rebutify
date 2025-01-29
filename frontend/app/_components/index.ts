@@ -17,3 +17,4 @@ export { default as ConfirmResetPassword } from '@/components/confirmresetpasswo
 export { default as Tag } from '@/components/tag'
 export { default as Search } from '@/components/search'
 export { default as ArgumentCreation } from '@/components/argumentCreation'
+export { default as ReputationBlocker } from '@/components/reputationBlocker'

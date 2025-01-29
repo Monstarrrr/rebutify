@@ -1,17 +1,24 @@
 'use client'
+// eslint-disable-next-line no-restricted-imports
+import styles from './post.module.scss'
 import * as type from '@/types'
 import React, { FormEvent, useState } from 'react'
 import { vote } from '@/api/vote'
 import { createPost, deletePost, editPost } from '@/api/posts'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateUser } from '@/store/slices/user'
-import { Button, Form, Icon, LoginBlocker, Comments, Follow } from '@/components'
+import {
+  Button,
+  Form,
+  Icon,
+  LoginBlocker,
+  Comments,
+  Follow,
+  ReputationBlocker,
+} from '@/components'
 import { useRouter } from 'next/navigation'
-import { ContentStyle, VoteValue } from '@/components/postStyles'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
 import { AxiosResponse } from 'axios'
-// eslint-disable-next-line no-restricted-imports
-import styles from './post.module.scss'
 import { tokens } from '@/styles/tokens'
 
 const Post: React.FC<{ item: type.Post }> = ({ item }) => {
@@ -142,7 +149,9 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               styles={{ background: 'transparent' }}
               icon={<Icon name='arrow' />}
             />
-            <VoteValue>{post.upvotes - post.downvotes}</VoteValue>
+            <div className={styles.voteValue}>
+              {post.upvotes - post.downvotes}
+            </div>
             <Button
               label=''
               onClick={handleVote('down')}
@@ -152,7 +161,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
           </div>
         )}
         <div className={styles.rightContainer}>
-          <ContentStyle>
+          <div className={styles.contentStyle}>
             {post.type == 'argument' && post.title && (
               <div>
                 <h1>{post.title}</h1>
@@ -192,7 +201,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             ) : (
               <p>{post.body}</p>
             )}
-          </ContentStyle>
+          </div>
           {/* Actions */}
           {user.id && !isEditingBody && (
             <div className={styles.actionsContainer}>
@@ -240,7 +249,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
               comments={comments}
               parentPostId={post.id}
             />
-            {isCommenting ? (
+            {(isCommenting && (
               <Form
                 id='comment'
                 inputsFields={[
@@ -264,17 +273,24 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                   onClick={() => handleCommentsVisibility(false)}
                 />
               </Form>
-            ) : user.id ? (
-              <Button
-                loading={commentLoading}
-                success={commentSuccess}
-                outlined
-                label='Add a comment'
-                onClick={() => handleCommentsVisibility(true)}
-              />
-            ) : (
-              <LoginBlocker action={'comment'} />
-            )}
+            )) ||
+              (user.id && (
+                <>
+                  <Button
+                    loading={commentLoading}
+                    success={commentSuccess}
+                    outlined
+                    disabled={user.reputation < 1}
+                    label={`Add a comment${user.reputation < 1 ? '*' : ''}`}
+                    onClick={() => handleCommentsVisibility(true)}
+                  />
+                  {user.reputation < 1 && (
+                    <div className={styles.reputationBlockerContainer}>
+                      <ReputationBlocker action={'comment'} />
+                    </div>
+                  )}
+                </>
+              )) || <LoginBlocker action={'comment'} />}
           </div>
         </div>
       </div>
