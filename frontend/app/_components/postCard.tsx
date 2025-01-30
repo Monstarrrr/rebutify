@@ -11,7 +11,7 @@ const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({
   item,
   layoutClassName,
 }) => {
-  const { title, type, id, updated, isPending = false } = item
+  const { title, type, id, updated, isPending = false, upvotes, downvotes } = item
 
   const date = new Date(updated)
   const day = String(date.getDate()).padStart(2, '0') // Ensure two digits
@@ -25,6 +25,10 @@ const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({
   const randomNumber = Math.floor(Math.random() * 100)
   const random = randomBoolean ? randomNumber : 0
 
+  // get first 20 characters of body
+  const body = item.body
+  const truncatedBody = body.length > 32 ? body.substring(0, 32) + '...' : body
+
   return (
     <Link
       className={`${styles.link} ${layoutClassName ?? ''}`}
@@ -32,9 +36,16 @@ const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({
     >
       <div className={styles.wrapper}>
         {' '}
+        <div className={styles.title}>
+          {type === 'argument' ? title : truncatedBody}
+        </div>
         {/* div used at (routes)\profile\page.module.scss */}
-        <div className={styles.viewCount}>{random} views</div>
-        <div className={styles.title}>{title}</div>
+        {type === 'argument' && (
+          <div className={styles.viewCount}>{random} views</div>
+        )}
+        {type === 'rebuttal' && (
+          <div className={styles.viewCount}>{upvotes - downvotes} votes</div>
+        )}
         {isPending && (
           <div className={styles.tag}>
             <Tag />
