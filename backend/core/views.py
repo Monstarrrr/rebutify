@@ -110,7 +110,6 @@ DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
 class CursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
-    ordering = "-updated", "-created"
 
 class PostCursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
