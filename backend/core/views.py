@@ -109,13 +109,17 @@ DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
 class CursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
-    ordering = "-isPending", "-updated", "-created"
+    ordering = "-updated", "-created"
 
+class PostCursorPaginationViewSet(CursorPagination):
+    page_size = DEFAULT_PAGE_SIZE
+    page_size_query_param = "page_size"
+    ordering = "-isPending", "-updated", "-created"
 
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
-
+    
     # get all arguments
     queryset = Post.objects.filter(type="argument")
 
@@ -493,7 +497,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    pagination_class = CursorPaginationViewSet
+    pagination_class = PostCursorPaginationViewSet
 
     def get_queryset(self):
         type = self.request.query_params.get("type")
