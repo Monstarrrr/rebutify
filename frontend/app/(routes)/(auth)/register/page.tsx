@@ -23,18 +23,21 @@ export default function Register() {
   const registerInputs: TextInput[] = [
     {
       id: 'username',
-      placeholder: 'Username',
+      label: 'Username',
+      placeholder: 'JohnDoe',
       value: '',
     },
     {
       id: 'email',
-      placeholder: 'Email',
+      label: 'Email',
+      placeholder: 'your@email.com',
       type: 'email',
       value: '',
     },
     {
       id: 'password',
-      placeholder: 'Password',
+      label: 'Password',
+      placeholder: '**************',
       type: 'password',
       value: '',
     },

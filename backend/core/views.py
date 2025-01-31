@@ -16,6 +16,7 @@ from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -460,8 +461,9 @@ class RebuttalViewSet(viewsets.ModelViewSet):
         queryset = Post.objects.filter(type="rebuttal")
         return queryset
 
-    def perform_create(self, serializer):
-        serializer.save(ownerUserId=self.request.user.id)
+    # def perform_create(self, serializer):
+    #     # save rebuttal
+    #     serializer.save(ownerUserId=self.request.user.id)
 
     def get_permissions(self):
         if self.action == "create":
@@ -535,7 +537,20 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        is_pending = serializer.validated_data.get("type") == "argument"
+        post_type = serializer.validated_data.get("type")
+
+        if post_type in ["rebuttal", "comment"]:
+            # Get or create user profile
+            user_profile, created = UserProfile.objects.get_or_create(
+                user=self.request.user, defaults={"created": timezone.now().date()}
+            )
+            # Reputation requirement
+            if user_profile.reputation < 1:
+                raise PermissionDenied(
+                    f"Your reputation is too low to create {post_type}s."
+                )
+
+        is_pending = post_type == "argument"
 
         post: Post = serializer.save(
             ownerUserId=self.request.user.id, isPending=is_pending

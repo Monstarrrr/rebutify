@@ -14,6 +14,7 @@ const forgotPasswordInputs: TextInput[] = [
     id: 'email',
     placeholder: 'your@email.com',
     label: 'Email',
+    required: true,
     type: 'email',
     value: '',
   },

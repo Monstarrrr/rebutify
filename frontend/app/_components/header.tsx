@@ -1,9 +1,8 @@
 'use client'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { removeUser } from '@/store/slices/user'
+import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { NavLink } from '@/types/NavLink'
 import styled from 'styled-components'
 import Image from 'next/image'
@@ -52,10 +51,8 @@ const BrandLabel = styled.span`
 export default function Header() {
   // get user from store
   const userStore = useAppSelector((state) => state.user)
-  const dispatch = useAppDispatch()
   const [user, setUser] = useState(userStore)
   const pathName = usePathname()
-  const router = useRouter()
 
   const links: NavLink[] = [
     { href: '/profile', label: user.username, withAuth: true },
@@ -72,12 +69,6 @@ export default function Header() {
     setUser(userStore)
   }, [userStore])
 
-  const handleLogout = () => {
-    dispatch(removeUser())
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    router.push('/')
-  }
   return (
     <>
       <Nav>
@@ -111,16 +102,6 @@ export default function Header() {
               </div>
             )
           })}
-          {user.id && (
-            <Button
-              styles={{ marginLeft: '12px' }}
-              onClick={handleLogout}
-              label='Logout'
-              color={tokens.color.secondary}
-              transparent
-            />
-          )}
-          <br />
         </RightBlock>
       </Nav>
     </>

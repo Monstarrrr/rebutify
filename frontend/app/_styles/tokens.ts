@@ -21,21 +21,22 @@ export const config = {
   secondary: 'rgb(215,212,207)',
   secondaryWeak: 'rgb(172, 172, 172)',
   secondaryWeaker: 'rgb(138, 138, 138)',
+  secondaryWeakest: 'rgb(120, 120, 120)',
   secondaryTransparent: '',
   secondaryContrast: '',
   secondaryContrastWeak: '',
 
-  accent: 'rgb(164, 252, 0)',
+  accent: 'rgb(185, 252, 0)',
   accentWeak: '',
   accentTransparent: '',
 
   transparent: `rgba(255, 255, 255, 0.1)`,
   transparentWeak: `rgba(255, 255, 255, 0.2)`,
 
-  success: 'rgb(164, 252, 0)',
+  success: 'rgb(185, 252, 0)',
   info: '#141270',
   inactive: '#9d9ccc',
-  warning: '#ffc107',
+  warning: 'rgb(255, 207, 75)',
   error: '#dc3545',
 
   xsFontsize: '14px',
@@ -81,6 +82,7 @@ export const tokens = {
     secondary: `${config.secondary}`,
     secondaryWeak: `${config.secondaryWeak}`,
     secondaryWeaker: `${config.secondaryWeaker}`,
+    secondaryWeakest: `${config.secondaryWeakest}`,
     secondaryTransparent: `${config.secondaryTransparent}`,
     accent: `${config.accent}`,
 

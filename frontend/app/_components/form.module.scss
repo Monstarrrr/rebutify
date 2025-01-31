@@ -14,10 +14,11 @@
   color: var(--color-secondary);
   padding: 8px 12px;
   border-radius: 24px;
+  border-top-left-radius: 0%;
   margin-bottom: 12px;
 
   &::placeholder {
-    color: var(--color-secondary-weaker);
+    color: var(--color-secondary-weakest);
     font-style: italic;
   }
 }

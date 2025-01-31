@@ -1,11 +1,12 @@
 export type TextInput = {
-  id: string
-  placeholder: string
-  value?: string
+  disabled?: boolean
   errors?: string[]
-  label?: string
-  required?: boolean
-  type?: 'text' | 'textarea' | 'password' | 'email'
-  styles?: React.CSSProperties
+  id: string
   inputClassName?: string
+  label?: string
+  placeholder: string
+  required?: boolean
+  styles?: React.CSSProperties
+  type?: 'text' | 'textarea' | 'password' | 'email'
+  value?: string
 }

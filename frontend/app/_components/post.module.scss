@@ -20,7 +20,16 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 22px;
+  gap: 12px;
+}
+
+.contentStyle {
+  flex: 1;
+}
+
+.voteValue {
+  font-size: 18px;
+  margin: 0 8px;
 }
 
 .editPost,
@@ -49,4 +58,8 @@
   flex-direction: column;
   align-items: center;
   margin-right: 22px;
+}
+
+.reputationBlockerContainer {
+  padding: 6px;
 }

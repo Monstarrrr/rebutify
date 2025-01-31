@@ -20,6 +20,7 @@
   --color-secondary: rgb(215, 212, 207);
   --color-secondary-weak: rgb(172, 172, 172);
   --color-secondary-weaker: rgb(138, 138, 138);
+  --color-secondary-weakest: rgb(120, 120, 120);
   --color-secondary-transparent: rgba(255, 255, 255, 0.1);
   --color-secondary-contrast: '';
   --color-secondary-contrast-weak: '';
@@ -30,6 +31,12 @@
 
   --color-transparent: `rgba(255, 255, 255, 0.1) `;
   --color-transparent-weak: `rgba(255, 255, 255, 0.2) `;
+
+  --color-warning: rgb(255, 207, 75);
+  --color-info: #141270;
+  --color-inactive: #9d9ccc;
+  --color-success: rgb(185, 252, 0);
+  --color-error: #dc3545;
 }
 
 /*
