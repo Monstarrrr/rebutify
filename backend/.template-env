@@ -20,6 +20,12 @@ SITE_NAME=rebutify.org
 # URL of frontend
 FRONTEND_SITE_URL=localhost:3000
 
+# Typesense
+TYPESENSE_SECRET_KEY=
+TYPESENSE_HOST=
+TYPESENSE_PORT=
+TYPESENSE_PROTOCOL=
+
 # Uses a local SQLite DB
 DEBUG_DB=True
 
