@@ -3,11 +3,12 @@
 
 // We import * as types to address naming conflicts with components
 import * as type from '@/types'
+// eslint-disable-next-line no-restricted-imports
+import styles from './list.module.scss'
 
 export default function List<T extends type.Identifiable>({
   items,
   Layout,
-  styles,
   className,
   layoutClassName,
 }: type.ListProps<T>) {
@@ -16,18 +17,27 @@ export default function List<T extends type.Identifiable>({
   }
 
   return (
-    <ul
-      style={{
-        listStyle: 'none',
-        padding: 0,
-        margin: 0,
-        ...styles,
-      }}
-      className={className}
+    <div
+      className={`${styles.resultsContainer} ${(className && className) || ''}`}
     >
-      {items.map((item) => (
-        <Layout layoutClassName={layoutClassName} key={item.id} item={item} />
-      ))}
-    </ul>
+      <div className={styles.resultsInfoContainer}>
+        <p className={styles.resultsCounter}>
+          {`
+            ${items.length} ${items.length === 1 ? 'post' : 'posts'} found
+          `}
+        </p>
+      </div>
+      <ul
+        style={{
+          listStyle: 'none',
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        {items.map((item) => (
+          <Layout layoutClassName={layoutClassName} key={item.id} item={item} />
+        ))}
+      </ul>
+    </div>
   )
 }

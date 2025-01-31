@@ -1,9 +1,10 @@
 'use client'
 
-import { ReactNode, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { AppStore, makeStore } from '@/store/store'
 import { Provider } from 'react-redux'
 import { injectStore } from '@/api/api'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 type PropsType = Readonly<{
   children: ReactNode
@@ -21,5 +22,15 @@ export default function StoreProvider({ children }: PropsType) {
     storeRef.current = makeStore()
     injectStore(storeRef.current)
   }
+
+  useEffect(() => {
+    if (storeRef.current != null) {
+      // configure listeners using the provided defaults
+      // optional, but required for 'refetchOnFocus'/'refetchOnReconnect' behaviors
+      const unsubscribe = setupListeners(storeRef.current.dispatch)
+      return unsubscribe
+    }
+    return () => {}
+  }, [])
   return <Provider store={storeRef.current}>{children}</Provider>
 }

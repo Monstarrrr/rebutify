@@ -21,3 +21,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def check():
+    from django.core.management import call_command
+
+    call_command("check")

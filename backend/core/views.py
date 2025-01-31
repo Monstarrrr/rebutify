@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -25,6 +26,8 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
 from .serializers import (
@@ -107,13 +110,16 @@ DEFAULT_PAGE_SIZE = settings.REST_FRAMEWORK["PAGE_SIZE"]
 class CursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
-    ordering = "-isPending", "-updated", "-created"
 
+class PostCursorPaginationViewSet(CursorPagination):
+    page_size = DEFAULT_PAGE_SIZE
+    page_size_query_param = "page_size"
+    ordering = "-isPending", "-updated", "-created"
 
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
-
+    
     # get all arguments
     queryset = Post.objects.filter(type="argument")
 
@@ -132,6 +138,85 @@ class ArgumentViewSet(viewsets.ModelViewSet):
         if self.action in ["update", "delete", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return [AllowAny()]
+
+    # search arguments
+    @action(detail=False, methods=["get"], url_path="search")
+    def search(self, request, *args, **kwargs):
+        from core.typesense.posts.sync import sync_all_posts_with_typesense
+
+        client = get_client()
+
+        query = request.GET.get("q", "")
+        if not query:
+            return Response(
+                {"error": "No search query provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            # Sync all posts
+            sync_all_posts_with_typesense(self, sender=self)
+        except Exception as e:
+            logger.error(f"❌ Error syncing posts with Typesense: {e}")
+
+        try:
+            print("🔎 Starting Typesense search for query:", query[0:20])
+
+            search_params = {
+                "q": query,
+                "query_by": "title,body",  # Search in title and body
+                "filter_by": "type:argument",  # Only search in arguments
+                "sort_by": "_text_match:desc",
+                "text_match_type": "max_weight",
+            }
+            search_results = client.collections["posts"].documents.search(search_params)
+            print("✅ Typesense search completed.")
+
+            # We format the results
+            results = []
+            for hit in search_results.get("hits", []):
+                document = hit["document"]
+
+                transformed_item = {
+                    "id": int(document["id"]),
+                    "type": document["type"],
+                    "body": document["body"],
+                    "title": document["title"],
+                    "ownerUserId": document["ownerUserId"],
+                    "parentId": document.get("parentId")
+                    if "parentId" in document
+                    else None,
+                    "created": datetime.fromtimestamp(document["created"]).isoformat(),
+                    "updated": datetime.fromtimestamp(document["updated"]).isoformat(),
+                    "upvotes": document.get("upvotes", 0),
+                    "downvotes": document.get("downvotes", 0),
+                }
+
+                # Order results by score
+                results.append(transformed_item)
+                formattedResults = {
+                    "results": results,
+                }
+            return Response(formattedResults, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error(
+                "❌ Typesense search failed with exception type: %s and value: %s",
+                type(e).__name__,
+                str(e),
+            )
+
+            # Try to get collection status
+            try:
+                stats = client.collections["posts"].status()
+                print("Collection status:", stats)
+            except Exception as e:
+                logger.error(f"❌ Error retrieving collection status: {e}")
+
+            return Response(
+                {"error": "An internal error has occurred. Please try again later."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     # get followers of the argument
     @action(detail=True, methods=["get"])
@@ -413,7 +498,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    pagination_class = CursorPaginationViewSet
+    pagination_class = PostCursorPaginationViewSet
 
     def get_queryset(self):
         type = self.request.query_params.get("type")

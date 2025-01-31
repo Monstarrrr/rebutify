@@ -1,5 +1,6 @@
 import api from '@/api/api'
 
+// client side
 export const getPosts = async (
   type?: 'argument' | 'rebuttal' | 'comment',
   parentId?: string,
@@ -25,13 +26,22 @@ export const getPosts = async (
   }
 }
 
-export async function fetchPosts(type: string) {
+// server side
+export async function fetchPosts(type: string, query?: string) {
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`
+  if (query) {
+    url = `${process.env.NEXT_PUBLIC_API_URL}/api/arguments/search/?q=${query}`
+  }
+  console.log(`# url :`, url)
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?type=${type}`,
-    )
+    const response = await fetch(url, {
+      cache: 'no-store',
+      next: {
+        tags: ['posts'],
+      },
+    })
     const data = await response.json()
-    return data.results
+    return (query && data.hits) || data.results
   } catch (error: any) {
     console.error('❌ Error fetching posts: ', error)
   }
