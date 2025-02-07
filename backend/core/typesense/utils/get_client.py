@@ -6,7 +6,7 @@ def get_client():
     api_key = os.getenv("TYPESENSE_SECRET_KEY", "")
     
     if not api_key:
-        raise Exception(f"Missing API Key for Typesense. Please set TYPESENSE_SECRET_KEY environment variable.")
+        raise Exception("Missing API Key for Typesense. Please set TYPESENSE_SECRET_KEY environment variable.")
     
     try:
         client = typesense.Client(
