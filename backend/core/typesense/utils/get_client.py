@@ -3,13 +3,10 @@ import typesense
 
 
 def get_client():
-    host = os.getenv("TYPESENSE_HOST", "")
-    port = os.getenv("TYPESENSE_PORT", "")
-    protocol = os.getenv("TYPESENSE_PROTOCOL", "")
     api_key = os.getenv("TYPESENSE_SECRET_KEY", "")
     
-    if not host or not port or not protocol or not api_key:
-        raise Exception(f"Missing config: Host: {host}, Port: {port}, Protocol: {protocol}, API Key: {api_key}")
+    if not api_key:
+        raise Exception(f"Missing API Key for Typesense. Please set TYPESENSE_SECRET_KEY environment variable.")
     
     try:
         client = typesense.Client(
