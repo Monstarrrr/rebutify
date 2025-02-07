@@ -16,6 +16,8 @@ def get_client():
                 }
             ],
             "api_key": os.getenv("TYPESENSE_SECRET_KEY", ""),
-            "connection_timeout_seconds": 2,
+            "connection_timeout_seconds": 10,
+            "num_retries": 3,
+            "retry_interval_seconds": 1,
         }
     )
