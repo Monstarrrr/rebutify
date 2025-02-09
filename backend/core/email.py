@@ -23,3 +23,31 @@ class SendConfirmNewEmail(BaseEmailMessage):
 
 class SendNewEmailActivated(BaseEmailMessage):
     template_name = "send_new_email_activated.html"
+
+
+class NotifyFollowers(BaseEmailMessage):
+    template_name = "notify_followers.html"
+
+    def get_subject(self):
+        # Override the subject method to provide a clean subject line
+        return f"New post by {self.context['user']} on {settings.SITE_NAME}"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["user"] = context.get("user")
+        context["post"] = context.get("post")
+        context["debug"] = settings.DEBUG
+        context["url"] = context.get("url")
+        context["domain"] = settings.SITE_URL
+        print("Email context:", context)
+        return context
+
+    def send(self, to, *args, **kwargs):
+        print(f"Attempting to send email to: {to}")
+        try:
+            result = super().send(to, *args, **kwargs)
+            print("Email sent successfully")  # Debug print
+            return result
+        except Exception as e:
+            print(f"Failed to send email: {str(e)}")  # Debug print
+            raise

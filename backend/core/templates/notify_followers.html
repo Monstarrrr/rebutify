@@ -1,0 +1,22 @@
+{% load i18n %} {% block html_body %}
+<p>{% trans "Hello!" %}</p>
+<p>
+  {% blocktrans %}{{ author }} just created or updated the following post: "{{
+  post_title }}".{% endblocktrans %}
+</p>
+<p>{% trans "Check it out here:" %}</p>
+{% if debug %}
+<p>
+  <a href="http://localhost:3000/posts/{{ post_id|safe }}"
+    >http://localhost:3000/posts/{{ post_id|safe }}</a
+  >
+</p>
+{% else %}
+<p>
+  <a href="http://{{ domain }}/posts/{{ post_id|safe }}"
+    >http://{{ domain }}/posts/{{ post_id|safe }}</a
+  >
+</p>
+{% endif %}
+<p>{% trans "Thank you for following!" %}</p>
+{% endblock html_body %}

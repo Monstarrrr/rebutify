@@ -193,6 +193,12 @@ export default function Profile() {
                 </tr>
                 <tr>
                   <td>
+                    <b>Saved posts:</b>
+                  </td>
+                  <td>{user.followedPosts}</td>
+                </tr>
+                <tr>
+                  <td>
                     <b>Joined on:</b>
                   </td>
                   <td style={{ opacity: 0.7, fontStyle: 'italic' }}>

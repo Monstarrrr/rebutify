@@ -27,6 +27,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.email import NotifyFollowers
 from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
@@ -573,23 +574,33 @@ class PostViewSet(viewsets.ModelViewSet):
                 user_profile.saved_posts.add(parent)
 
         # get all followers for this post and notify
-        author = User.objects.get(pk=post.ownerUserId)
-        followers = User.objects.filter(userprofile__saved_posts__id=post.parentId)
-        admins = "monstar.dev@protonmail.com"
-        follower_emails = [admins] + [
-            follower.email for follower in followers if follower != author
-        ]
+        # author = User.objects.get(pk=post.ownerUserId)
+        # followers = User.objects.filter(userprofile__saved_posts__id=post.parentId)
+        # admins = "monstar.dev@protonmail.com"
+        # follower_emails = [admins] + [
+        #     follower.email for follower in followers if follower != author
+        # ]
 
+        # try:
+        #     send_mail(
+        #         "New update on an argument you follow",
+        #         f"Check it out at https://{settings.SITE_URL}/{parent.type}/{post.parentId}",
+        #         settings.EMAIL_FROM,
+        #         follower_emails,
+        #         fail_silently=False,
+        #     )
+        # except Exception as e:
+        #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
         try:
-            send_mail(
-                "New update on an argument you follow",
-                f"Check it out at https://{settings.SITE_URL}/{parent.type}/{post.parentId}",
-                settings.EMAIL_FROM,
-                follower_emails,
-                fail_silently=False,
-            )
+            email = NotifyFollowers()
+            email.context = {
+                "user": self.request.user,
+                "post": post,
+                "url": f"{settings.SITE_URL}/{post.type}/{post.parentId}",
+            }
+            email.send(to=["monstar.dev@protonmail.com"])
         except Exception as e:
-            logerror(e, f"Couldn't send email to followers: {follower_emails}")
+            logerror(e, "Couldn't send email to monstar.dev@protonmail.com")
 
     def perform_destroy(self, instance: Post):
         title = instance.title
@@ -829,6 +840,16 @@ class EditView(APIView):
                         f"Check it out at https://{settings.SITE_URL}/{post.type}/{post.pk}",
                         settings.EMAIL_FROM,
                         follower_emails,
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    logerror(e, f"Couldn't send email to followers: {follower_emails}")
+                try:
+                    send_mail(
+                        "New post creation or update",
+                        f"At https://{settings.SITE_URL}/{post.type}/{post.pk}",
+                        settings.EMAIL_FROM,
+                        ["monstar.dev@protonmail.com"],
                         fail_silently=False,
                     )
                 except Exception as e:
