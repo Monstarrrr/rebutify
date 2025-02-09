@@ -594,9 +594,8 @@ class PostViewSet(viewsets.ModelViewSet):
         try:
             email = NotifyFollowers()
             email.context = {
-                "user": self.request.user,
                 "post": post,
-                "url": f"{settings.SITE_URL}/{post.type}/{post.parentId}",
+                "postAuthor": User.objects.get(pk=post.ownerUserId),
             }
             email.send(to=["monstar.dev@protonmail.com"])
         except Exception as e:

@@ -33,13 +33,23 @@ class NotifyFollowers(BaseEmailMessage):
         return f"New post by {self.context['user']} on {settings.SITE_NAME}"
 
     def get_context_data(self):
-        context = super().get_context_data()
-        context["user"] = context.get("user")
-        context["post"] = context.get("post")
-        context["debug"] = settings.DEBUG
-        context["url"] = context.get("url")
-        context["domain"] = settings.SITE_URL
-        print("Email context:", context)
+        try:
+            context = super().get_context_data()
+
+            post = context.get("post")
+            author = context.get("postAuthor")
+
+            context["postAuthor"] = author
+            context["postTitle"] = post.title
+            context["postId"] = post.id
+            context["postUrl"] = f"{settings.SITE_URL}/posts/{post.id}"
+
+            context["debug"] = settings.DEBUG
+            context["domain"] = settings.SITE_URL
+
+        except Exception as e:
+            print(f"❌ Error getting context data: {e}")
+
         return context
 
     def send(self, to, *args, **kwargs):

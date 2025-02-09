@@ -1,0 +1,4 @@
+# Yaml files are ignored because prettier errors on them are :poop:
+*.yaml
+# Html files are ignored because new-line stuff causes issues
+**/*.html
