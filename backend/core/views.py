@@ -111,15 +111,17 @@ class CursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
 
+
 class PostCursorPaginationViewSet(CursorPagination):
     page_size = DEFAULT_PAGE_SIZE
     page_size_query_param = "page_size"
     ordering = "-isPending", "-updated", "-created"
 
+
 class ArgumentViewSet(viewsets.ModelViewSet):
     serializer_class = ArgumentSerializer
     pagination_class = CursorPaginationViewSet
-    
+
     # get all arguments
     queryset = Post.objects.filter(type="argument")
 
@@ -551,6 +553,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
         is_pending = post_type == "argument"
 
+        # Save post as pending unless user is admin
+        if self.request.user.is_superuser:
+            is_pending = False
         post: Post = serializer.save(
             ownerUserId=self.request.user.id, isPending=is_pending
         )
@@ -567,10 +572,11 @@ class PostViewSet(viewsets.ModelViewSet):
             if parent:
                 user_profile.saved_posts.add(parent)
 
-        # get all followers fo this post and notify
+        # get all followers for this post and notify
         author = User.objects.get(pk=post.ownerUserId)
         followers = User.objects.filter(userprofile__saved_posts__id=post.parentId)
-        follower_emails = [
+        admins = "monstar.dev@protonmail.com"
+        follower_emails = [admins] + [
             follower.email for follower in followers if follower != author
         ]
 
