@@ -20,11 +20,6 @@ const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({
   const hours = String(date.getHours()).padStart(2, '0')
   const minutes = String(date.getMinutes()).padStart(2, '0')
 
-  // Temporary random data
-  const randomBoolean = Math.random() < 0.5
-  const randomNumber = Math.floor(Math.random() * 100)
-  const random = randomBoolean ? randomNumber : 0
-
   // get first 20 characters of body
   const body = item.body
   const truncatedBody = body.length > 32 ? body.substring(0, 32) + '...' : body
@@ -40,9 +35,7 @@ const PostCard: React.FC<{ item: Post; layoutClassName?: string }> = ({
           {type === 'argument' ? title : truncatedBody}
         </div>
         {/* div used at (routes)\profile\page.module.scss */}
-        {type === 'argument' && (
-          <div className={styles.viewCount}>{random} views</div>
-        )}
+        {type === 'argument' && <div className={styles.viewCount}>? views</div>}
         {type === 'rebuttal' && (
           <div className={styles.viewCount}>{upvotes - downvotes} votes</div>
         )}

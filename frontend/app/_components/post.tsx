@@ -227,10 +227,13 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                   )}
                 </>
               )}
-              <Follow
-                postId={post.id}
-                undo={user.followedPosts.includes(post.id) ? true : false}
-              />
+              {post.type === 'argument' && (
+                <Follow
+                  postId={post.id}
+                  postType={post.type}
+                  undo={user.followedPosts.includes(post.id) ? true : false}
+                />
+              )}
               <br />
               {voteError && post.ownerUserId !== user.id && (
                 <LoginBlocker action={'vote'} />

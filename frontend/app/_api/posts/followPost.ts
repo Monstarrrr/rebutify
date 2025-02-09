@@ -2,7 +2,7 @@ import api from '@/api/api'
 
 export const followPost = async (
   postId: string,
-  postType: 'argument' | 'rebuttal',
+  postType: 'argument' | 'rebuttal' | 'comment',
   undo?: boolean,
 ) => {
   const endpoint = `api/${postType}s/${postId}/follow/${undo ? 'undo' : ''}`

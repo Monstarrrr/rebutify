@@ -13,6 +13,10 @@ const StyledButton = styled('button')<{
   $iconOnly: boolean
   $disabled: boolean | string | null
 }>`
+  ${(props) => {
+    console.log('StyledButton props:', props)
+    return ''
+  }}
   background-color: ${(props) => props.$color};
   border: none;
   color: ${tokens.color.primaryWeaker};
@@ -23,18 +27,21 @@ const StyledButton = styled('button')<{
   width: fit-content;
 
   ${(props) =>
+    props.$iconOnly &&
+    `
+    padding: 0;
+  `}
+  ${(props) =>
+    props.$size === 'max' &&
+    `
+    width: 100%;
+  `}
+  ${(props) =>
     props.$outlined &&
     `
     background-color: transparent;
     border: 1px solid ${props.$color};
     color: ${props.$color};
-  `}
-  ${(props) =>
-    props.$transparent &&
-    `
-    background-color: transparent;
-    color: ${props.$color};
-    padding: 0 6px;
   `}
   ${(props) =>
     props.$success &&
@@ -65,14 +72,11 @@ const StyledButton = styled('button')<{
     }
   `}
   ${(props) =>
-    props.$size === 'max' &&
+    props.$transparent &&
     `
-    width: 100%;
-  `}
-  ${(props) =>
-    props.$iconOnly &&
-    `
-    padding: 0;
+    background-color: transparent;
+    color: ${props.$color};
+    padding: 0 6px;
   `}
 `
 
@@ -93,6 +97,7 @@ export default function Button(props: ButtonProps) {
     outlined = false,
     transparent = false,
   } = props
+
   return (
     <StyledButton
       style={styles}
@@ -100,7 +105,7 @@ export default function Button(props: ButtonProps) {
       $size={size}
       $iconOnly={iconOnly}
       onClick={onClick}
-      $disabled={loading || success || disabled}
+      $disabled={loading || disabled}
       $success={success}
       $outlined={outlined}
       $transparent={transparent}

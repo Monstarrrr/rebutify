@@ -8,9 +8,11 @@ import { useState } from 'react'
 
 export default function Follow({
   postId,
+  postType,
   undo,
 }: {
   postId: string
+  postType: 'argument' | 'rebuttal' | 'comment'
   undo?: boolean
 }) {
   const user = useAppSelector((state) => state.user)
@@ -23,7 +25,7 @@ export default function Follow({
     setError(null)
     setLoading(true)
     try {
-      await followPost(postId, 'argument', undo)
+      await followPost(postId, postType, undo)
       setLoading(false)
       setSuccess(undo ? 'Unfollowed' : 'Followed')
       if (undo) {
