@@ -3,7 +3,7 @@ import api from '@/api/api'
 // client side
 export const getPosts = async (
   type?: 'argument' | 'rebuttal' | 'comment',
-  parentId?: string,
+  parentId?: string
 ) => {
   try {
     const response = await api.get(`api/posts/`, {
@@ -20,7 +20,7 @@ export const getPosts = async (
       error.response?.data?.detail ??
         error.response?.data ??
         error.response ??
-        error,
+        error
     )
     throw error
   }
@@ -32,7 +32,6 @@ export async function fetchPosts(type: string, query?: string) {
   if (query) {
     url = `${process.env.NEXT_PUBLIC_API_URL}/api/arguments/search/?q=${query}`
   }
-  console.log(`# url :`, url)
   try {
     const response = await fetch(url, {
       cache: 'no-store',
