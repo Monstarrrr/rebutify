@@ -27,7 +27,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.email import NotifyFollowers
+from core.email import SendEmailNewPostCreated
 from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
@@ -592,7 +592,7 @@ class PostViewSet(viewsets.ModelViewSet):
         # except Exception as e:
         #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
         try:
-            email = NotifyFollowers()
+            email = SendEmailNewPostCreated()
             email.context = {
                 "post": post,
                 "postAuthor": User.objects.get(pk=post.ownerUserId),

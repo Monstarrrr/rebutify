@@ -246,7 +246,7 @@ DJOSER = {
     "EMAIL": {
         "send_confirm_new_email": "core.email.SendConfirmNewEmail",
         "send_new_email_activated": "core.email.SendNewEmailActivated",
-        "notify_followers": "core.email.NotifyFollowers",
+        "send_email_new_post_created": "core.email.SendEmailNewPostCreated",
     },
     "SERIALIZERS": {
         "current_user": "core.serializers.UserSerializer",

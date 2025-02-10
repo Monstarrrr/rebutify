@@ -25,8 +25,8 @@ class SendNewEmailActivated(BaseEmailMessage):
     template_name = "send_new_email_activated.html"
 
 
-class NotifyFollowers(BaseEmailMessage):
-    template_name = "notify_followers.html"
+class SendEmailNewPostCreated(BaseEmailMessage):
+    template_name = "new_post_created.html"
 
     def get_subject(self):
         # Override the subject method to provide a clean subject line
@@ -42,13 +42,26 @@ class NotifyFollowers(BaseEmailMessage):
             context["postAuthor"] = author
             context["postTitle"] = post.title
             context["postId"] = post.id
-            context["postUrl"] = f"{settings.SITE_URL}/posts/{post.id}"
-
+            context["postType"] = post.type
+            context["postBody"] = post.body
+            context["baseUrl"] = f"{settings.SITE_URL}/"
             context["debug"] = settings.DEBUG
-            context["domain"] = settings.SITE_URL
+
+            print("topParentId :", post.topParentId)
+            if post.type == "argument":
+                context["postUrl"] = f"argument/{post.id}/"
+            elif post.type == "rebuttal":
+                context["postUrl"] = f"argument/{post.parentId}/"
+            elif post.type == "comment":
+                print('Post type is "comment"')
+                context["postUrl"] = f"argument/{post.topParentId}/"
+            else:
+                raise Exception(
+                    f"❌ Couldn't send email. Invalid post type: {post.type}"
+                )
 
         except Exception as e:
-            print(f"❌ Error getting context data: {e}")
+            print(f"❌ Couldn't send email. Error: {e}")
 
         return context
 
