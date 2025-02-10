@@ -3,7 +3,6 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.db import transaction
@@ -16,7 +15,7 @@ from djoser.views import UserViewSet
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -27,7 +26,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.email import NotifyFollowers
+from core.email import SendEmailNewPostCreated
 from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
@@ -489,7 +488,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(ownerUserId=self.request.user.id)
+        serializer.save(owner_user_id=self.request.user.id)
 
     def get_permissions(self):
         if self.action == "create":
@@ -541,6 +540,19 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         post_type = serializer.validated_data.get("type")
 
+        # get or create topParentId
+        parent_id = serializer.validated_data.get("parentId")
+        if parent_id:
+            try:
+                parent_post = Post.objects.get(id=parent_id)
+                # If it's a reply to another comment, inherit the top_parent_id from the parent comment
+                top_parent_id = parent_post.topParentId or parent_post.id
+            except Post.DoesNotExist:
+                raise ValidationError("Parent post does not exist.")
+        else:
+            # If it's a top-level comment, set top_parent_id as the post id
+            top_parent_id = None
+
         if post_type in ["rebuttal", "comment"]:
             # Get or create user profile
             user_profile, created = UserProfile.objects.get_or_create(
@@ -558,7 +570,9 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             is_pending = False
         post: Post = serializer.save(
-            ownerUserId=self.request.user.id, isPending=is_pending
+            ownerUserId=self.request.user.id,
+            isPending=is_pending,
+            topParentId=top_parent_id,
         )
 
         # Get or create user profile
@@ -592,7 +606,7 @@ class PostViewSet(viewsets.ModelViewSet):
         # except Exception as e:
         #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
         try:
-            email = NotifyFollowers()
+            email = SendEmailNewPostCreated()
             email.context = {
                 "post": post,
                 "postAuthor": User.objects.get(pk=post.ownerUserId),
