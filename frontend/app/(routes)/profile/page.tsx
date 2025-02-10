@@ -193,9 +193,9 @@ export default function Profile() {
                 </tr>
                 <tr>
                   <td>
-                    <b>Saved posts:</b>
+                    <b>Reputation:</b>
                   </td>
-                  <td>{user.followedPosts}</td>
+                  <td>{user.reputation}</td>
                 </tr>
                 <tr>
                   <td>

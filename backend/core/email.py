@@ -25,6 +25,16 @@ class SendNewEmailActivated(BaseEmailMessage):
     template_name = "send_new_email_activated.html"
 
 
+class SendEmailNotifyFollowers(BaseEmailMessage):
+    template_name = "notify_followers.html"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["debug"] = settings.DEBUG
+        context["domain"] = settings.SITE_URL
+        return context
+
+
 class SendEmailNewPostCreated(BaseEmailMessage):
     template_name = "new_post_created.html"
 
@@ -45,9 +55,9 @@ class SendEmailNewPostCreated(BaseEmailMessage):
             context["postType"] = post.type
             context["postBody"] = post.body
             context["baseUrl"] = f"{settings.SITE_URL}/"
-            context["debug"] = settings.DEBUG
 
             print("topParentId :", post.topParentId)
+
             if post.type == "argument":
                 context["postUrl"] = f"argument/{post.id}/"
             elif post.type == "rebuttal":
@@ -60,16 +70,18 @@ class SendEmailNewPostCreated(BaseEmailMessage):
                     f"❌ Couldn't send email. Invalid post type: {post.type}"
                 )
 
+            context["debug"] = settings.DEBUG
+
         except Exception as e:
-            print(f"❌ Couldn't send email. Error: {e}")
+            print(f"❌ Error getting context data for sending the email: {e}")
 
         return context
 
     def send(self, to, *args, **kwargs):
-        print(f"Attempting to send email to: {to}")
+        print(f"⏳ Attempting to send email to: {to} ...")
         try:
             result = super().send(to, *args, **kwargs)
-            print("Email sent successfully")  # Debug print
+            print(f"✅ Email sent successfully to: {to}.")  # Debug print
             return result
         except Exception as e:
             print(f"Failed to send email: {str(e)}")  # Debug print
