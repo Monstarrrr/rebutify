@@ -1,6 +1,4 @@
-{% load i18n %} 
-{% block subject %} {% blocktrans %}Account email change for {{ site_name }}{% endblocktrans %} {% endblock subject %} 
-{% block html_body %}
+{% load i18n %} {% block html_body %}
 <p>{% trans "Hello!" %}</p>
 <p>
   {% blocktrans %} {{ postAuthor }} just created or updated the following post: "{{ postTitle }}". {% endblocktrans %}
@@ -9,13 +7,13 @@
 {% if debug %}
 <p>
   <a href="http://localhost:3000/posts/{{ postId|safe }}"
-    >http://localhost:3000/argument/{{ postId|safe }}</a
+    >http://localhost:3000/posts/{{ postId|safe }}</a
   >
 </p>
 {% else %}
 <p>
   <a href="http://{{ domain }}/posts/{{ postId|safe }}"
-    >http://{{ domain }}/argument/{{ postId|safe }}</a
+    >http://{{ domain }}/posts/{{ postId|safe }}</a
   >
 </p>
 {% endif %}

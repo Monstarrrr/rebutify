@@ -25,18 +25,8 @@ class SendNewEmailActivated(BaseEmailMessage):
     template_name = "send_new_email_activated.html"
 
 
-class SendEmailNotifyFollowers(BaseEmailMessage):
+class NotifyFollowers(BaseEmailMessage):
     template_name = "notify_followers.html"
-
-    def get_context_data(self):
-        context = super().get_context_data()
-        context["debug"] = settings.DEBUG
-        context["domain"] = settings.SITE_URL
-        return context
-
-
-class SendEmailNewPostCreated(BaseEmailMessage):
-    template_name = "new_post_created.html"
 
     def get_subject(self):
         # Override the subject method to provide a clean subject line
@@ -52,36 +42,21 @@ class SendEmailNewPostCreated(BaseEmailMessage):
             context["postAuthor"] = author
             context["postTitle"] = post.title
             context["postId"] = post.id
-            context["postType"] = post.type
-            context["postBody"] = post.body
-            context["baseUrl"] = f"{settings.SITE_URL}/"
-
-            print("topParentId :", post.topParentId)
-
-            if post.type == "argument":
-                context["postUrl"] = f"argument/{post.id}/"
-            elif post.type == "rebuttal":
-                context["postUrl"] = f"argument/{post.parentId}/"
-            elif post.type == "comment":
-                print('Post type is "comment"')
-                context["postUrl"] = f"argument/{post.topParentId}/"
-            else:
-                raise Exception(
-                    f"❌ Couldn't send email. Invalid post type: {post.type}"
-                )
+            context["postUrl"] = f"{settings.SITE_URL}/posts/{post.id}"
 
             context["debug"] = settings.DEBUG
+            context["domain"] = settings.SITE_URL
 
         except Exception as e:
-            print(f"❌ Error getting context data for sending the email: {e}")
+            print(f"❌ Error getting context data: {e}")
 
         return context
 
     def send(self, to, *args, **kwargs):
-        print(f"⏳ Attempting to send email to: {to} ...")
+        print(f"Attempting to send email to: {to}")
         try:
             result = super().send(to, *args, **kwargs)
-            print(f"✅ Email sent successfully to: {to}.")  # Debug print
+            print("Email sent successfully")  # Debug print
             return result
         except Exception as e:
             print(f"Failed to send email: {str(e)}")  # Debug print

@@ -28,7 +28,6 @@ class UserSerializer(serializers.ModelSerializer):
     upvotedPosts = serializers.SerializerMethodField()
     downvotedPosts = serializers.SerializerMethodField()
     followedPosts = serializers.SerializerMethodField()
-    reputation = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -39,7 +38,6 @@ class UserSerializer(serializers.ModelSerializer):
             "upvotedPosts",
             "downvotedPosts",
             "followedPosts",
-            "reputation",
         ]
 
     def get_upvotedPosts(self, user):
@@ -69,15 +67,6 @@ class UserSerializer(serializers.ModelSerializer):
         try:
             user = User.objects.get(id=user.id)
             return Post.objects.filter(followers=user.id).values_list("id", flat=True)
-        except User.DoesNotExist as e:
-            logger.error(f"Error fetching user: {e}")
-            return None
-
-    def get_reputation(self, user):
-        # Fetch the reputation based on user id
-        try:
-            user = User.objects.get(id=user.id)
-            return user.userprofile.reputation
         except User.DoesNotExist as e:
             logger.error(f"Error fetching user: {e}")
             return None

@@ -25,7 +25,6 @@ class Post(models.Model):
     title: models.CharField = models.CharField(max_length=TITLE_MAX_LEN)
     ownerUserId: models.IntegerField = models.IntegerField(null=True)
     parentId: models.IntegerField = models.IntegerField(null=True, blank=True)
-    topParentId: models.IntegerField = models.IntegerField(null=True, blank=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
     upvotes: models.IntegerField = models.IntegerField(null=False, default=0)

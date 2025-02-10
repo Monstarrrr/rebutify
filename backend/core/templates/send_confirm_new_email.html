@@ -1,6 +1,5 @@
-{% load i18n %} 
-{% block subject %} {% blocktrans %}Account email change for {{ site_name }}{% endblocktrans %} {% endblock subject %} 
-{% block html_body %}
+{% load i18n %} {% block subject %} {% blocktrans %}Account email change for {{
+site_name }}{% endblocktrans %} {% endblock subject %} {% block html_body %}
 <p>{% trans "Please go to the following page to update your email:" %}</p>
 {% if debug %}
 <p>
