@@ -80,6 +80,7 @@ Create and run database migrations with
 ```
 python backend/manage.py makemigrations
 python backend/manage.py migrate
+python backend/manage.py collectstatic
 ```
 
 Add the site URL in the database
