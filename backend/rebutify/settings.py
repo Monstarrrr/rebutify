@@ -204,6 +204,17 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Important for Render.com
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# Enable compression and caching
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Settings for maximum compression (optional)
+WHITENOISE_COMPRESS_ENABLED = True
+WHITENOISE_COMPRESS_OFFLINE = True
+WHITENOISE_BROTLI_ENABLED = True  # Enables Brotli compression (even better than gzip)
+if not DEBUG:
+    # Enable WhiteNoise for serving static files
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
