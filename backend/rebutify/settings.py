@@ -41,6 +41,7 @@ ALLOWED_HOSTS: List[str] = (
 
 # Name of website used in activation, password reset emails, etc.
 SITE_NAME = os.getenv("SITE_NAME", "rebutify.org")
+DOMAIN = os.getenv("FRONTEND_SITE_URL", "rebutify.org")
 
 # URL used in activation, password reset emails, etc.
 SITE_URL = os.getenv("FRONTEND_SITE_URL", "localhost:3000")
@@ -236,6 +237,9 @@ EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", True))
 
 EMAIL_FROM = os.getenv("EMAIL_FROM", "noreply@rebutify.org")
 DEFAULT_FROM_EMAIL = EMAIL_FROM
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DJOSER = {
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
