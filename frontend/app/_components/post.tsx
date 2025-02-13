@@ -199,7 +199,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                 </Form>
               </div>
             ) : (
-              <p>{post.body}</p>
+              <p className={styles.postBody}>{post.body}</p>
             )}
           </div>
           {/* Actions */}
@@ -227,13 +227,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
                   )}
                 </>
               )}
-              {post.type === 'argument' && (
-                <Follow
-                  postId={post.id}
-                  postType={post.type}
-                  undo={user.followedPosts.includes(post.id) ? true : false}
-                />
-              )}
+              <Follow
+                postId={post.id}
+                postType={post.type}
+                undo={user.followedPosts.includes(post.id) ? true : false}
+              />
               <br />
               {voteError && post.ownerUserId !== user.id && (
                 <LoginBlocker action={'vote'} />
@@ -246,6 +244,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
             </div>
           )}
           {/* Comments */}
+          <h4 className={styles.commentsLabel}>Comments</h4>
           <div className={styles.commentsContainer}>
             <Comments
               setComments={setComments}

@@ -26,7 +26,6 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.email import SendEmailNewPostCreated
 from core.typesense.utils.get_client import get_client
 
 from .models import POST_TYPES, Post, Report, UserProfile, Vote
@@ -587,34 +586,6 @@ class PostViewSet(viewsets.ModelViewSet):
             if parent:
                 user_profile.saved_posts.add(parent)
 
-        # get all followers for this post and notify
-        # author = User.objects.get(pk=post.ownerUserId)
-        # followers = User.objects.filter(userprofile__saved_posts__id=post.parentId)
-        # admins = "monstar.dev@protonmail.com"
-        # follower_emails = [admins] + [
-        #     follower.email for follower in followers if follower != author
-        # ]
-
-        # try:
-        #     send_mail(
-        #         "New update on an argument you follow",
-        #         f"Check it out at https://{settings.SITE_URL}/{parent.type}/{post.parentId}",
-        #         settings.EMAIL_FROM,
-        #         follower_emails,
-        #         fail_silently=False,
-        #     )
-        # except Exception as e:
-        #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
-        try:
-            email = SendEmailNewPostCreated()
-            email.context = {
-                "post": post,
-                "postAuthor": User.objects.get(pk=post.ownerUserId),
-            }
-            email.send(to=["monstar.dev@protonmail.com"])
-        except Exception as e:
-            logerror(e, "Couldn't send email to monstar.dev@protonmail.com")
-
     def perform_destroy(self, instance: Post):
         title = instance.title
         followers = User.objects.filter(userprofile__saved_posts__id=instance.pk)
@@ -847,19 +818,22 @@ class EditView(APIView):
                     follower.email for follower in followers if follower != author
                 ]
 
+                # Todo: Fix follower emails list because currently it contains all users
+                print("Follower emails", follower_emails)
+                # try:
+                #     send_mail(
+                #         "New update on an argument you follow",
+                #         f"Check it out at https://{settings.SITE_URL}/{post.type}/{post.pk}",
+                #         settings.EMAIL_FROM,
+                #         follower_emails,
+                #         fail_silently=False,
+                #     )
+                # except Exception as e:
+                #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
+
                 try:
                     send_mail(
-                        "New update on an argument you follow",
-                        f"Check it out at https://{settings.SITE_URL}/{post.type}/{post.pk}",
-                        settings.EMAIL_FROM,
-                        follower_emails,
-                        fail_silently=False,
-                    )
-                except Exception as e:
-                    logerror(e, f"Couldn't send email to followers: {follower_emails}")
-                try:
-                    send_mail(
-                        "New post creation or update",
+                        f"[ADMIN] New post creation or update on {post.type} by {author.username}",
                         f"At https://{settings.SITE_URL}/{post.type}/{post.pk}",
                         settings.EMAIL_FROM,
                         ["monstar.dev@protonmail.com"],

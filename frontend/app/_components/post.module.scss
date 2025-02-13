@@ -20,11 +20,14 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
 }
 
 .contentStyle {
   flex: 1;
+}
+
+.postBody {
+  margin-bottom: 32px;
 }
 
 .voteValue {
@@ -32,10 +35,10 @@
   margin: 0 8px;
 }
 
-.editPost,
-.commentsContainer {
+.editPost {
   background-color: var(--color-primary-weak);
   border-radius: 14px;
+  border-top-left-radius: 0%;
   padding: 12px;
 }
 
@@ -58,6 +61,14 @@
   flex-direction: column;
   align-items: center;
   margin-right: 22px;
+}
+
+.commentsContainer {
+  border: 1px solid var(--color-primary-border);
+  border-radius: 14px;
+  border-top-left-radius: 0%;
+  margin: 4px 0 0;
+  padding: 12px;
 }
 
 .reputationBlockerContainer {

@@ -1,4 +1,11 @@
-.container {
-  padding: 8px;
+.commentsContainer {
   margin-bottom: 8px;
+}
+.commentContainer {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--color-primary);
+  &:nth-last-child(1) {
+    border-bottom: none;
+  }
 }

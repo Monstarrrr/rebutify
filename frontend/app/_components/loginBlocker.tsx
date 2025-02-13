@@ -3,16 +3,9 @@ import { Button } from '@/components'
 
 export default function LoginBlocker({ action }: { action: string }) {
   return (
-    <div
-      style={{
-        margin: '6px',
-      }}
-    >
+    <div>
       <Link href='/login'>
-        <Button
-          label={'Login'}
-          outlined
-        />
+        <Button label={'Login'} outlined />
       </Link>
       <span
         style={{
@@ -22,7 +15,8 @@ export default function LoginBlocker({ action }: { action: string }) {
           pointerEvents: 'none',
         }}
       >
-        {' '}to {action}.
+        {' '}
+        to {action}.
       </span>
     </div>
   )

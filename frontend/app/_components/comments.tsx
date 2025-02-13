@@ -10,6 +10,7 @@ import { AxiosResponse } from 'axios'
 import { ServerErrorMessage } from '@/helpers'
 // eslint-disable-next-line no-restricted-imports
 import styles from './comments.module.scss'
+import { tokens } from '@/styles/tokens'
 
 const AuthorStyle = styled.span`
   opacity: 0.7;
@@ -80,7 +81,7 @@ export default function Comments({
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.commentsContainer}>
       {comments.length === 0 ? (
         commentsLoading ? (
           <p>Loading comments...</p>
@@ -89,14 +90,14 @@ export default function Comments({
         )
       ) : (
         comments.map((comment) => (
-          <div key={comment.id}>
+          <div key={comment.id} className={styles.commentContainer}>
             <p
               style={{
                 marginRight: '8px',
                 display: 'inline',
               }}
             >
-              <span>{comment?.body ?? 'Empty comment'}</span>
+              <span>{`\"${comment?.body ?? 'Empty comment'}\"`}</span>
               <AuthorStyle>
                 - {comment?.ownerUser?.username ?? 'Anonymous'}
               </AuthorStyle>
@@ -115,6 +116,8 @@ export default function Comments({
               <Button
                 key={comment.id}
                 loading={loadingCommentId === comment.id}
+                transparent
+                color={tokens.color.secondary}
                 label='Delete'
                 onClick={() => {
                   handleDeleteComment(comment.id)
@@ -122,7 +125,6 @@ export default function Comments({
               />
             )}
             {deleteError && <p>{deleteError.data.detail}</p>}
-            <hr />
           </div>
         ))
       )}
