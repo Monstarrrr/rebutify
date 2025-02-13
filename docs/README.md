@@ -1,4 +1,4 @@
-### Repository of [rebutify.org](https://rebutify.org).
+### Repository of [rebutify.org](https://www.rebutify.org).
 
 📄 [Project's White Paper](https://docs.google.com/document/d/1YD5JONwXirWWoSGQblhfEtk968Ux9Y2Sgw0Dd9XnpuI)  
 🩺 [Servers Status](https://vj0kytyy.status.cron-job.org/)
