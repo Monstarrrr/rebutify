@@ -37,25 +37,25 @@ def notify_post_update(sender, instance, created, **kwargs):
             )
 
     # Notify followers on new rebuttals of followed arguments
-    # if created and instance.type == "rebuttal":
-    #     print("A rebuttal was created")
-    #     # Get the parent argument post
-    #     parent_argument = Post.objects.get(id=instance.parentId)
-    #     print("The parent argument is:", parent_argument.type, parent_argument.id)
-    #     # Verify it's an argument
-    #     if parent_argument.type == "argument":
-    #         # Get all followers of the argument
-    #         followers = parent_argument.followers.all()
-    #         print("The followers are:", followers)
-    #         for follower in followers:
-    #             if follower.id != instance.ownerUserId:
-    #                 print("Sending email to", follower.email)
-    #                 send_mail(
-    #                     subject=f"New rebuttal on {parent_argument.type} you follow.",
-    #                     message=f"There is a new rebuttal on one of the {parent_argument.type}s you follow. Check it out here: https://www.{settings.SITE_URL}/argument/{parent_argument.id}",
-    #                     from_email=settings.EMAIL_FROM,
-    #                     recipient_list=[follower.email],
-    #                 )
+    if created and instance.type == "rebuttal":
+        print("A rebuttal was created")
+        # Get the parent argument post
+        parent_argument = Post.objects.get(id=instance.parentId)
+        print("The parent argument is:", parent_argument.type, parent_argument.id)
+        # Verify it's an argument
+        if parent_argument.type == "argument":
+            # Get all followers of the argument
+            followers = parent_argument.followers.all()
+            print("The followers are:", followers)
+            for follower in followers:
+                if follower.id != instance.ownerUserId:
+                    print("Sending email to", follower.email)
+                    send_mail(
+                        subject=f"New rebuttal on {parent_argument.type} you follow.",
+                        message=f"There is a new rebuttal on one of the {parent_argument.type}s you follow. Check it out here: https://www.{settings.SITE_URL}/argument/{parent_argument.id}",
+                        from_email=settings.EMAIL_FROM,
+                        recipient_list=[follower.email],
+                    )
 
     # Notify admins on creations & edits of any post
     # admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
