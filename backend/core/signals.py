@@ -1,17 +1,3 @@
-# from django.db.models.signals import pre_save
-# from django.dispatch import receiver
-# from .models import Post
-
-# @receiver(pre_save, sender=Post)
-# def handle_post_save(sender, instance, **kwargs):
-#     print(f"⏳ Handling post save signal for: {instance}")
-#     previous = Post.objects.get(pk=instance.pk)
-#     if previous.isPending and not instance.isPending:  # Check transition from True to False
-#         user_profile = instance.ownerUserId.userprofile
-#         user_profile.reputation += 1
-#         user_profile.save()
-#         print(f"✅ Reputation incremented for user {instance.ownerUserId.username}")
-
 import logging
 
 from django.db.models.signals import pre_save

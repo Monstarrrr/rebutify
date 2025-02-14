@@ -6,7 +6,11 @@ class CoreConfig(AppConfig):
     name = "core"
 
     def ready(self):
+        from core.signals import post_signals
         from core.typesense.client import create_posts_collections
 
+        print(
+            f'{"✅ Signals loaded" if post_signals else "❌ Signals not loaded, the app will not work properly."}'
+        )
         print("🚀 Core app is ready!")
         create_posts_collections()
