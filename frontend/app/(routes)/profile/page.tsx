@@ -360,6 +360,7 @@ export default function Profile() {
                     </h3>
                     <List
                       items={rebuttalsList}
+                      displayCounter={false}
                       Layout={PostCard}
                       layoutClassName={styles.postCard}
                     />

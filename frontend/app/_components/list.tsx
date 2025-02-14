@@ -11,6 +11,7 @@ export default function List<T extends type.Identifiable>({
   Layout,
   className,
   layoutClassName,
+  displayCounter = true,
 }: type.ListProps<T>) {
   if (!items || items.length === 0) {
     return null
@@ -20,13 +21,15 @@ export default function List<T extends type.Identifiable>({
     <div
       className={`${styles.resultsContainer} ${(className && className) || ''}`}
     >
-      <div className={styles.resultsInfoContainer}>
-        <p className={styles.resultsCounter}>
-          {`
-            ${items.length} ${items.length === 1 ? 'post' : 'posts'} found
-          `}
-        </p>
-      </div>
+      {displayCounter && (
+        <div className={styles.resultsInfoContainer}>
+          <p className={styles.resultsCounter}>
+            {`
+              ${items.length} ${items.length === 1 ? 'post' : 'posts'} found
+            `}
+          </p>
+        </div>
+      )}
       <ul
         style={{
           listStyle: 'none',

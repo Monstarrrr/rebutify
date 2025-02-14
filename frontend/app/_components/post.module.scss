@@ -27,7 +27,7 @@
 }
 
 .postBody {
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 }
 
 .voteValue {
@@ -63,6 +63,10 @@
   margin-right: 22px;
 }
 
+.commentsLabel {
+  color: var(--color-secondary-weaker);
+  margin-top: 12px;
+}
 .commentsContainer {
   border: 1px solid var(--color-primary-border);
   border-radius: 14px;

@@ -46,7 +46,7 @@ export default function Argument(props: Props) {
           <Post item={argument} />
 
           <div className={styles.rebuttalsContainer}>
-            <H2>Rebuttals</H2>
+            <H2>Rebuttals ({rebuttals.length})</H2>
             <div className={styles.rebuttalsWrapper}>
               {rebuttals.length === 0 ? (
                 <EmptySectionStyle>There are no rebuttals yet</EmptySectionStyle>

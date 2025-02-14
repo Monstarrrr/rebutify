@@ -10,4 +10,5 @@ export type ListProps<T extends Identifiable> = {
   styles?: React.CSSProperties
   className?: string
   layoutClassName?: string
+  displayCounter?: boolean
 }
