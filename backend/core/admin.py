@@ -1,6 +1,38 @@
 from django.contrib import admin, messages
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 
 from .models import Post, UserProfile
+
+
+class CustomUserAdmin(UserAdmin):
+    # Keep the default fieldsets
+    fieldsets = UserAdmin.fieldsets
+
+    # Custom list to display in the user listing
+    list_display = (
+        "id",
+        "email",
+        "username",
+        "is_active",
+        "is_staff",
+        "date_joined",
+        "last_login",
+    )
+
+    # Fields we can filter by in the right sidebar
+    list_filter = ("is_active", "is_staff", "is_superuser", "groups", "date_joined")
+
+    # Search fields
+    search_fields = ("id", "username", "first_name", "last_name", "email")
+
+    # Optional: Add fields that can be ordered by clicking the column header
+    ordering = ("-date_joined",)
+
+
+# Unregister the default UserAdmin and register our custom one
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 
 
 @admin.register(Post)
