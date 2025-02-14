@@ -63,11 +63,14 @@ def notify_post_update(sender, instance, created, **kwargs):
     # recipient_list = list(set(admins))
     # recipient_list.append("monstar.dev@protonmail.com")
     recipient_list = ["monstar.dev@protonmail.com", "contact@rebutify.org"]
-    
     for recipient in recipient_list:
+        if instance.type != "argument":
+            message = f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.topParentId}"
+        else:
+            message = f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.id}"
         send_mail(
             subject=f"[ADMIN] Some {instance.type} was {'created' if created else 'updated'}.",
-            message=f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.id}",
+            message=message,
             from_email=settings.EMAIL_FROM,
             recipient_list=[recipient],
             fail_silently=True,
