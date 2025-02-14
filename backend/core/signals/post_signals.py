@@ -11,13 +11,16 @@ from core.models import Post
 def notify_post_update(sender, instance, created, **kwargs):
     print("A post was created or updated")
 
+    for follower in instance.followers.all():
+        print("Follower:", follower.username)
+
     # Notify followers on edits of existing posts
     if not created:
         followers = instance.followers.all()
         for follower in followers:
             send_mail(
                 subject=f"Some {instance.type} you follow was updated.",
-                message=f"{follower.username}, {instance.ownerUserId.username} just updated their {instance.type}. Check it out here: https://{settings.SITE_URL}/argument/{instance.id}",
+                message=f"{instance.ownerUserId.username} just updated their {instance.type}. Check it out here: https://{settings.SITE_URL}/argument/{instance.id}",
                 from_email=settings.EMAIL_FROM,
                 recipient_list=[follower.email],
             )
@@ -29,7 +32,7 @@ def notify_post_update(sender, instance, created, **kwargs):
         for follower in followers:
             send_mail(
                 subject=f"New comment on {top_parent.type} you follow.",
-                message=f"{follower.username}, there is a new comment on on of the {top_parent.type}s you follow. Check it out here: https://{settings.SITE_URL}/argument/{top_parent.id}",
+                message=f"There is a new comment on on of the {top_parent.type}s you follow. Check it out here: https://{settings.SITE_URL}/argument/{top_parent.id}",
                 from_email=settings.EMAIL_FROM,
                 recipient_list=[follower.email],
             )
@@ -50,7 +53,7 @@ def notify_post_update(sender, instance, created, **kwargs):
                     print("Sending email to", follower.email)
                     send_mail(
                         subject=f"New rebuttal on {parent_argument.type} you follow.",
-                        message=f"{follower.username}, there is a new rebuttal on one of the {parent_argument.type}s you follow. Check it out here: https://{settings.SITE_URL}/argument/{parent_argument.id}",
+                        message=f"There is a new rebuttal on one of the {parent_argument.type}s you follow. Check it out here: https://{settings.SITE_URL}/argument/{parent_argument.id}",
                         from_email=settings.EMAIL_FROM,
                         recipient_list=[follower.email],
                     )
@@ -63,7 +66,7 @@ def notify_post_update(sender, instance, created, **kwargs):
     for recipient in recipient_list:
         send_mail(
             subject=f"[ADMIN] Some {instance.type} was {'created' if created else 'updated'}.",
-            message=f"{follower.username}, there is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://{settings.SITE_URL}/argument/{instance.id}",
+            message=f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://{settings.SITE_URL}/argument/{instance.id}",
             from_email=settings.EMAIL_FROM,
             recipient_list=[recipient],
             fail_silently=True,
