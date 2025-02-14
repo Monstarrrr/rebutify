@@ -24,7 +24,7 @@ def notify_post_update(sender, instance, created, **kwargs):
                 from_email=settings.EMAIL_FROM,
                 recipient_list=[follower.email],
             )
-
+    
     # Notify followers on new comments
     if created and instance.type == "comment":
         top_parent = Post.objects.get(id=instance.topParentId)
@@ -57,12 +57,13 @@ def notify_post_update(sender, instance, created, **kwargs):
                         from_email=settings.EMAIL_FROM,
                         recipient_list=[follower.email],
                     )
-
+    
     # Notify admins on creations & edits of any post
-    admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
-    recipient_list = list(set(admins))
-    recipient_list.append("monstar.dev@protonmail.com")
-
+    # admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
+    # recipient_list = list(set(admins))
+    # recipient_list.append("monstar.dev@protonmail.com")
+    recipient_list = ["monstar.dev@protonmail.com", "contact@rebutify.org"]
+    
     for recipient in recipient_list:
         send_mail(
             subject=f"[ADMIN] Some {instance.type} was {'created' if created else 'updated'}.",
