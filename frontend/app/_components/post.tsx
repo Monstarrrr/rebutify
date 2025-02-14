@@ -136,7 +136,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
   }
 
   const handleCommentsVisibility = (state: boolean) => {
-    setIsCommenting(state)
+    user.reputation > 0 && setIsCommenting(state)
   }
   return (
     <>
