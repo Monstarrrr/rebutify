@@ -12,5 +12,6 @@ class CoreConfig(AppConfig):
         print(
             f'{"✅ Signals loaded" if post_signals else "❌ Signals not loaded, the app will not work properly."}'
         )
-        print("🚀 Core app is ready!")
+        print("🚀 [1/2] Django server is ready!")
+        print("----")
         create_posts_collections()

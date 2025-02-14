@@ -2,14 +2,6 @@ import os
 
 from core.typesense.utils.get_client import get_client
 
-print("TYPESENSE_HOST:", os.getenv("TYPESENSE_HOST"))
-print("TYPESENSE_PORT:", os.getenv("TYPESENSE_PORT"))
-print("TYPESENSE_PROTOCOL:", os.getenv("TYPESENSE_PROTOCOL"))
-print(
-    "TYPESENSE_SECRET_KEY:", os.getenv("TYPESENSE_SECRET_KEY", "")[0:5] + "..."
-)  # Only print first 5 chars of key
-
-
 # Example function to test connection
 def check_connection():
     client = get_client()
@@ -46,17 +38,19 @@ def create_posts_collections():
     client = get_client()
     if client.collections["posts"]:
         try:
-            print("⏳ Deleting collections...")
+            print("⏳ Deleting typesense collections...")
             client.collections["posts"].delete()
             print("✅ Collections deleted successfully!")
         except Exception as e:
-            print(f"❌ Error deleting collection: {e}")
-
+            print(f"❌ Error deleting typesense collection: {e}")
+    
     try:
         print("⏳ Creating collections...")
         client.collections.create(posts_collection_schema)
         # client.collections.create(users_collection_schema)
-        print("✅ Collections created successfully!")
+        print("✅ Typesense collections created successfully!")
+        print("🚀 [2/2] Typesense server is ready!")
+        print("----")
     except Exception as e:
         print(f"❌ Error creating collection: {e}")
 

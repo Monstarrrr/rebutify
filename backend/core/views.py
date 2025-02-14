@@ -215,7 +215,9 @@ class ArgumentViewSet(viewsets.ModelViewSet):
                 logger.error(f"❌ Error retrieving collection status: {e}")
 
             return Response(
-                {"error": "An internal error has occurred. Please try again later."},
+                {
+                    "error": "An internal error has occurred. Please contact admins if it persists."
+                },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
@@ -552,11 +554,11 @@ class PostViewSet(viewsets.ModelViewSet):
             # If it's a top-level comment, set top_parent_id as the post id
             top_parent_id = None
 
+        # Get or create user profile
+        user_profile, created = UserProfile.objects.get_or_create(
+            user=self.request.user, defaults={"created": timezone.now().date()}
+        )
         if post_type in ["rebuttal", "comment"]:
-            # Get or create user profile
-            user_profile, created = UserProfile.objects.get_or_create(
-                user=self.request.user, defaults={"created": timezone.now().date()}
-            )
             # Reputation requirement
             if user_profile.reputation < 1:
                 raise PermissionDenied(
@@ -565,8 +567,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
         is_pending = post_type == "argument"
 
-        # Save post as pending unless user is admin
-        if self.request.user.is_superuser:
+        # Save post as pending unless user is admin and/or has > 0 reputation
+        if self.request.user.is_superuser or user_profile.reputation > 0:
             is_pending = False
         post: Post = serializer.save(
             ownerUserId=self.request.user.id,
