@@ -35,7 +35,7 @@ def notify_post_update(sender, instance, created, **kwargs):
                 from_email=settings.EMAIL_FROM,
                 recipient_list=[follower.email],
             )
-
+    
     # Notify followers on new rebuttals of followed arguments
     if created and instance.type == "rebuttal":
         print("A rebuttal was created")
@@ -64,7 +64,7 @@ def notify_post_update(sender, instance, created, **kwargs):
     recipient_list = ["monstar.dev@protonmail.com", "contact@rebutify.org"]
     for recipient in recipient_list:
         if instance.type != "argument":
-            message = f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.topParentId}"
+            message = f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.parentId}"
         else:
             message = f"There is a new {instance.type} {'created' if created else 'updated'}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.id}"
         send_mail(
