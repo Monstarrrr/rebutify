@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/globals.css'
 import StoreProvider from '@/store/Provider'
-import { Header, ClientInitializer } from '@/components'
+import { Header, ClientInitializer, Popup } from '@/components'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 // eslint-disable-next-line no-restricted-imports
@@ -42,6 +42,7 @@ export default function RootLayout({ children }: PropsType) {
         <StoreProvider>
           <ClientInitializer />
           <Header />
+          <Popup />
           <div className={styles.mainPageWrapper}>{children}</div>
           <footer className={styles.footer}>
             <div
