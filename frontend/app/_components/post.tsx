@@ -15,6 +15,7 @@ import {
   Comments,
   Follow,
   ReputationBlocker,
+  Tag,
 } from '@/components'
 import { useRouter } from 'next/navigation'
 import { formDataToObj, ServerErrorMessage } from '@/helpers'
@@ -33,6 +34,7 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
     downvotes: item.downvotes,
     id: item.id,
     ownerUserId: item.ownerUserId,
+    isPending: item?.isPending,
     type: item.type,
   })
   const [voteError, setVoteError] = useState<boolean | null>(null)
@@ -162,6 +164,11 @@ const Post: React.FC<{ item: type.Post }> = ({ item }) => {
         )}
         <div className={styles.rightContainer}>
           <div className={styles.contentStyle}>
+            {post.isPending && (
+              <div className={styles.pendingContainer}>
+                <Tag />
+              </div>
+            )}
             {post.type == 'argument' && post.title && (
               <div>
                 <h1>{post.title}</h1>
