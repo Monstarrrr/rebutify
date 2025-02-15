@@ -2,6 +2,8 @@
 import { useAppDispatch } from '@/store/hooks'
 import { showPopup } from '@/store/slices/popup'
 import { useEffect } from 'react'
+// eslint-disable-next-line no-restricted-imports
+import styles from './layout.module.scss'
 
 export default function RegisterLayout({
   children,
@@ -34,6 +36,19 @@ export default function RegisterLayout({
                 representative of the final project.
               </li>
             </ul>
+            <p>
+              If you find any issues, please share them with us on{' '}
+              <a className={styles.link} href='https://discord.gg/NpUB93jsJy'>
+                Discord
+              </a>{' '}
+              or email{' '}
+              <a className={styles.link} href='mailto:contact@rebutify.org'>
+                contact@rebutify.org
+              </a>
+              . <br />
+              <br />
+              Thank you {`🤍`},<br />- The Rebutify Team
+            </p>
           </>
         ),
       }),
