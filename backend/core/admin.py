@@ -47,7 +47,16 @@ class PostAdmin(admin.ModelAdmin):
         "created",
         "updated",
         "isPending",
+        "get_followers",
     ]
+
+    def get_followers(self, obj):
+        return ", ".join([user.username for user in obj.followers.all()[:3]]) + (
+            "..." if obj.followers.count() > 3 else ""
+        )
+
+    get_followers.short_description = "Followers"
+
     # Fields that can be edited directly in the admin interface
     list_editable = ["title", "body", "isPending"]
 
