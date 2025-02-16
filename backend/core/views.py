@@ -813,36 +813,6 @@ class EditView(APIView):
             serializer = PostSerializer(post, data=update_data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-
-                author = User.objects.get(pk=post.ownerUserId)
-                followers = User.objects.filter(userprofile__saved_posts__id=post.pk)
-                follower_emails = [
-                    follower.email for follower in followers if follower != author
-                ]
-
-                # Todo: Fix follower emails list because currently it contains all users
-                print("Follower emails", follower_emails)
-                # try:
-                #     send_mail(
-                #         "New update on an argument you follow",
-                #         f"Check it out at https://{settings.SITE_URL}/{post.type}/{post.pk}",
-                #         settings.EMAIL_FROM,
-                #         follower_emails,
-                #         fail_silently=False,
-                #     )
-                # except Exception as e:
-                #     logerror(e, f"Couldn't send email to followers: {follower_emails}")
-
-                try:
-                    send_mail(
-                        f"[ADMIN] New post creation or update on {post.type} by {author.username}",
-                        f"At https://{settings.SITE_URL}/{post.type}/{post.pk}",
-                        settings.EMAIL_FROM,
-                        ["monstar.dev@protonmail.com"],
-                        fail_silently=False,
-                    )
-                except Exception as e:
-                    logerror(e, f"Couldn't send email to followers: {follower_emails}")
                 return Response(serializer.data, status=200)
 
             return Response(serializer.errors, status=400)

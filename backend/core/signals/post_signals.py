@@ -5,6 +5,10 @@ from django.dispatch import receiver
 
 from core.models import Post
 
+signature = """
+    - The Rebutify Team 🤍
+"""
+
 
 @receiver(post_save, sender=Post)
 def notify_post_update(sender, instance, created, **kwargs):
@@ -18,10 +22,17 @@ def notify_post_update(sender, instance, created, **kwargs):
     if not created:
         try:
             followers = instance.followers.all()
+
             for follower in followers:
                 send_mail(
                     subject=f"Some {instance.type} you follow was updated.",
-                    message=f"{instance.ownerUserId.username} just updated their {instance.type}. Check it out here: https://www.{settings.SITE_URL}/argument/{instance.id}",
+                    message=f"""
+                        Hello {follower.username}, 
+                        Someone just updated the {instance.type} you follow{' "' + instance.title + '"' if instance.type == "argument" else ""}. 
+                        Check it out here: https://www.{settings.SITE_URL}/argument/{instance.id}
+
+                        {signature}
+                    """,
                     from_email=settings.EMAIL_FROM,
                     recipient_list=[follower.email],
                 )
@@ -36,7 +47,13 @@ def notify_post_update(sender, instance, created, **kwargs):
             for follower in followers:
                 send_mail(
                     subject=f"New comment on {top_parent.type} you follow.",
-                    message=f"There is a new comment on on of the {top_parent.type}s you follow. Check it out here: https://wwww.{settings.SITE_URL}/argument/{top_parent.id}",
+                    message=f"""
+                        Hello {follower.username},
+                        There is a new comment on one of the {top_parent.type}s you follow. 
+                        Check it out here: https://wwww.{settings.SITE_URL}/argument/{top_parent.id}
+                        
+                        {signature}
+                    """,
                     from_email=settings.EMAIL_FROM,
                     recipient_list=[follower.email],
                 )
@@ -60,7 +77,13 @@ def notify_post_update(sender, instance, created, **kwargs):
                         print("Sending email to", follower.email)
                         send_mail(
                             subject=f"New rebuttal on {parent_argument.type} you follow.",
-                            message=f"There is a new rebuttal on one of the {parent_argument.type}s you follow. Check it out here: https://www.{settings.SITE_URL}/argument/{parent_argument.id}",
+                            message=f"""
+                                Hello {follower.username},
+                                There is a new rebuttal on one of the {parent_argument.type}s you follow. 
+                                Check it out here: https://www.{settings.SITE_URL}/argument/{parent_argument.id}
+
+                                {signature}
+                            """,
                             from_email=settings.EMAIL_FROM,
                             recipient_list=[follower.email],
                         )
