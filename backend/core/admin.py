@@ -56,7 +56,7 @@ class PostAdmin(admin.ModelAdmin):
         )
 
     get_followers.short_description = "Followers"
-
+    
     # Fields that can be edited directly in the admin interface
     list_editable = ["title", "body", "isPending"]
 
