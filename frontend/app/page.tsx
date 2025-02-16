@@ -20,7 +20,7 @@ export default async function Home({
         <div className={styles.innerContainer}>
           <div className={styles.topContainer}>
             <h2 className={styles.title}>
-              Search an argument, see its rebuttals, and create your owns !
+              Search an argument, see its rebuttals, and create your own !
             </h2>
             <Search
               placeholder='e.g. "Plants feel pain tho"'
