@@ -10,6 +10,7 @@ from core.models import Post
 def notify_post_update(sender, instance, created, **kwargs):
     print("A post was created or updated")
 
+    print("All Followers:", instance.followers.all())
     for follower in instance.followers.all():
         print("Follower:", follower.username)
 
@@ -35,7 +36,7 @@ def notify_post_update(sender, instance, created, **kwargs):
                 from_email=settings.EMAIL_FROM,
                 recipient_list=[follower.email],
             )
-    
+
     # Notify followers on new rebuttals of followed arguments
     if created and instance.type == "rebuttal":
         print("A rebuttal was created")

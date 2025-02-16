@@ -4,7 +4,7 @@ import { tokens } from '@/styles/tokens'
 import { ButtonProps } from '@/types'
 import styled from 'styled-components'
 
-const StyledButton = styled('button') <{
+const StyledButton = styled('button')<{
   $color: string
   $size: 'min' | 'max' | undefined
   $success: string | null
@@ -51,15 +51,17 @@ const StyledButton = styled('button') <{
     cursor: not-allowed;
     opacity: 0.5;
     background-color: ${tokens.color.secondary};
-    ${props.$outlined &&
-    `
+    ${
+      props.$outlined &&
+      `
       background-color: transparent;
       border-color: ${tokens.color.secondary};
       color: ${tokens.color.secondary};  
     `
     }
-    ${props.$transparent &&
-    `
+    ${
+      props.$transparent &&
+      `
       background-color: transparent;
       color: ${tokens.color.secondary};
     `
@@ -70,7 +72,8 @@ const StyledButton = styled('button') <{
     `
     background-color: transparent;
     color: ${props.$color};
-    padding: 0 6px;
+    padding: 0px;
+    padding-right: 6px;
   `}
 `
 

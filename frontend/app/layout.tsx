@@ -63,7 +63,7 @@ export default function RootLayout({ children }: PropsType) {
               >
                 <span style={LinkLabel}>About</span>
               </Link>
-              <Link className={styles.link} href='https://discord.gg/QHNutWjpHy'>
+              <Link className={styles.link} href='https://discord.gg/NpUB93jsJy'>
                 <span style={LinkLabel}>Discord</span>
               </Link>
               <Link
