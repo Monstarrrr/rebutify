@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState: PopupProps = {
   isVisible: false,
   content: null,
-  onClose: () => {},
 }
 
 const popupSlice = createSlice({
